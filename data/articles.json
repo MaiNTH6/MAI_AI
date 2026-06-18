@@ -190,28 +190,6 @@
       "Không chỉ cho test case — dùng cho MỌI quy tắc QA: bug report, quy ước đặt tên, mẫu checklist, giọng văn báo cáo.",
       "Lưu 1 lần, dùng lâu dài, nhất quán cả nhóm — hết cảnh 'mỗi lần AI một kiểu'."
     ],
-    "comparisonTable": [
-      {
-        "label": "Mỗi lần sinh test case / bug report",
-        "before": "Dặn lại format từ đầu",
-        "after": "Claude tự theo format đã lưu"
-      },
-      {
-        "label": "Cả team cùng làm",
-        "before": "Mỗi người một kiểu",
-        "after": "Chung 1 chuẩn (commit git)"
-      },
-      {
-        "label": "Khi tool/quy tắc thay đổi",
-        "before": "Sửa rải rác, dễ quên chỗ",
-        "after": "Sửa 1 chỗ (CLAUDE.md)"
-      },
-      {
-        "label": "Người mới vào dự án",
-        "before": "Phải dặn từng quy tắc",
-        "after": "Mở dự án là có sẵn chuẩn"
-      }
-    ],
     "steps": [
       {
         "title": "① CLAUDE.md — khuyên dùng (luôn bật + chia sẻ cả team)",
@@ -276,28 +254,6 @@
       "Coi kết quả là BẢN NHÁP có cấu trúc: AI hay thiếu tổ hợp trong bảng quyết định + bịa giá trị biên — phải rà lại.",
       "Lấy cấu trúc cột từ Kho Template QA cho AI điền → ra đúng định dạng team đang dùng.",
       "Update nhiều lần mà không lệch format: lưu quy tắc cột vào CLAUDE.md (hoặc /command) để Claude Code tự nhớ — khỏi dặn lại mỗi lần."
-    ],
-    "comparisonTable": [
-      {
-        "label": "Viết bộ case cho 1 user story",
-        "before": "Gõ tay 1-2 giờ",
-        "after": "AI sinh nháp ~30 giây + rà 15 phút"
-      },
-      {
-        "label": "Độ phủ các dạng",
-        "before": "Dễ quên negative/biên khi mệt",
-        "after": "AI liệt kê đủ happy/âm/biên/bảo mật"
-      },
-      {
-        "label": "Định dạng",
-        "before": "Tự kẻ bảng, gõ từng cột",
-        "after": "AI trả bảng sẵn, dán Excel ra cột"
-      },
-      {
-        "label": "Việc của QA",
-        "before": "Vừa nghĩ vừa gõ",
-        "after": "Tập trung rà đúng/sai + ưu tiên"
-      }
     ],
     "steps": [
       {
@@ -695,28 +651,6 @@
       "Hợp lúc mới vào dự án (onboarding), tài liệu rải rác, hoặc cần gom thông tin nhiều trang thật nhanh.",
       "Vẫn phải verify: tài liệu Confluence dễ lỗi thời; AI dựa vào search nên đặt từ khóa lệch có thể sót trang."
     ],
-    "comparisonTable": [
-      {
-        "label": "Tìm thông tin trong tài liệu dự án",
-        "before": "Mở từng trang, search từ khóa, đọc tay",
-        "after": "Hỏi Claude → tìm + tổng hợp + dẫn link"
-      },
-      {
-        "label": "Nắm dự án mới (onboarding)",
-        "before": "Đọc hết wiki nhiều ngày",
-        "after": "Hỏi tổng quan, đào sâu theo nhu cầu (~giờ)"
-      },
-      {
-        "label": "Gom thông tin rải nhiều trang",
-        "before": "Copy từng đoạn, ghép tay",
-        "after": "AI tổng hợp xuyên trang trong 1 lần"
-      },
-      {
-        "label": "Tìm tài liệu thiếu / mâu thuẫn",
-        "before": "Khó thấy nếu nằm khác trang",
-        "after": "AI đối chiếu, chỉ ra chỗ lệch"
-      }
-    ],
     "steps": [
       {
         "title": "Kết nối Confluence (làm 1 lần)",
@@ -817,28 +751,6 @@
       "Code là 'sự thật': khi tài liệu lỗi thời/không có, đọc code mới hiểu đúng hệ thống thực sự làm gì.",
       "Mọi câu trả lời trích 'file:dòng' để kiểm chứng — nhưng AI vẫn suy diễn sai nếu code rối, phải verify.",
       "Repo lớn: khoanh vùng 1 module/thư mục cho AI đọc sâu, đừng hỏi cả repo khổng lồ một lần."
-    ],
-    "comparisonTable": [
-      {
-        "label": "Hiểu hệ thống khi không có tài liệu",
-        "before": "Đọc code tay, đoán mò (nhiều ngày)",
-        "after": "Claude Code tóm tắt kiến trúc (~30 phút)"
-      },
-      {
-        "label": "Tìm chỗ xử lý 1 chức năng",
-        "before": "Grep + lần theo từng file",
-        "after": "Hỏi thẳng, AI chỉ đúng file + dòng"
-      },
-      {
-        "label": "Hiểu 1 luồng nghiệp vụ",
-        "before": "Đọc dọc nhiều file, dễ lạc",
-        "after": "AI trace từng bước API → DB"
-      },
-      {
-        "label": "Biết chỗ nào cần test kỹ",
-        "before": "Dựa cảm tính / kinh nghiệm",
-        "after": "AI chỉ điểm logic phức tạp, validate yếu"
-      }
     ],
     "steps": [
       {
@@ -946,28 +858,6 @@
       "Trả lời có dẫn chứng 'theo mục 3.2 file SRS.md' — kiểm chứng được, nhưng VẪN phải đối chiếu bản gốc vì AI có thể suy diễn thừa.",
       "Cài 1 lệnh npm, chạy trong terminal tại thư mục chứa tài liệu. File .md/.txt đọc tốt nhất; PDF/Word nên convert sang text trước.",
       "Không thay được tư duy QA — nó tăng tốc bước 'đọc & soát', còn quyết định test cái gì vẫn là bạn."
-    ],
-    "comparisonTable": [
-      {
-        "label": "Đọc & nắm 40 trang đặc tả",
-        "before": "Đọc tay 2-3 lần (2-3 giờ)",
-        "after": "Claude Code tóm tắt + liệt kê chức năng (10 phút)"
-      },
-      {
-        "label": "Tìm requirement mâu thuẫn/mơ hồ",
-        "before": "Dựa kinh nghiệm, dễ sót",
-        "after": "AI quét toàn bộ, liệt kê kèm vị trí"
-      },
-      {
-        "label": "Phác thảo test scenario",
-        "before": "Viết từ đầu theo từng chức năng",
-        "after": "AI gợi ý bộ scenario để bạn lọc lại"
-      },
-      {
-        "label": "Đối chiếu nhiều file requirement",
-        "before": "Mở song song, dò thủ công",
-        "after": "AI đọc cùng lúc, chỉ chỗ lệch nhau"
-      }
     ],
     "steps": [
       {

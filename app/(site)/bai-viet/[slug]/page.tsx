@@ -8,7 +8,6 @@ import { AffiliateButton } from "@/components/AffiliateButton";
 import {
   IntroBox,
   TldrBox,
-  ComparisonTableBox,
   VideoBox,
   StepsBox,
   PromptsBox,
@@ -81,11 +80,6 @@ export default async function ArticlePage({ params }: PageProps) {
 
         {/* TLDR — 30s value */}
         {article.tldr && <TldrBox items={article.tldr} />}
-
-        {/* Trước/Sau — visual proof */}
-        {article.comparisonTable && (
-          <ComparisonTableBox rows={article.comparisonTable} />
-        )}
 
         {/* Video hướng dẫn */}
         {article.videoUrl && (
