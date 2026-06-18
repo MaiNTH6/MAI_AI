@@ -7,6 +7,7 @@ build/
 *.log
 next-env.d.ts
 .vercel
+tsconfig.tsbuildinfo
 
 # Tài liệu demo/nội bộ — không đẩy lên git
 demo-review/
