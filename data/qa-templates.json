@@ -1,0 +1,904 @@
+[
+  {
+    "slug": "test-scenario",
+    "title": "Test Scenario",
+    "emoji": "🎬",
+    "description": "Kịch bản kiểm thử mức cao — liệt kê 'cần test cái gì' trước khi viết test case chi tiết.",
+    "templates": [
+      {
+        "slug": "scenario-bang",
+        "title": "Test Scenario — dạng bảng",
+        "whenToUse": "Dùng ngay sau khi phân tích requirement, để bao quát mọi luồng cần test và rà với BA.",
+        "content": {
+          "kind": "table",
+          "columns": [
+            "ID",
+            "Tên Scenario",
+            "Mô tả ngắn",
+            "Loại",
+            "Requirement",
+            "Ưu tiên"
+          ],
+          "rows": [
+            [
+              "SC-01",
+              "Đăng nhập thành công",
+              "Nhập đúng email + mật khẩu → vào trang chủ",
+              "Happy path",
+              "SRS-2.1",
+              "Cao"
+            ],
+            [
+              "SC-02",
+              "Sai mật khẩu",
+              "Báo lỗi, không tiết lộ email có tồn tại",
+              "Negative",
+              "SRS-2.1",
+              "Cao"
+            ],
+            [
+              "SC-03",
+              "Khóa sau 5 lần sai",
+              "Tài khoản bị khóa đúng ngưỡng",
+              "Boundary",
+              "SRS-2.5",
+              "Trung bình"
+            ],
+            [
+              "SC-04",
+              "Chống brute force",
+              "Vượt ngưỡng → captcha/khóa",
+              "Security",
+              "SRS-2.5",
+              "Cao"
+            ]
+          ],
+          "note": "Loại: Happy path · Negative · Boundary · Security · Performance"
+        },
+        "aiPrompt": "Dựa hoàn toàn vào requirement của chức năng [TÊN CHỨC NĂNG] trong tài liệu, hãy sinh Test Scenario theo đúng các cột: ID | Tên Scenario | Mô tả ngắn | Loại | Requirement | Ưu tiên. Phân loại đủ: Happy path, Negative, Boundary, Security. Mỗi dòng trích requirement gốc. Nếu requirement chưa rõ, ghi \"cần xác nhận\". Trả về dạng bảng để tôi copy sang Excel."
+      }
+    ]
+  },
+  {
+    "slug": "test-case",
+    "title": "Test Case",
+    "emoji": "📝",
+    "description": "Các định dạng test case chi tiết — chọn loại hợp với dự án (truyền thống / BDD / data-driven).",
+    "templates": [
+      {
+        "slug": "tc-step-based",
+        "title": "Test Case — dạng từng bước (truyền thống)",
+        "whenToUse": "Phổ biến nhất, hợp test thủ công. Quản lý bằng Excel: mỗi test case một dòng, các trường là cột.",
+        "content": {
+          "kind": "table",
+          "context": "Quản lý nhiều test case trong Excel — mỗi case 1 dòng:",
+          "columns": [
+            "Test Case ID",
+            "Tiêu đề",
+            "Module",
+            "Tiền điều kiện",
+            "Các bước",
+            "Dữ liệu test",
+            "Kết quả mong đợi",
+            "Kết quả thực tế",
+            "Trạng thái",
+            "Ưu tiên"
+          ],
+          "rows": [
+            [
+              "TC-001",
+              "Đăng nhập đúng thông tin",
+              "Login",
+              "Đã có tài khoản hợp lệ",
+              "1. Mở trang login 2. Nhập email+mật khẩu 3. Bấm Đăng nhập",
+              "user@mail.com / 123456",
+              "Vào trang chủ, hiển thị tên user",
+              "",
+              "Chưa chạy",
+              "Cao"
+            ],
+            [
+              "TC-002",
+              "Đăng nhập sai mật khẩu",
+              "Login",
+              "Đã có tài khoản hợp lệ",
+              "1. Mở trang login 2. Nhập email đúng, mật khẩu sai 3. Bấm Đăng nhập",
+              "user@mail.com / saimk",
+              "Báo 'Email hoặc mật khẩu không đúng'",
+              "",
+              "Chưa chạy",
+              "Cao"
+            ]
+          ],
+          "note": "Trạng thái: Chưa chạy · Pass · Fail · Blocked"
+        },
+        "aiPrompt": "Từ Test Scenario [MÃ, vd SC-02] (hoặc user story dưới đây), viết test case chi tiết theo đúng các cột: Test Case ID | Tiêu đề | Module | Tiền điều kiện | Các bước | Dữ liệu test | Kết quả mong đợi | Ưu tiên. Viết các bước cụ thể để người khác chạy lại được. Trả về dạng bảng để copy sang Excel. Chỉ dựa vào requirement, không bịa dữ liệu nghiệp vụ.\n\n[DÁN SCENARIO / USER STORY]"
+      },
+      {
+        "slug": "tc-bdd",
+        "title": "Test Case — BDD / Gherkin (Given-When-Then)",
+        "whenToUse": "Hợp dự án Agile, automation (Cucumber/SpecFlow), hoặc khi muốn BA/dev đọc hiểu chung. Dạng văn bản, không phải bảng Excel.",
+        "content": {
+          "kind": "text",
+          "body": "Feature: [Tên tính năng]\n\n  Scenario: [Tên kịch bản cụ thể]\n    Given [tiền điều kiện / trạng thái ban đầu]\n    And   [điều kiện bổ sung nếu có]\n    When  [hành động người dùng thực hiện]\n    Then  [kết quả mong đợi]\n    And   [kết quả bổ sung nếu có]\n\n  Scenario Outline: [Kịch bản chạy nhiều bộ dữ liệu]\n    Given user ở màn hình đăng nhập\n    When  nhập \"<email>\" và \"<matkhau>\"\n    Then  hệ thống hiển thị \"<ketqua>\"\n\n    Examples:\n      | email      | matkhau | ketqua           |\n      | a@test.com | 123456  | Vào trang chủ    |\n      | a@test.com | sai     | Báo sai mật khẩu |"
+        },
+        "aiPrompt": "Chuyển requirement của chức năng [TÊN] trong tài liệu thành các kịch bản BDD theo cú pháp Gherkin (Feature / Scenario / Given-When-Then). Tách happy path và negative thành Scenario riêng. Nếu có nhiều bộ dữ liệu, dùng Scenario Outline + Examples. Viết bằng tiếng Việt.\n\n[DÁN REQUIREMENT]"
+      },
+      {
+        "slug": "tc-data-driven",
+        "title": "Test Case — Data-driven (bảng dữ liệu)",
+        "whenToUse": "Khi một luồng cần test nhiều bộ input/expected (vd: validate trường nhập liệu).",
+        "content": {
+          "kind": "table",
+          "context": "Chức năng: [Tên] — Trường: Email — Tiền điều kiện: đang ở màn hình đăng ký",
+          "columns": [
+            "#",
+            "Input",
+            "Loại",
+            "Kết quả mong đợi"
+          ],
+          "rows": [
+            [
+              "1",
+              "user@mail.com",
+              "Hợp lệ",
+              "Chấp nhận"
+            ],
+            [
+              "2",
+              "(để trống)",
+              "Bắt buộc",
+              "Báo \"không được để trống\""
+            ],
+            [
+              "3",
+              "usermail.com",
+              "Sai định dạng",
+              "Báo \"email không hợp lệ\""
+            ],
+            [
+              "4",
+              "a@b.co",
+              "Biên ngắn",
+              "Chấp nhận"
+            ],
+            [
+              "5",
+              "[chuỗi 255+ ký tự]",
+              "Biên trên",
+              "Báo vượt độ dài"
+            ],
+            [
+              "6",
+              "<script>alert(1)</script>",
+              "Bảo mật",
+              "Không thực thi, escape an toàn"
+            ]
+          ]
+        },
+        "aiPrompt": "Sinh bảng test data-driven cho trường [TÊN TRƯỜNG] của chức năng [TÊN], dựa trên ràng buộc trong requirement. Bao gồm: giá trị hợp lệ, bắt buộc/để trống, sai định dạng, giá trị biên (ngắn/dài nhất), 1-2 case bảo mật (XSS/SQLi). Trả về đúng bảng: # | Input | Loại | Kết quả mong đợi (để copy sang Excel).\n\n[DÁN RÀNG BUỘC TRƯỜNG TỪ REQUIREMENT]"
+      },
+      {
+        "slug": "tc-api",
+        "title": "API Test Case",
+        "whenToUse": "Dự án có API/backend. Kiểm thử từng endpoint: request → status + response mong đợi.",
+        "content": {
+          "kind": "table",
+          "context": "API: [Tên dịch vụ] — Base URL: [https://api.example.com]",
+          "columns": [
+            "ID",
+            "Endpoint",
+            "Method",
+            "Header / Auth",
+            "Payload / Params",
+            "Status mong đợi",
+            "Response mong đợi",
+            "Kết quả"
+          ],
+          "rows": [
+            [
+              "API-01",
+              "/login",
+              "POST",
+              "Content-Type: application/json",
+              "{\"email\":\"a@mail.com\",\"pass\":\"123456\"}",
+              "200",
+              "Trả token + thông tin user",
+              ""
+            ],
+            [
+              "API-02",
+              "/login",
+              "POST",
+              "Content-Type: application/json",
+              "{\"email\":\"a@mail.com\",\"pass\":\"sai\"}",
+              "401",
+              "Message \"Sai thông tin đăng nhập\"",
+              ""
+            ],
+            [
+              "API-03",
+              "/login",
+              "POST",
+              "Content-Type: application/json",
+              "{\"email\":\"a@mail.com\"}",
+              "400",
+              "Báo thiếu trường pass",
+              ""
+            ],
+            [
+              "API-04",
+              "/users/{id}",
+              "GET",
+              "Authorization: Bearer <token>",
+              "id = 1",
+              "200",
+              "Thông tin user id=1",
+              ""
+            ],
+            [
+              "API-05",
+              "/users/{id}",
+              "GET",
+              "(không gửi token)",
+              "id = 1",
+              "401",
+              "Unauthorized",
+              ""
+            ]
+          ],
+          "note": "Status: kiểm cả mã (200/400/401/403/404/500) lẫn nội dung response + thời gian phản hồi."
+        },
+        "aiPrompt": "Dựa trên API spec / Swagger / mô tả endpoint dưới đây, sinh bộ API test case theo các cột: ID | Endpoint | Method | Header/Auth | Payload/Params | Status mong đợi | Response mong đợi | Kết quả (để trống). Bao gồm: case hợp lệ, thiếu trường bắt buộc, sai auth, sai định dạng, không tồn tại (404). Trả về bảng để copy sang Excel.\n\n[DÁN API SPEC / SWAGGER]"
+      }
+    ]
+  },
+  {
+    "slug": "bao-loi",
+    "title": "Báo lỗi & Defect",
+    "emoji": "🐞",
+    "description": "Báo cáo lỗi chuẩn để dev tái hiện được, và bảng theo dõi toàn bộ lỗi của đợt test.",
+    "templates": [
+      {
+        "slug": "bug-report",
+        "title": "Bug Report (1 lỗi)",
+        "whenToUse": "Báo 1 lỗi cụ thể (dán vào Jira/Redmine/ticket). Viết rõ để dev tái hiện được ngay.",
+        "content": {
+          "kind": "text",
+          "body": "BUG REPORT\n\nBug ID:            BUG-001\nTiêu đề:           [Ngắn gọn: cái gì lỗi, ở đâu]\nSản phẩm / Module: [...]\nMôi trường:        [OS / Trình duyệt + phiên bản / Server / Build]\nMức độ (Severity): [Nghiêm trọng / Cao / Trung bình / Thấp]\nƯu tiên (Priority):[Cao / Trung bình / Thấp]\nTiền điều kiện:    [Trạng thái trước khi tái hiện]\n\nCác bước tái hiện:\n  1. \n  2. \n  3. \n\nKết quả thực tế:   [Hệ thống đang làm gì sai]\nKết quả mong đợi:  [Đáng lẽ phải thế nào]\nTần suất:          [Luôn luôn / Thỉnh thoảng / Chỉ 1 lần]\nĐính kèm:          [Ảnh chụp / video / log lỗi]\nLiên quan:         Test Case [TC-...] · Requirement [SRS-...]\nNgười tạo:         [...]      Ngày: [...]\nTrạng thái:        Mới"
+        },
+        "aiPrompt": "Chuyển mô tả lỗi dưới đây thành Bug Report chuẩn theo đúng các trường: Tiêu đề, Môi trường, Mức độ (Severity), Ưu tiên, Tiền điều kiện, Các bước tái hiện (đánh số), Kết quả thực tế, Kết quả mong đợi, Tần suất. Viết rõ ràng để dev tái hiện được. Đề xuất Severity/Priority hợp lý.\n\n[DÁN MÔ TẢ LỖI]"
+      },
+      {
+        "slug": "defect-log",
+        "title": "Defect Log / Tracker",
+        "whenToUse": "Bảng theo dõi tất cả lỗi của đợt test — gửi status hằng ngày. Mỗi lỗi 1 dòng.",
+        "content": {
+          "kind": "table",
+          "context": "DEFECT LOG — [Dự án] — Đợt/Sprint: [...]",
+          "columns": [
+            "Bug ID",
+            "Tiêu đề",
+            "Module",
+            "Mức độ",
+            "Ưu tiên",
+            "Trạng thái lỗi",
+            "Người gán",
+            "Ngày phát hiện",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "BUG-001",
+              "Đăng nhập sai vẫn vào được",
+              "Login",
+              "Nghiêm trọng",
+              "Cao",
+              "Mới",
+              "Dev A",
+              "2026-06-16",
+              ""
+            ],
+            [
+              "BUG-002",
+              "Nút Lưu lệch trên mobile",
+              "Hồ sơ",
+              "Thấp",
+              "Thấp",
+              "Đang sửa",
+              "Dev B",
+              "2026-06-16",
+              ""
+            ]
+          ],
+          "note": "Trạng thái lỗi: Mới · Đang sửa · Đã sửa · Cần retest · Đóng · Mở lại."
+        },
+        "aiPrompt": "Từ danh sách lỗi/ghi chú test dưới đây, lập Defect Log theo các cột: Bug ID | Tiêu đề | Module | Mức độ | Ưu tiên | Trạng thái lỗi | Người gán | Ngày phát hiện | Ghi chú. Trả về bảng để copy sang Excel.\n\n[DÁN GHI CHÚ LỖI]"
+      }
+    ]
+  },
+  {
+    "slug": "quan-ly-bao-cao",
+    "title": "Quản lý & Báo cáo",
+    "emoji": "📊",
+    "description": "RTM phủ requirement, tracker theo dõi chạy test, báo cáo tổng kết và kế hoạch test.",
+    "templates": [
+      {
+        "slug": "rtm",
+        "title": "RTM — Ma trận truy vết requirement",
+        "whenToUse": "Map Requirement ↔ Test Case ↔ Kết quả ↔ Defect để chứng minh đã phủ hết requirement.",
+        "content": {
+          "kind": "table",
+          "context": "RTM — [Dự án] — Phiên bản: [...]",
+          "columns": [
+            "Req ID",
+            "Mô tả requirement",
+            "Scenario ID",
+            "Test Case ID",
+            "Kết quả",
+            "Defect ID"
+          ],
+          "rows": [
+            [
+              "SRS-2.1",
+              "Đăng nhập bằng email + mật khẩu",
+              "SC-01",
+              "TC-001",
+              "",
+              ""
+            ],
+            [
+              "SRS-2.1",
+              "Đăng nhập bằng email + mật khẩu",
+              "SC-02",
+              "TC-002",
+              "",
+              ""
+            ],
+            [
+              "SRS-2.5",
+              "Khóa tài khoản sau 5 lần sai",
+              "SC-03",
+              "TC-006",
+              "",
+              ""
+            ]
+          ],
+          "note": "Requirement không có Test Case nào = lỗ hổng phủ (coverage gap). Kết quả: Pass/Fail/Chưa test."
+        },
+        "aiPrompt": "Dựa trên danh sách requirement và test case dưới đây, lập RTM theo các cột: Req ID | Mô tả requirement | Scenario ID | Test Case ID | Kết quả (trống) | Defect ID. Chỉ ra requirement nào CHƯA có test case (lỗ hổng phủ). Trả về bảng để copy sang Excel.\n\n[DÁN REQUIREMENT + DANH SÁCH TEST CASE]"
+      },
+      {
+        "slug": "execution-tracker",
+        "title": "Test Execution Tracker",
+        "whenToUse": "Theo dõi tiến độ chạy test theo ngày/sprint — ai chạy gì, kết quả ra sao.",
+        "content": {
+          "kind": "table",
+          "context": "EXECUTION TRACKER — [Dự án] — Đợt: [...]",
+          "columns": [
+            "TC ID",
+            "Tên test case",
+            "Môi trường",
+            "Ngày chạy",
+            "Kết quả",
+            "Tester",
+            "Defect ID",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "TC-001",
+              "Đăng nhập đúng thông tin",
+              "Chrome / Staging",
+              "2026-06-16",
+              "",
+              "QA A",
+              "",
+              ""
+            ],
+            [
+              "TC-002",
+              "Đăng nhập sai mật khẩu",
+              "Chrome / Staging",
+              "2026-06-16",
+              "",
+              "QA A",
+              "",
+              ""
+            ]
+          ],
+          "note": "Kết quả: Pass · Fail · N/A · Chưa test. Lọc cột Kết quả = Fail để ra danh sách cần raise bug."
+        },
+        "aiPrompt": "Từ danh sách test case dưới đây, tạo Test Execution Tracker theo các cột: TC ID | Tên test case | Môi trường | Ngày chạy | Kết quả (trống) | Tester | Defect ID | Ghi chú. Trả về bảng để copy sang Excel.\n\n[DÁN DANH SÁCH TEST CASE]"
+      },
+      {
+        "slug": "test-summary",
+        "title": "Test Summary Report (TSR)",
+        "whenToUse": "Báo cáo cuối đợt — gửi PM/sếp. Tổng hợp kết quả + đánh giá có nên release không.",
+        "content": {
+          "kind": "text",
+          "body": "TEST SUMMARY REPORT — [Dự án] — Đợt/Sprint: [...] — Ngày: [...]\n\n1. PHẠM VI ĐÃ TEST\n   - Chức năng đã test: ...\n   - Ngoài phạm vi: ...\n\n2. KẾT QUẢ TỔNG QUAN\n   - Tổng test case:  [N]\n   - Pass:            [n]  (..%)\n   - Fail:            [n]\n   - Blocked:         [n]\n   - Chưa chạy:       [n]\n\n3. DEFECT THEO MỨC ĐỘ\n   - Nghiêm trọng:  [n]  (còn mở: ..)\n   - Cao:           [n]\n   - Trung bình:    [n]\n   - Thấp:          [n]\n\n4. RỦI RO / VẤN ĐỀ CÒN TỒN\n   - ...\n\n5. ĐÁNH GIÁ & ĐỀ XUẤT\n   [ ] Đủ điều kiện release\n   [ ] Cần thêm 1 vòng test\n   [ ] Chưa release — còn bug nghiêm trọng mở\n   Kết luận: ...\n\nNgười lập: ...    Ngày: ..."
+        },
+        "aiPrompt": "Từ số liệu kết quả test dưới đây (tổng TC, pass/fail/blocked, danh sách defect), viết Test Summary Report theo cấu trúc: Phạm vi · Kết quả tổng quan · Defect theo mức độ · Rủi ro còn tồn · Đánh giá & đề xuất release. Ngắn gọn, dành cho PM đọc nhanh.\n\n[DÁN SỐ LIỆU KẾT QUẢ TEST]"
+      },
+      {
+        "slug": "test-plan",
+        "title": "Test Plan (rút gọn — IEEE 829)",
+        "whenToUse": "Lập kế hoạch test cho 1 dự án/đợt trước khi bắt đầu. Chốt scope, môi trường, tiêu chí.",
+        "content": {
+          "kind": "text",
+          "body": "TEST PLAN — [Dự án] — Phiên bản: [...] — Ngày: [...]\n\n1. MỤC TIÊU\n   - ...\n\n2. PHẠM VI\n   - Trong phạm vi: ...\n   - Ngoài phạm vi: ...\n\n3. PHƯƠNG PHÁP TEST\n   - Manual / Automation / API / Performance / Security ...\n\n4. MÔI TRƯỜNG TEST\n   - Thiết bị / Trình duyệt / Server / Test data ...\n\n5. TIÊU CHÍ VÀO (Entry) / RA (Exit)\n   - Entry: requirement đã chốt, build sẵn sàng, môi trường OK ...\n   - Exit: 100% TC đã chạy, 0 bug Nghiêm trọng còn mở, pass >= [%] ...\n\n6. LỊCH & PHÂN CÔNG\n   - [Giai đoạn] — [Người] — [Thời gian]\n\n7. RỦI RO & PHƯƠNG ÁN\n   - [Rủi ro] → [Cách giảm thiểu]\n\n8. SẢN PHẨM BÀN GIAO\n   - Test case, Defect log, RTM, Test Summary Report ..."
+        },
+        "aiPrompt": "Dựa trên mô tả dự án/đợt test dưới đây, soạn Test Plan rút gọn theo cấu trúc: Mục tiêu · Phạm vi (trong/ngoài) · Phương pháp · Môi trường · Tiêu chí Entry/Exit · Lịch & phân công · Rủi ro · Sản phẩm bàn giao.\n\n[DÁN MÔ TẢ DỰ ÁN / ĐỢT TEST]"
+      },
+      {
+        "slug": "business-rules",
+        "title": "Business Rules Catalog (trích nghiệp vụ từ code)",
+        "whenToUse": "Khi đọc ngược nghiệp vụ từ code (dự án không tài liệu). Hứng từng rule + đánh dấu chỗ nghi là bug / cần hỏi BA.",
+        "content": {
+          "kind": "table",
+          "context": "BUSINESS RULES — [Dự án] — Nguồn: codebase [branch] — Người trích: [...]",
+          "columns": [
+            "ID",
+            "Quy tắc nghiệp vụ",
+            "Vị trí trong code",
+            "Loại rule",
+            "Nguồn",
+            "Trạng thái xác minh",
+            "Câu hỏi cho BA",
+            "Test case liên quan"
+          ],
+          "rows": [
+            [
+              "BR-01",
+              "Khóa tài khoản sau 5 lần đăng nhập sai",
+              "auth.service.js:55",
+              "Ngưỡng/điều kiện",
+              "Code",
+              "Cần hỏi BA",
+              "Vì sao là 5? Khóa bao lâu, có tự mở không?",
+              "TC-006"
+            ],
+            [
+              "BR-02",
+              "Phí ship = phí vùng + phụ phí − khuyến mãi",
+              "order.service.js:80",
+              "Tính toán",
+              "Code",
+              "Nghi vấn",
+              "Combo nhiều KM + freeship tính thế nào?",
+              "TC-020"
+            ],
+            [
+              "BR-03",
+              "Chỉ chủ đơn mới được hủy đơn",
+              "order.controller.js:95",
+              "Phân quyền",
+              "Code",
+              "Nghi là bug",
+              "Code hiện KHÔNG kiểm chủ sở hữu — đúng ý không?",
+              "TC-031"
+            ]
+          ],
+          "note": "Trạng thái: Đã xác nhận · Nghi vấn · Nghi là bug · Cần hỏi BA. Cột 'Nghi là bug' + 'Câu hỏi cho BA' là giá trị chính — đưa thẳng vào buổi clarify với BA/PO."
+        },
+        "aiPrompt": "Với góc nhìn QA, đọc codebase và TRÍCH các quy tắc nghiệp vụ (business rules) đang được cài trong code. Trả về bảng các cột: ID | Quy tắc nghiệp vụ (mô tả bằng tiếng nghiệp vụ) | Vị trí trong code (file:dòng) | Loại rule (Tính toán / Ngưỡng-điều kiện / Validate / Phân quyền / Trạng thái dữ liệu) | Nguồn (Code/Config/DB/Flag) | Trạng thái xác minh (mặc định 'Cần hỏi BA') | Câu hỏi cho BA | Test case liên quan (để trống).\n\nLƯU Ý BẮT BUỘC:\n- Tách riêng các con số 'magic' (ngưỡng, phí, số ngày...) — mỗi cái là 1 rule cần hỏi vì sao.\n- Đánh dấu 'Nghi là bug' cho chỗ TRÔNG SAI (vd thiếu kiểm phân quyền, validate hở).\n- CHỈ mô tả hành vi code thực có; phần 'vì sao' nếu không chắc thì ghi 'cần xác nhận', KHÔNG bịa lý do nghiệp vụ.\n\n[Để Claude Code đọc code trong thư mục, hoặc dán đoạn code vào đây]"
+      }
+    ]
+  },
+  {
+    "slug": "checklist",
+    "title": "Checklist",
+    "emoji": "✅",
+    "description": "Danh sách kiểm tra nhanh — smoke test, UI/UX, đa trình duyệt/thiết bị.",
+    "templates": [
+      {
+        "slug": "checklist-smoke",
+        "title": "Smoke Test Checklist",
+        "whenToUse": "Chạy nhanh khi nhận build mới — đảm bảo các luồng chính sống trước khi test sâu. Cột Kết quả để trống để tích trong Excel.",
+        "content": {
+          "kind": "table",
+          "context": "SMOKE TEST — [Tên tính năng] — Build: [số] — Ngày: [...]",
+          "columns": [
+            "Hạng mục kiểm tra",
+            "Kết quả",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "App/trang mở được, không màn hình trắng/lỗi 500",
+              "",
+              ""
+            ],
+            [
+              "Đăng nhập luồng chính thành công",
+              "",
+              ""
+            ],
+            [
+              "Điều hướng menu chính hoạt động",
+              "",
+              ""
+            ],
+            [
+              "Chức năng cốt lõi [TÊN] tạo/đọc/sửa/xóa cơ bản OK",
+              "",
+              ""
+            ],
+            [
+              "Submit form chính → lưu thành công",
+              "",
+              ""
+            ],
+            [
+              "Đăng xuất hoạt động",
+              "",
+              ""
+            ],
+            [
+              "Không lỗi console nghiêm trọng (F12)",
+              "",
+              ""
+            ]
+          ],
+          "note": "Kết luận build: PASS (nhận) / FAIL (trả). Cột Kết quả: tích trong Excel (xem mẹo dưới)."
+        },
+        "aiPrompt": "Tạo smoke test checklist cho [TÊN TÍNH NĂNG/MÀN HÌNH] dựa trên các luồng chính trong requirement. Chỉ liệt kê điểm BẮT BUỘC phải chạy được trước khi test sâu. Trả về dạng bảng 3 cột: Hạng mục kiểm tra | Kết quả | Ghi chú (cột Kết quả để trống). Ưu tiên luồng chính và điểm dễ vỡ nhất.\n\n[DÁN MÔ TẢ CHỨC NĂNG]"
+      },
+      {
+        "slug": "checklist-ui",
+        "title": "UI / UX Checklist",
+        "whenToUse": "Rà giao diện một màn hình: bố cục, trạng thái, thông báo, khả năng dùng.",
+        "content": {
+          "kind": "table",
+          "context": "UI/UX CHECKLIST — Màn hình: [Tên]",
+          "columns": [
+            "Nhóm",
+            "Hạng mục kiểm tra",
+            "Kết quả",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "Bố cục & hiển thị",
+              "Canh lề, khoảng cách đồng đều",
+              "",
+              ""
+            ],
+            [
+              "Bố cục & hiển thị",
+              "Font, cỡ chữ, màu đúng thiết kế",
+              "",
+              ""
+            ],
+            [
+              "Bố cục & hiển thị",
+              "Ảnh/icon hiển thị đủ, không vỡ",
+              "",
+              ""
+            ],
+            [
+              "Trạng thái",
+              "Trạng thái rỗng (empty state) có hướng dẫn",
+              "",
+              ""
+            ],
+            [
+              "Trạng thái",
+              "Loading có chỉ báo",
+              "",
+              ""
+            ],
+            [
+              "Trạng thái",
+              "Trạng thái lỗi hiển thị rõ ràng",
+              "",
+              ""
+            ],
+            [
+              "Tương tác",
+              "Nút bấm có hover/disabled hợp lý",
+              "",
+              ""
+            ],
+            [
+              "Tương tác",
+              "Validate hiển thị đúng chỗ, đúng lúc",
+              "",
+              ""
+            ],
+            [
+              "Tương tác",
+              "Thông báo (toast) rõ ràng, tự ẩn",
+              "",
+              ""
+            ],
+            [
+              "Văn bản",
+              "Không sai chính tả, đúng giọng văn",
+              "",
+              ""
+            ],
+            [
+              "Văn bản",
+              "Nhãn nút/menu dễ hiểu",
+              "",
+              ""
+            ]
+          ]
+        },
+        "aiPrompt": "Tạo UI/UX checklist để rà soát màn hình [TÊN] dựa trên mô tả/mockup dưới đây. Trả về dạng bảng 4 cột: Nhóm | Hạng mục kiểm tra | Kết quả | Ghi chú (cột Kết quả để trống). Nhóm theo: Bố cục, Trạng thái (rỗng/loading/lỗi), Tương tác, Văn bản.\n\n[DÁN MÔ TẢ MÀN HÌNH / MOCKUP NOTE]"
+      },
+      {
+        "slug": "checklist-compat",
+        "title": "Checklist Đa trình duyệt / Thiết bị",
+        "whenToUse": "Kiểm thử tương thích — đảm bảo chạy đúng trên các môi trường mục tiêu.",
+        "content": {
+          "kind": "table",
+          "context": "COMPATIBILITY CHECKLIST — Chức năng: [Tên]",
+          "columns": [
+            "Nhóm",
+            "Môi trường / Điểm kiểm tra",
+            "Kết quả",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "Trình duyệt",
+              "Chrome (mới nhất)",
+              "",
+              ""
+            ],
+            [
+              "Trình duyệt",
+              "Edge",
+              "",
+              ""
+            ],
+            [
+              "Trình duyệt",
+              "Firefox",
+              "",
+              ""
+            ],
+            [
+              "Trình duyệt",
+              "Safari (nếu hỗ trợ macOS)",
+              "",
+              ""
+            ],
+            [
+              "Thiết bị",
+              "Mobile dọc (375px)",
+              "",
+              ""
+            ],
+            [
+              "Thiết bị",
+              "Mobile ngang",
+              "",
+              ""
+            ],
+            [
+              "Thiết bị",
+              "Tablet (768px)",
+              "",
+              ""
+            ],
+            [
+              "Thiết bị",
+              "Desktop (1280px+)",
+              "",
+              ""
+            ],
+            [
+              "Điểm kiểm tra",
+              "Bố cục không vỡ, không tràn ngang",
+              "",
+              ""
+            ],
+            [
+              "Điểm kiểm tra",
+              "Bấm/chạm hoạt động (touch target đủ lớn)",
+              "",
+              ""
+            ],
+            [
+              "Điểm kiểm tra",
+              "Chức năng chính chạy đúng",
+              "",
+              ""
+            ],
+            [
+              "Điểm kiểm tra",
+              "Tốc độ tải chấp nhận được",
+              "",
+              ""
+            ]
+          ]
+        },
+        "aiPrompt": "Tạo checklist kiểm thử tương thích (đa trình duyệt + responsive) cho [TÊN CHỨC NĂNG]. Trả về dạng bảng 4 cột: Nhóm | Môi trường/Điểm kiểm tra | Kết quả | Ghi chú (cột Kết quả để trống). Liệt kê trình duyệt/thiết bị phổ biến ở Việt Nam."
+      },
+      {
+        "slug": "checklist-review-testcase",
+        "title": "Test Case Review Checklist",
+        "whenToUse": "Soát bộ test case trước khi execute — đảm bảo đủ phủ, đúng, rõ, không trùng, không lọt case.",
+        "content": {
+          "kind": "table",
+          "context": "REVIEW CHECKLIST — Bộ test case: [Tên/Chức năng] — Người review: [...] — Ngày: [...]",
+          "columns": [
+            "Nhóm",
+            "Hạng mục cần soát",
+            "Đánh giá",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "Độ phủ",
+              "Mỗi requirement / tiêu chí nghiệm thu có ít nhất 1 test case",
+              "",
+              ""
+            ],
+            [
+              "Độ phủ",
+              "Đủ happy path + negative + biên + bảo mật",
+              "",
+              ""
+            ],
+            [
+              "Độ phủ",
+              "Có case cho luồng E2E / tích hợp (nếu có)",
+              "",
+              ""
+            ],
+            [
+              "Độ phủ",
+              "Đối chiếu RTM: không requirement nào bị bỏ sót",
+              "",
+              ""
+            ],
+            [
+              "Đúng đắn",
+              "Kết quả mong đợi đúng nghiệp vụ (không bịa, không suy đoán)",
+              "",
+              ""
+            ],
+            [
+              "Đúng đắn",
+              "Dữ liệu test hợp lệ, đúng định dạng",
+              "",
+              ""
+            ],
+            [
+              "Đúng đắn",
+              "Tiền điều kiện đúng & khả thi",
+              "",
+              ""
+            ],
+            [
+              "Rõ ràng",
+              "Các bước cụ thể, người khác chạy lại được",
+              "",
+              ""
+            ],
+            [
+              "Rõ ràng",
+              "Tiêu đề nói rõ mục tiêu, không mơ hồ",
+              "",
+              ""
+            ],
+            [
+              "Nhất quán",
+              "Đúng format / cột chuẩn của team",
+              "",
+              ""
+            ],
+            [
+              "Nhất quán",
+              "Quy ước đặt tên / ID thống nhất",
+              "",
+              ""
+            ],
+            [
+              "Nhất quán",
+              "Mức ưu tiên gán hợp lý",
+              "",
+              ""
+            ],
+            [
+              "Không trùng",
+              "Không có case trùng nội dung",
+              "",
+              ""
+            ],
+            [
+              "Không trùng",
+              "Mỗi case kiểm 1 mục tiêu (atomic)",
+              "",
+              ""
+            ],
+            [
+              "Truy vết",
+              "Mỗi case map tới requirement / story (Req ID)",
+              "",
+              ""
+            ],
+            [
+              "Dữ liệu / Môi trường",
+              "Dữ liệu test đủ (hợp lệ / biên / không hợp lệ)",
+              "",
+              ""
+            ],
+            [
+              "Dữ liệu / Môi trường",
+              "Nêu rõ môi trường / điều kiện cần",
+              "",
+              ""
+            ]
+          ],
+          "note": "Đánh giá: Đạt / Không đạt / Cần sửa / N/A. Mọi mục 'Không đạt' hoặc 'Cần sửa' → ghi finding cho author sửa rồi review lại."
+        },
+        "aiPrompt": "Đóng vai reviewer, soát bộ test case dưới đây theo checklist 7 nhóm: Độ phủ, Đúng đắn, Rõ ràng, Nhất quán, Không trùng, Truy vết, Dữ liệu/Môi trường. Với mỗi vấn đề tìm thấy, trả về bảng: Case ID | Vấn đề | Nhóm | Mức độ | Đề xuất sửa. Chỉ rõ case nào trùng, mơ hồ, thiếu kết quả mong đợi; và requirement nào CHƯA có case.\n\n[DÁN BỘ TEST CASE + (nếu có) DANH SÁCH REQUIREMENT/RTM]"
+      }
+    ]
+  },
+  {
+    "slug": "kham-pha-nghiem-thu",
+    "title": "Khám phá & Nghiệm thu",
+    "emoji": "🧭",
+    "description": "Phiếu test khám phá theo session và biên bản nghiệm thu UAT.",
+    "templates": [
+      {
+        "slug": "exploratory-charter",
+        "title": "Exploratory Test Charter",
+        "whenToUse": "Test khám phá theo session có định hướng (time-box) — tìm lỗi ngoài test case có sẵn.",
+        "content": {
+          "kind": "text",
+          "body": "EXPLORATORY TEST CHARTER\n\nCharter:      Khám phá [khu vực] để tìm [loại vấn đề]\n              vd: \"Khám phá luồng thanh toán để tìm lỗi tính tiền / làm tròn\"\nKhu vực:      [Màn hình / chức năng]\nThời lượng:   [Time-box: 60 phút]\nNgười test:   [...]      Ngày: [...]\n\nÝ tưởng test (test ideas):\n  - ...\n  - ...\n\nGhi chú trong lúc test:\n  - ...\n\nBug / vấn đề tìm được:\n  - ...\n\nCâu hỏi cần làm rõ với BA/Dev:\n  - ..."
+        },
+        "aiPrompt": "Dựa trên mô tả chức năng dưới đây, gợi ý một Exploratory Test Charter: nêu charter (mục tiêu khám phá), time-box đề xuất, và danh sách 'test ideas' nên thử (tập trung vùng dễ có lỗi). KHÔNG viết test case chi tiết.\n\n[DÁN MÔ TẢ CHỨC NĂNG]"
+      },
+      {
+        "slug": "uat-signoff",
+        "title": "UAT Sign-off",
+        "whenToUse": "Nghiệm thu với khách hàng / bộ phận nghiệp vụ — chốt tiêu chí chấp nhận + ký xác nhận.",
+        "content": {
+          "kind": "table",
+          "context": "UAT SIGN-OFF — [Dự án] — Bên nghiệp vụ: [...]",
+          "columns": [
+            "#",
+            "Tiêu chí nghiệm thu",
+            "Kết quả mong đợi",
+            "Kết quả",
+            "Ghi chú"
+          ],
+          "rows": [
+            [
+              "1",
+              "Đăng nhập & phân quyền đúng vai trò",
+              "Đúng như mô tả nghiệp vụ",
+              "",
+              ""
+            ],
+            [
+              "2",
+              "Luồng nghiệp vụ chính chạy đầu-cuối",
+              "Hoàn tất không lỗi chặn",
+              "",
+              ""
+            ],
+            [
+              "3",
+              "Báo cáo/số liệu khớp dữ liệu thật",
+              "Khớp 100%",
+              "",
+              ""
+            ]
+          ],
+          "note": "Ký nghiệm thu: Bên test ____  ·  Bên nghiệp vụ ____  ·  Ngày ____. Kết luận: Chấp nhận / Chấp nhận có điều kiện / Từ chối."
+        },
+        "aiPrompt": "Từ requirement nghiệp vụ dưới đây, lập danh sách tiêu chí nghiệm thu UAT theo các cột: # | Tiêu chí nghiệm thu | Kết quả mong đợi | Kết quả (trống) | Ghi chú. Tập trung tiêu chí nghiệp vụ mà người dùng cuối quan tâm, không phải chi tiết kỹ thuật.\n\n[DÁN REQUIREMENT NGHIỆP VỤ]"
+      }
+    ]
+  }
+]
