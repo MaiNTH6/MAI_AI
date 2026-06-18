@@ -22,21 +22,21 @@
     "steps": [
       {
         "title": "Bước 1 — Cài Playwright cho Python",
-        "body": "Trong thư mục dự án test, chạy `pip install pytest-playwright` rồi `playwright install` (lệnh sau tải trình duyệt Chromium/Firefox/WebKit về). Đây cũng đúng là cách bài này đã cài để chạy các ví dụ bên dưới.\n[Chèn ảnh: terminal sau khi chạy pip install pytest-playwright và playwright install]"
+        "body": "Trong thư mục dự án test, chạy `pip install pytest-playwright` rồi `playwright install` (lệnh sau tải trình duyệt Chromium/Firefox/WebKit về). Đây cũng đúng là cách bài này đã cài để chạy các ví dụ bên dưới."
       },
       {
         "title": "Bước 2 — Mở Claude Code, cho nó xem trang cần test",
-        "body": "Mở Claude Code tại thư mục test. Chỉ cho nó địa chỉ trang cần kiểm (ví dụ https://maiqa.vercel.app) và mô tả các phần chính: tiêu đề lớn, menu, ô tìm kiếm. Mục tiêu là để AI nắm cấu trúc trang trước khi sinh code, nhờ vậy locator sát thực tế hơn.\n[Chèn ảnh: Claude Code trong terminal, đang đọc/được mô tả trang chủ MAI.tools]"
+        "body": "Mở Claude Code tại thư mục test. Chỉ cho nó địa chỉ trang cần kiểm (ví dụ https://maiqa.vercel.app) và mô tả các phần chính: tiêu đề lớn, menu, ô tìm kiếm. Mục tiêu là để AI nắm cấu trúc trang trước khi sinh code, nhờ vậy locator sát thực tế hơn."
       },
       {
         "title": "Bước 3 — Yêu cầu sinh test theo Page Object",
-        "body": "Lưu bộ test case của trang (mỗi case gồm Thao tác + Verify) thành một file, ví dụ `test-cases/trang-chu.md`. Rồi dùng Prompt 1 bên dưới để Claude Code đọc file đó và sinh file test: một class Page Object (gom locator + hành động của trang) và các hàm test (mỗi case một test, có assertion bằng expect). Tổ chức theo Page Object giúp khi giao diện đổi bạn chỉ sửa một chỗ. Bắt đầu với đúng một trang — trang chủ — cho dễ kiểm soát.\n[Chèn ảnh: file test-cases/trang-chu.md và file test sinh ra cạnh nhau]",
+        "body": "Lưu bộ test case của trang (mỗi case gồm Thao tác + Verify) thành một file, ví dụ `test-cases/trang-chu.md`. Rồi dùng Prompt 1 bên dưới để Claude Code đọc file đó và sinh file test: một class Page Object (gom locator + hành động của trang) và các hàm test (mỗi case một test, có assertion bằng expect). Tổ chức theo Page Object giúp khi giao diện đổi bạn chỉ sửa một chỗ. Bắt đầu với đúng một trang — trang chủ — cho dễ kiểm soát.",
         "linkSlug": "ai-viet-test-case-tu-user-story",
         "linkLabel": "Cần kịch bản test trước? Xem bài Viết test case từ user story"
       },
       {
         "title": "Bước 4 — Chạy pytest, đọc kết quả, sửa khi đỏ",
-        "body": "Chạy `pytest --base-url https://maiqa.vercel.app -q`. Lần đầu thường gặp lỗi 'strict mode' (locator khớp nhiều phần tử) hoặc selector chưa đúng — dán lỗi cho Claude Code để nó sửa (Prompt 2). Thêm `--headed` để xem trình duyệt chạy trực tiếp, hoặc bật trace khi cần soi từng bước.\n[Chèn ảnh: kết quả pytest hiện '3 passed']"
+        "body": "Chạy `pytest --base-url https://maiqa.vercel.app -q`. Lần đầu thường gặp lỗi 'strict mode' (locator khớp nhiều phần tử) hoặc selector chưa đúng — dán lỗi cho Claude Code để nó sửa (Prompt 2). Thêm `--headed` để xem trình duyệt chạy trực tiếp, hoặc bật trace khi cần soi từng bước."
       },
       {
         "title": "Bước 5 — Gộp data-driven & mở rộng, rồi mới tính CI",
@@ -866,7 +866,7 @@
     "steps": [
       {
         "title": "Clone repo về máy",
-        "body": "Cần cài git + có quyền truy cập repo. Mở terminal: git clone [URL_REPO] rồi cd vào thư mục repo. Nếu repo riêng tư, đăng nhập git (token/SSH) trước. [Chèn ảnh: terminal sau khi clone xong]"
+        "body": "Cần cài git + có quyền truy cập repo. Mở terminal: git clone [URL_REPO] rồi cd vào thư mục repo. Nếu repo riêng tư, đăng nhập git (token/SSH) trước."
       },
       {
         "title": "Mở Claude Code ngay trong thư mục repo",
@@ -973,7 +973,7 @@
     "steps": [
       {
         "title": "Cài Claude Code",
-        "body": "Cần Node.js (>=18). Mở terminal, chạy: npm install -g @anthropic-ai/claude-code. Sau đó gõ 'claude' để đăng nhập bằng tài khoản Anthropic (hoặc API key của công ty). Nếu ngại dòng lệnh, có thể dùng bản desktop app / tiện ích trong VS Code. [Chèn ảnh: terminal sau khi cài xong]"
+        "body": "Cần Node.js (>=18). Mở terminal, chạy: npm install -g @anthropic-ai/claude-code. Sau đó gõ 'claude' để đăng nhập bằng tài khoản Anthropic (hoặc API key của công ty). Nếu ngại dòng lệnh, có thể dùng bản desktop app / tiện ích trong VS Code."
       },
       {
         "title": "Gom tài liệu requirement vào 1 thư mục",

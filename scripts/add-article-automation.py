@@ -124,8 +124,7 @@ art = {
             "title": "Bước 1 — Cài Playwright cho Python",
             "body": (
                 "Trong thư mục dự án test, chạy `pip install pytest-playwright` rồi `playwright install` (lệnh sau tải trình duyệt "
-                "Chromium/Firefox/WebKit về). Đây cũng đúng là cách bài này đã cài để chạy các ví dụ bên dưới.\n"
-                "[Chèn ảnh: terminal sau khi chạy pip install pytest-playwright và playwright install]"
+                "Chromium/Firefox/WebKit về). Đây cũng đúng là cách bài này đã cài để chạy các ví dụ bên dưới."
             ),
         },
         {
@@ -133,8 +132,7 @@ art = {
             "body": (
                 "Mở Claude Code tại thư mục test. Chỉ cho nó địa chỉ trang cần kiểm (ví dụ https://maiqa.vercel.app) và mô tả các "
                 "phần chính: tiêu đề lớn, menu, ô tìm kiếm. Mục tiêu là để AI nắm cấu trúc trang trước khi sinh code, nhờ vậy "
-                "locator sát thực tế hơn.\n"
-                "[Chèn ảnh: Claude Code trong terminal, đang đọc/được mô tả trang chủ MAI.tools]"
+                "locator sát thực tế hơn."
             ),
         },
         {
@@ -143,8 +141,7 @@ art = {
                 "Lưu bộ test case của trang (mỗi case gồm Thao tác + Verify) thành một file, ví dụ `test-cases/trang-chu.md`. "
                 "Rồi dùng Prompt 1 bên dưới để Claude Code đọc file đó và sinh file test: một class Page Object (gom locator + "
                 "hành động của trang) và các hàm test (mỗi case một test, có assertion bằng expect). Tổ chức theo Page Object giúp "
-                "khi giao diện đổi bạn chỉ sửa một chỗ. Bắt đầu với đúng một trang — trang chủ — cho dễ kiểm soát.\n"
-                "[Chèn ảnh: file test-cases/trang-chu.md và file test sinh ra cạnh nhau]"
+                "khi giao diện đổi bạn chỉ sửa một chỗ. Bắt đầu với đúng một trang — trang chủ — cho dễ kiểm soát."
             ),
             "linkSlug": "ai-viet-test-case-tu-user-story",
             "linkLabel": "Cần kịch bản test trước? Xem bài Viết test case từ user story",
@@ -154,8 +151,7 @@ art = {
             "body": (
                 "Chạy `pytest --base-url https://maiqa.vercel.app -q`. Lần đầu thường gặp lỗi 'strict mode' (locator khớp nhiều phần "
                 "tử) hoặc selector chưa đúng — dán lỗi cho Claude Code để nó sửa (Prompt 2). Thêm `--headed` để xem trình duyệt chạy "
-                "trực tiếp, hoặc bật trace khi cần soi từng bước.\n"
-                "[Chèn ảnh: kết quả pytest hiện '3 passed']"
+                "trực tiếp, hoặc bật trace khi cần soi từng bước."
             ),
         },
         {
