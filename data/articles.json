@@ -1,114 +1,114 @@
 [
   {
     "slug": "ai-viet-script-automation-playwright-tu-test-case",
-    "title": "Manual sang automation: để Claude Code viết script Playwright từ bộ test case sẵn có",
-    "excerpt": "Bạn đã có bộ test case tốt nhưng mỗi lần dựng automation lại ngại vì phải viết code từ đầu? Bài này hướng dẫn để Claude Code đọc thẳng test case trong dự án rồi sinh ra script Playwright chạy được — kèm Page Object và assertion — cùng cách rà soát lại cho đúng thay vì tin AI hoàn toàn.",
+    "title": "Manual sang automation: để Claude Code viết test Playwright + Python, chạy thật trên web của bạn",
+    "excerpt": "Biết viết kịch bản test nhưng ngại dựng automation vì phải code? Bài này dùng Claude Code sinh test Playwright bằng Python cho một trang web thật — chạy `pytest` ra kết quả ngay — kèm Page Object, cách sửa khi test đỏ, và những chỗ bạn phải tự rà thay vì tin AI.",
     "category": "ai-qa",
     "readingTime": 11,
     "publishedAt": "2026-06-18",
     "cover": "🎭",
     "intro": {
-      "problem": "Nhiều tester thủ công viết test case rất chắc, nhưng đến bước chuyển sang automation thì khựng lại: cú pháp framework, selector, xử lý bất đồng bộ — toàn thứ nghe như việc của lập trình viên. Viết tay từng script vừa lâu vừa dễ nản, trong khi tin tuyển dụng ngày càng đòi 'biết automation'. Cái khó thường không nằm ở kịch bản test — cái đó bạn đã có — mà ở việc dịch kịch bản ấy sang code chạy được.",
-      "whatIs": "Claude Code là công cụ AI chạy ngay trong thư mục dự án (qua terminal hoặc trình soạn thảo), đọc được cả bộ test case lẫn mã nguồn rồi tạo ra file script automation thật trong repo — không phải dán qua lại trong khung chat. Playwright là framework kiểm thử web hiện đại, mã nguồn mở, đang được nhiều đội ở Việt Nam ưu tiên nhờ nhanh và ổn định.",
-      "whyThis": "So với việc dán từng đoạn vào ChatGPT, Claude Code thấy được toàn bộ ngữ cảnh: bộ test case, cấu trúc thư mục, trang cần kiểm — nên sinh nhiều file một lúc (Page Object + test) và sửa trực tiếp khi chạy lỗi. Bạn vẫn là người quyết định kiểm cái gì; AI chỉ rút ngắn quãng từ kịch bản sang code. Và như mọi việc với AI, script sinh ra là bản nháp tốt cần rà lại, không phải kết quả tin ngay."
+      "problem": "Nhiều tester thủ công nắm chắc kịch bản kiểm thử, nhưng đến bước automation thì khựng lại vì cú pháp, selector, xử lý bất đồng bộ — toàn thứ nghe như việc của lập trình viên. Viết tay từng test vừa lâu vừa dễ nản, trong khi tin tuyển dụng ngày càng đòi 'biết automation'. Cái khó thường không nằm ở kịch bản — cái đó bạn đã có — mà ở việc dịch nó sang code chạy được.",
+      "whatIs": "Claude Code là công cụ AI chạy trong thư mục dự án, đọc được cấu trúc trang rồi tạo ra file test thật trong repo. Playwright hỗ trợ Python; kết hợp với pytest (qua gói pytest-playwright) là cách viết test web gọn gàng cho người dùng Python. Bài này lấy chính trang MAI.tools làm ví dụ — một web thật đang chạy — nên mọi test đều chạy lại và kiểm chứng được.",
+      "whyThis": "So với việc dán từng đoạn vào ChatGPT, Claude Code thấy được cấu trúc trang thật nên đặt locator sát hơn, sinh nhiều file cùng lúc và sửa trực tiếp khi chạy lỗi. Toàn bộ ví dụ dưới đây đã được chạy thật bằng `pytest` trên maiqa.vercel.app — không phải code suông. Dù vậy, script AI sinh ra vẫn là bản nháp cần rà, không phải kết quả tin ngay."
     },
     "tldr": [
-      "Bạn vẫn là người thiết kế kịch bản test; AI chỉ chuyển kịch bản đó thành code.",
-      "Claude Code đọc file test case + trang web rồi sinh script Playwright (Page Object + assertion) chạy được.",
-      "Bắt đầu từ một luồng nhỏ (đăng nhập), chạy thử, rồi mở rộng — đừng sinh hàng loạt rồi tin ngay.",
-      "Phần việc còn lại của bạn: rà selector, xử lý chờ bất đồng bộ, kiểm assertion đúng nghĩa — chỗ AI hay sai.",
-      "Không cần giỏi code mới bắt đầu, nhưng cần đọc hiểu để sửa."
+      "Bạn vẫn là người quyết định kiểm gì; AI chỉ chuyển kịch bản thành code Python.",
+      "Claude Code đọc trang web rồi sinh test Playwright + pytest (Page Object + expect) chạy được.",
+      "Ví dụ trong bài đã chạy thật trên trang MAI.tools — pytest báo 'passed', không phải code suông.",
+      "Phần việc còn lại của bạn: rà selector cho hết mơ hồ, xử lý chờ, kiểm assertion đúng nghĩa.",
+      "Cài nhanh: `pip install pytest-playwright` rồi `playwright install`."
     ],
     "steps": [
       {
-        "title": "Bước 1 — Chuẩn bị: cài Playwright + đặt test case thành file trong repo",
-        "body": "Trong thư mục dự án, khởi tạo Playwright: chạy lệnh `npm init playwright@latest` (cần Node.js). Lệnh này tạo sẵn cấu trúc thư mục `tests/` và file cấu hình. Sau đó đặt bộ test case của bạn dưới dạng file văn bản trong repo — mỗi màn hình một file, ví dụ `test-cases/dang-nhap.md` — để Claude Code đọc trực tiếp.\n[Chèn ảnh: terminal sau khi chạy npm init playwright, hiện thư mục tests/ và playwright.config]",
+        "title": "Bước 1 — Cài Playwright cho Python",
+        "body": "Trong thư mục dự án test, chạy `pip install pytest-playwright` rồi `playwright install` (lệnh sau tải trình duyệt Chromium/Firefox/WebKit về). Đây cũng đúng là cách bài này đã cài để chạy các ví dụ bên dưới.\n[Chèn ảnh: terminal sau khi chạy pip install pytest-playwright và playwright install]"
+      },
+      {
+        "title": "Bước 2 — Mở Claude Code, cho nó xem trang cần test",
+        "body": "Mở Claude Code tại thư mục test. Chỉ cho nó địa chỉ trang cần kiểm (ví dụ https://maiqa.vercel.app) và mô tả các phần chính: tiêu đề lớn, menu, ô tìm kiếm. Mục tiêu là để AI nắm cấu trúc trang trước khi sinh code, nhờ vậy locator sát thực tế hơn.\n[Chèn ảnh: Claude Code trong terminal, đang đọc/được mô tả trang chủ MAI.tools]"
+      },
+      {
+        "title": "Bước 3 — Yêu cầu sinh test theo Page Object",
+        "body": "Lưu bộ test case của trang (mỗi case gồm Thao tác + Verify) thành một file, ví dụ `test-cases/trang-chu.md`. Rồi dùng Prompt 1 bên dưới để Claude Code đọc file đó và sinh file test: một class Page Object (gom locator + hành động của trang) và các hàm test (mỗi case một test, có assertion bằng expect). Tổ chức theo Page Object giúp khi giao diện đổi bạn chỉ sửa một chỗ. Bắt đầu với đúng một trang — trang chủ — cho dễ kiểm soát.\n[Chèn ảnh: file test-cases/trang-chu.md và file test sinh ra cạnh nhau]",
         "linkSlug": "ai-viet-test-case-tu-user-story",
-        "linkLabel": "Chưa có bộ test case? Xem bài Viết test case từ user story"
+        "linkLabel": "Cần kịch bản test trước? Xem bài Viết test case từ user story"
       },
       {
-        "title": "Bước 2 — Mở Claude Code trong thư mục dự án, cho nó đọc test case + trang cần kiểm",
-        "body": "Mở Claude Code ngay tại thư mục dự án. Chỉ cho nó file test case và nơi có giao diện đăng nhập (đường dẫn component, hoặc URL trang). Mục tiêu là để AI nắm được vừa kịch bản (cần kiểm gì) vừa ngữ cảnh trang (có những ô/nút nào) trước khi sinh code.\n[Chèn ảnh: Claude Code đang đọc file test-cases/dang-nhap.md trong terminal]"
+        "title": "Bước 4 — Chạy pytest, đọc kết quả, sửa khi đỏ",
+        "body": "Chạy `pytest --base-url https://maiqa.vercel.app -q`. Lần đầu thường gặp lỗi 'strict mode' (locator khớp nhiều phần tử) hoặc selector chưa đúng — dán lỗi cho Claude Code để nó sửa (Prompt 2). Thêm `--headed` để xem trình duyệt chạy trực tiếp, hoặc bật trace khi cần soi từng bước.\n[Chèn ảnh: kết quả pytest hiện '3 passed']"
       },
       {
-        "title": "Bước 3 — Yêu cầu sinh script cho một luồng, theo cấu trúc Page Object",
-        "body": "Dùng Prompt 1 bên dưới để AI sinh hai file: một Page Object (gom locator + hành động của trang) và một file test (mỗi case một test, có assertion). Tổ chức theo Page Object giúp khi giao diện đổi, bạn chỉ sửa một chỗ. Bắt đầu với đúng một luồng — đăng nhập — cho dễ kiểm soát.\n[Chèn ảnh: file pages/LoginPage.ts và tests/dang-nhap.spec.ts vừa được sinh ra]"
-      },
-      {
-        "title": "Bước 4 — Chạy thử, đọc lỗi, nhờ AI sửa selector / xử lý chờ",
-        "body": "Chạy `npx playwright test`. Lần đầu thường có test đỏ vì selector AI đoán chưa khớp trang thật, hoặc chờ chưa đúng. Đây là bước quan trọng nhất: dán thông báo lỗi cho Claude Code (Prompt 2) để nó đọc lỗi + code + trang rồi sửa. Xem thêm báo cáo `npx playwright show-report` để biết test dừng ở đâu.\n[Chèn ảnh: kết quả chạy playwright test, một test pass một test fail + trace]"
-      },
-      {
-        "title": "Bước 5 — Mở rộng dần & gộp dữ liệu, rồi mới tính đến CI",
-        "body": "Khi luồng đầu đã xanh và bạn đã rà đúng, mở rộng sang các luồng khác theo cùng cấu trúc. Với các case cùng dạng (nhiều bộ email/mật khẩu), gộp thành một test data-driven cho gọn (Prompt 3). Khi bộ test đủ ổn định mới đưa vào CI (GitHub Actions...) để chạy tự động — đừng vội tự động hóa khi test còn chập chờn."
+        "title": "Bước 5 — Gộp data-driven & mở rộng, rồi mới tính CI",
+        "body": "Khi trang đầu đã xanh và bạn đã rà đúng, gộp các case cùng dạng (nhiều từ khóa, nhiều bộ dữ liệu) thành một test data-driven bằng `@pytest.mark.parametrize` cho gọn (Prompt 3), rồi mở rộng sang trang khác. Khi bộ test đủ ổn định mới đưa vào CI (GitHub Actions...) — đừng vội tự động hóa khi test còn chập chờn."
       }
     ],
     "prompts": [
       {
-        "title": "Prompt 1 — Sinh script Playwright từ test case, theo Page Object",
-        "goal": "Biến một test case (luồng đăng nhập) thành script Playwright chạy được, tổ chức theo Page Object.",
-        "prompt": "Đọc file test case `test-cases/dang-nhap.md` và giao diện trang đăng nhập của dự án. Viết script Playwright (TypeScript) cho các case trong file, tổ chức theo Page Object Model:\n- Tạo `pages/LoginPage.ts`: gom locator và hành động (mở trang, nhập email/mật khẩu, bấm Đăng nhập).\n- Tạo `tests/dang-nhap.spec.ts`: mỗi case một test, gọi Page Object, có assertion rõ ràng.\nƯu tiên locator theo vai trò/nhãn/nội dung (getByRole, getByLabel, getByText), hạn chế CSS/XPath dễ vỡ. Dùng auto-wait của Playwright (expect(...).toBeVisible()) thay cho chờ thời gian cứng. Chỗ nào chưa chắc selector hay đường dẫn thì ghi TODO, đừng đoán bừa.",
-        "exampleInput": "test-cases/dang-nhap.md\nTC-01  Đăng nhập email + mật khẩu đúng → vào trang chủ (thấy menu \"Tài khoản\")\nTC-02  Mật khẩu sai → hiện thông báo \"Vui lòng kiểm tra lại thông tin\"\nTC-03  Bỏ trống email → nút \"Đăng nhập\" bị mờ (disabled)\n\nTrang đăng nhập có: ô Email, ô Mật khẩu, nút \"Đăng nhập\". Đường dẫn trang: /login",
-        "result": "Claude Code tạo 2 file (rút gọn):\n\n// pages/LoginPage.ts\nimport { Page, expect } from '@playwright/test';\nexport class LoginPage {\n  constructor(private page: Page) {}\n  async goto() { await this.page.goto('/login'); }\n  email()    { return this.page.getByLabel('Email'); }\n  password() { return this.page.getByLabel('Mật khẩu'); }\n  submit()   { return this.page.getByRole('button', { name: 'Đăng nhập' }); }\n  async login(email: string, pass: string) {\n    await this.email().fill(email);\n    await this.password().fill(pass);\n    await this.submit().click();\n  }\n}\n\n// tests/dang-nhap.spec.ts\nimport { test, expect } from '@playwright/test';\nimport { LoginPage } from '../pages/LoginPage';\n\ntest('TC-01 đăng nhập đúng → vào trang chủ', async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.login('user@mail.com', 'MatKhau@123');\n  await expect(page.getByRole('link', { name: 'Tài khoản' })).toBeVisible();\n});\n\ntest('TC-02 mật khẩu sai → báo lỗi', async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.login('user@mail.com', 'sai-mat-khau');\n  await expect(page.getByText('Vui lòng kiểm tra lại thông tin')).toBeVisible();\n});\n\ntest('TC-03 bỏ trống email → nút Đăng nhập mờ', async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.password().fill('MatKhau@123');\n  await expect(login.submit()).toBeDisabled();\n});\n\n// TODO: xác nhận lại nhãn ô input (\"Email\" / \"Mật khẩu\") và route \"/login\" với trang thật.",
-        "testerNote": "AI hay đoán selector chưa tồn tại (class/id tự nghĩ ra) nên lần chạy đầu dễ đỏ — phải chạy thật rồi sửa theo HTML thực tế. Locator theo vai trò/nhãn bền hơn CSS. Đừng tin test xanh ngay: kiểm xem assertion có thật sự kiểm đúng kết quả nghiệp vụ không (vào đúng trang chủ chứ không chỉ là 'có chữ nào đó')."
+        "title": "Prompt 1 — Sinh test Playwright (Python) theo Page Object",
+        "goal": "Biến bộ test case của trang chủ thành test Playwright + pytest chạy được, tổ chức theo Page Object.",
+        "prompt": "Đọc bộ test case cho trang chủ https://maiqa.vercel.app trong file `test-cases/trang-chu.md` (mỗi case gồm phần Thao tác và Verify), rồi viết test tự động bằng Playwright Python (pytest-playwright), tổ chức theo Page Object Model:\n- Một class TrangChu: gom locator và hành động (mở trang, lấy tiêu đề, bấm menu, nhập ô tìm kiếm rồi bấm Tìm).\n- Mỗi test case thành một hàm test_...: thực hiện đúng phần 'Thao tác', rồi dùng expect() để kiểm đúng phần 'Verify'.\nƯu tiên locator theo vai trò/nhãn/nội dung (get_by_role, get_by_label); nếu phần tử không có vai trò/nhãn phù hợp (ví dụ ô tìm kiếm) thì dùng thuộc tính ổn định như name, tránh selector phụ thuộc class/style dễ vỡ. Mở trang để xác nhận selector trước khi viết; chỗ nào chưa chắc thì ghi TODO, đừng đoán bừa. Dùng base URL qua --base-url để goto('/').",
+        "exampleInput": "test-cases/trang-chu.md — bộ test case cho trang chủ https://maiqa.vercel.app:\n\nTC-01 — Tiêu đề trang chủ hiển thị đúng\n  Thao tác: Mở trang chủ (\"/\").\n  Verify: Tiêu đề lớn (h1) chứa \"trợ lý đắc lực cho dân QA\".\n\nTC-02 — Menu \"AI cho QA\" điều hướng đúng\n  Thao tác: Ở trang chủ, bấm liên kết \"AI cho QA\" trên thanh menu.\n  Verify: Trình duyệt chuyển sang trang có địa chỉ kết thúc bằng /ai-qa.\n\nTC-03 — Tìm kiếm trả về kết quả\n  Thao tác: Nhập \"test case\" vào ô tìm kiếm (input name=\"q\") rồi bấm nút \"Tìm\".\n  Verify: Chuyển sang /tim-kiem, có tiêu đề \"Kết quả cho: ...\" và hiển thị ít nhất một liên kết bài viết (/bai-viet/...).",
+        "result": "Claude Code tạo file test (đã chạy thật, rút gọn):\n\n# test_mai_tools.py\nimport re\nfrom playwright.sync_api import Page, expect\n\nclass TrangChu:\n    def __init__(self, page: Page):\n        self.page = page\n    def mo(self):\n        self.page.goto(\"/\")\n    def tieu_de_hero(self):\n        return self.page.get_by_role(\"heading\", level=1)\n    def menu_ai_cho_qa(self):\n        return self.page.get_by_role(\"link\", name=\"AI cho QA\", exact=True)\n    def o_tim_kiem(self):\n        return self.page.locator('input[name=\"q\"]')\n    def nut_tim(self):\n        return self.page.get_by_role(\"button\", name=\"Tìm\")\n    def tim(self, tu_khoa: str):\n        self.o_tim_kiem().fill(tu_khoa)\n        self.nut_tim().click()\n\ndef test_trang_chu_hien_dung_hero(page: Page):\n    home = TrangChu(page); home.mo()\n    expect(home.tieu_de_hero()).to_contain_text(\"trợ lý đắc lực cho dân QA\")\n\ndef test_menu_ai_cho_qa_chuyen_dung_trang(page: Page):\n    home = TrangChu(page); home.mo()\n    home.menu_ai_cho_qa().click()\n    expect(page).to_have_url(re.compile(r\"/ai-qa$\"))\n\ndef test_tim_kiem_ra_ket_qua(page: Page):\n    home = TrangChu(page); home.mo()\n    home.tim(\"test case\")\n    expect(page).to_have_url(re.compile(r\"/tim-kiem\"))\n    expect(page.get_by_role(\"heading\", level=1)).to_contain_text(\"Kết quả cho\")\n    expect(page.locator('a[href^=\"/bai-viet/\"]').first).to_be_visible()\n\n# TODO: nếu test web nội bộ, xác nhận lại nhãn nút/menu và base URL với trang thật.\n\n--- Chạy thử (đã chạy thật) ---\n$ pytest --base-url https://maiqa.vercel.app -q\n3 passed in 10.64s",
+        "testerNote": "AI hay đoán selector chưa khớp trang thật nên lần chạy đầu dễ đỏ — phải chạy thật rồi sửa. Locator get_by_role bền hơn CSS. Đừng tin 'passed' ngay: kiểm xem assertion có thật sự khẳng định đúng kết quả (vào đúng trang, đúng nội dung) chứ không chỉ 'có phần tử nào đó'."
       },
       {
-        "title": "Prompt 2 — Sửa khi test chạy đỏ (đọc lỗi + sửa selector/chờ)",
-        "goal": "Khi script chạy lỗi, nhờ Claude Code đọc thông báo lỗi + trang thật để sửa selector hoặc cách chờ.",
-        "prompt": "Chạy `npx playwright test` ra lỗi dưới đây. Đọc lỗi + file `pages/LoginPage.ts` và giao diện trang thật, chỉ ra nguyên nhân và sửa:\n- Nếu locator không khớp: đổi sang locator theo vai trò/nhãn (getByRole/getByLabel) bền hơn.\n- Nếu do chờ: dùng auto-wait (expect(...).toBeVisible()) thay vì chờ thời gian cứng (waitForTimeout).\nGiải thích ngắn gọn vì sao sửa như vậy.",
-        "exampleInput": "Lỗi khi chạy npx playwright test:\nTimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log: waiting for locator('.btn-login')\n  tại tests/dang-nhap.spec.ts:8",
-        "result": "Claude Code chẩn đoán & sửa:\n\n- Nguyên nhân: locator '.btn-login' không khớp phần tử nào (nút không có class đó, hoặc class đã đổi). Test chờ đủ 30 giây rồi timeout.\n- Sửa locator — dùng vai trò + nhãn hiển thị thay cho class:\n    // thay:  await page.locator('.btn-login').click();\n    // bằng:  await page.getByRole('button', { name: 'Đăng nhập' }).click();\n- Sau khi submit, thay vì chờ cứng:\n    // bỏ:    await page.waitForTimeout(3000);\n    // dùng:  await expect(page.getByRole('link', { name: 'Tài khoản' })).toBeVisible();\n\nVì sao: getByRole bám theo nội dung hiển thị nên ít vỡ khi đổi CSS; expect(...).toBeVisible() tự chờ đến khi phần tử xuất hiện, không phải đoán thời gian — test vừa ổn định vừa nhanh hơn.",
-        "testerNote": "Lỗi timeout phần lớn do selector sai hoặc chờ chưa đúng, không phải do trang chậm — đừng vá bằng cách tăng thời gian chờ cứng (gây test chậm và chập chờn). Mỗi lần sửa, chạy lại để chắc chắn, đừng sửa hàng loạt rồi mới chạy."
+        "title": "Prompt 2 — Sửa khi pytest báo đỏ (lỗi strict mode / selector)",
+        "goal": "Khi test đỏ — nhất là lỗi strict mode do locator khớp nhiều phần tử — nhờ Claude Code đọc lỗi rồi sửa.",
+        "prompt": "Test Playwright của tôi chạy pytest bị lỗi. Hãy đọc thông báo lỗi ở dưới, chỉ ra nguyên nhân, sửa code cho đúng và giải thích ngắn gọn vì sao. Nếu lỗi do locator (sai hoặc khớp nhiều phần tử), ưu tiên locator rõ ràng, ổn định.\n\nLỗi pytest:\n[DÁN LỖI VÀO ĐÂY]",
+        "exampleInput": "Lỗi khi chạy pytest (danh sách rút gọn):\nplaywright._impl._errors.Error: Locator.click: Error: strict mode violation:\nget_by_role(\"link\", name=\"QA\") resolved to 13 elements:\n  1) <a href=\"/ai-qa\">AI cho QA</a>  aka get_by_role(\"link\", name=\"AI cho QA\", exact=True)\n  2) <a href=\"/ai-qa\">Bắt đầu với QA</a>\n  3) <a href=\"/ai-qa\">🧪 Hướng dẫn AI cho QA …</a>\n  … và 10 liên kết khác cũng chứa chữ \"QA\" (gồm các thẻ bài viết \"QA / Test\")",
+        "result": "Claude Code chẩn đoán & sửa:\n\n- Nguyên nhân: Playwright chạy ở \"strict mode\". Locator get_by_role(\"link\", name=\"QA\") khớp tới 13 liên kết — vì \"QA\" là khớp chuỗi con, xuất hiện ở cả menu, nút lẫn các thẻ bài viết \"QA / Test\" — nên nó báo lỗi thay vì bấm bừa.\n- Sửa: thu hẹp cho khớp đúng MỘT phần tử. Playwright còn gợi ý sẵn ngay trong lỗi (dòng \"aka ...\"):\n    # thay:  page.get_by_role(\"link\", name=\"QA\")\n    # bằng:  page.get_by_role(\"link\", name=\"AI cho QA\", exact=True)\n- Vì sao: thêm exact=True buộc khớp đúng nhãn \"AI cho QA\" thay vì mọi link chứa \"QA\". Strict mode chính là thứ ép locator phải rõ ràng, tránh test bấm nhầm phần tử rồi vẫn \"xanh\".",
+        "testerNote": "Lỗi strict mode rất hay gặp khi trang có nhiều liên kết/nút trùng chữ — đừng vá bằng .first cho qua chuyện, hãy đặt locator rõ ràng để không bấm nhầm. Mỗi lần sửa, chạy lại để chắc, đừng sửa hàng loạt rồi mới chạy."
       },
       {
-        "title": "Prompt 3 — Gộp nhiều case cùng dạng thành một test data-driven",
-        "goal": "Gom các case cùng dạng (nhiều bộ email/mật khẩu) thành một test lặp qua dữ liệu, đỡ lặp code.",
-        "prompt": "Từ file `test-cases/dang-nhap.md`, gom các case kiểm tra validate đăng nhập thành MỘT test Playwright data-driven: khai báo một mảng dữ liệu {tên, email, mật khẩu, kết quả mong đợi} rồi lặp để sinh test. Giữ nguyên Page Object đã có. Đặt tên mỗi test kèm dữ liệu để khi đỏ biết ngay dòng nào hỏng. Case đặc thù (không submit, ví dụ kiểm nút mờ) thì để riêng, đừng ép vào vòng lặp.",
-        "exampleInput": "test-cases/dang-nhap.md — các case validate đăng nhập:\n- email đúng + mật khẩu đúng → vào trang chủ\n- email đúng + mật khẩu sai → \"Vui lòng kiểm tra lại thông tin\"\n- email sai định dạng → \"Email không hợp lệ\"\n- bỏ trống email → nút Đăng nhập mờ",
-        "result": "// tests/dang-nhap.data.spec.ts (rút gọn)\nimport { test, expect } from '@playwright/test';\nimport { LoginPage } from '../pages/LoginPage';\n\nconst cases = [\n  { ten: 'đúng → vào trang chủ',     email: 'user@mail.com', pass: 'MatKhau@123', moDoi: 'home' },\n  { ten: 'mật khẩu sai → báo lỗi',  email: 'user@mail.com', pass: 'sai',         moDoi: 'Vui lòng kiểm tra lại thông tin' },\n  { ten: 'email sai định dạng',      email: 'abc',           pass: 'MatKhau@123', moDoi: 'Email không hợp lệ' },\n];\n\nfor (const c of cases) {\n  test(`Đăng nhập: ${c.ten}`, async ({ page }) => {\n    const login = new LoginPage(page);\n    await login.goto();\n    await login.login(c.email, c.pass);\n    if (c.moDoi === 'home') {\n      await expect(page.getByRole('link', { name: 'Tài khoản' })).toBeVisible();\n    } else {\n      await expect(page.getByText(c.moDoi)).toBeVisible();\n    }\n  });\n}\n\n// Case \"bỏ trống email → nút mờ\" giữ ở file spec riêng (không submit) — không gộp vào vòng lặp này.",
-        "testerNote": "Data-driven gọn nhưng khi một dòng đỏ phải biết ngay dòng nào — vì vậy đặt tên test kèm dữ liệu. Cẩn thận phân biệt dữ liệu giả để minh họa với dữ liệu thật của hệ thống; đừng để lộ tài khoản/dữ liệu nhạy cảm trong script."
+        "title": "Prompt 3 — Gộp nhiều trường hợp thành test data-driven (parametrize)",
+        "goal": "Test data-driven = viết MỘT test rồi cho nó chạy lại với nhiều bộ dữ liệu khác nhau, thay vì chép test thành nhiều bản gần giống nhau. Ở đây: gộp các trường hợp tìm kiếm (nhiều từ khóa) thành một test lặp qua danh sách từ khóa — đỡ lặp code, dễ thêm trường hợp mới.",
+        "prompt": "Gộp các trường hợp tìm kiếm cùng dạng thành MỘT test data-driven bằng @pytest.mark.parametrize, cho các từ khóa: \"test case\", \"requirement\", \"automation\". Với mỗi từ khóa: tìm trên trang chủ rồi khẳng định chuyển sang /tim-kiem và có ít nhất một kết quả bài viết. Giữ phong cách locator như các test trước. Đặt tên rõ để khi đỏ biết ngay từ khóa nào hỏng.",
+        "exampleInput": "Các từ khóa cần kiểm tìm kiếm trên MAI.tools: \"test case\", \"requirement\", \"automation\".\nKỳ vọng: mỗi từ khóa → chuyển sang /tim-kiem và hiện ít nhất một liên kết bài viết (/bai-viet/...).",
+        "result": "// test data-driven (đã chạy thật, rút gọn):\n\nimport re, pytest\nfrom playwright.sync_api import Page, expect\n\n@pytest.mark.parametrize(\"tu_khoa\", [\"test case\", \"requirement\", \"automation\"])\ndef test_tim_kiem_co_ket_qua(page: Page, tu_khoa):\n    page.goto(\"/\")\n    page.locator('input[name=\"q\"]').fill(tu_khoa)\n    page.get_by_role(\"button\", name=\"Tìm\").click()\n    expect(page).to_have_url(re.compile(r\"/tim-kiem\"))\n    expect(page.locator('a[href^=\"/bai-viet/\"]').first).to_be_visible()\n\n--- Chạy thử (đã chạy thật) cùng 3 test trước ---\n$ pytest --base-url https://maiqa.vercel.app -q\n6 passed in 7.06s\n# pytest tự gắn tham số vào tên test: test_tim_kiem_co_ket_qua[automation] ...",
+        "testerNote": "Data-driven gọn, nhưng khi một từ khóa đỏ phải biết ngay từ nào — pytest tự gắn tham số vào tên test (test_tim_kiem_co_ket_qua[automation]). Cẩn thận phân biệt dữ liệu minh họa với dữ liệu thật; đừng để lộ tài khoản/dữ liệu nhạy cảm trong script."
       }
     ],
     "pros": [
-      "Tận dụng bộ test case đã có — không viết script từ con số 0.",
-      "Sinh cả Page Object lẫn test cùng lúc, đúng cấu trúc dễ bảo trì.",
+      "Sinh test Python chạy được từ mô tả trang — không phải viết từ con số 0.",
+      "Có cả Page Object lẫn test, cấu trúc dễ bảo trì.",
       "Hạ rào 'phải giỏi code' cho người mới chuyển sang automation.",
       "Sửa lỗi nhanh vì AI đọc được cả thông báo lỗi lẫn mã nguồn."
     ],
     "cons": [
-      "Vẫn phải đọc hiểu code để rà và sửa — không phải 'bấm nút là xong'.",
-      "Cần môi trường (Node.js, Playwright) nên có bước cài đặt ban đầu.",
-      "Selector phụ thuộc HTML thật; nếu AI không thấy trang thì dễ đoán sai."
+      "Vẫn phải đọc hiểu Python để rà và sửa — không phải 'bấm nút là xong'.",
+      "Cần cài môi trường (Python, pytest-playwright, trình duyệt) ở bước đầu.",
+      "Locator phụ thuộc HTML thật; nếu AI không thấy trang thì dễ đoán sai."
     ],
     "bugs": [
-      "AI thường bịa selector chưa tồn tại (tự nghĩ ra class/id) khiến test đỏ ngay lần đầu — bắt buộc chạy thật rồi sửa theo trang.",
-      "Dễ lạm dụng chờ thời gian cứng (waitForTimeout) làm test chậm và chập chờn — nên ép dùng auto-wait của Playwright.",
-      "Assertion 'trông có vẻ đúng' nhưng kiểm sai thứ (chỉ kiểm có chữ, không kiểm đã chuyển trang) — người phải xác nhận assertion đúng nghĩa nghiệp vụ.",
-      "Test xanh chưa chắc đúng: AI có thể viết assertion yếu khiến test luôn pass — đừng tin mỗi màu xanh."
+      "AI thường đoán selector chưa khớp trang thật khiến test đỏ lần đầu — bắt buộc chạy thật rồi sửa.",
+      "Lỗi 'strict mode' khi locator khớp nhiều phần tử là dấu hiệu locator còn mơ hồ — cần thu hẹp, đừng .first cho qua.",
+      "Dễ lạm dụng chờ cứng (time.sleep / wait_for_timeout) làm test chậm và chập chờn — nên dùng expect auto-wait.",
+      "Test 'passed' chưa chắc đúng: assertion yếu có thể luôn xanh — người phải xác nhận assertion kiểm đúng nghiệp vụ."
     ],
     "faq": [
       {
-        "question": "Không biết code thì có làm theo được không?",
-        "answer": "Bắt đầu được, vì AI lo phần dựng code. Nhưng để rà và sửa khi test đỏ, bạn cần đọc hiểu cơ bản — nên học song song nền JavaScript/TypeScript và cú pháp Playwright. Càng hiểu, bạn càng kiểm soát được chất lượng thay vì phụ thuộc AI."
+        "question": "Không biết Python thì có làm theo được không?",
+        "answer": "Bắt đầu được, vì AI lo phần dựng code. Nhưng để rà và sửa khi test đỏ, bạn cần đọc hiểu Python cơ bản — nên học song song cú pháp Python và API của Playwright. Càng hiểu, bạn càng kiểm soát được chất lượng thay vì phụ thuộc AI."
       },
       {
-        "question": "Phải dùng Playwright à? Selenium hay Cypress được không?",
-        "answer": "Cách làm giống nhau — chỉ cần đổi tên framework trong prompt sang công cụ bạn đang dùng. Bài này lấy Playwright vì phổ biến, miễn phí và đang được nhiều đội ở Việt Nam ưu tiên."
+        "question": "Vì sao chọn Playwright + Python, không phải Selenium?",
+        "answer": "Cách làm giống nhau — chỉ cần đổi yêu cầu trong prompt sang công cụ bạn dùng. Bài chọn Playwright vì nhanh, có auto-wait giúp test đỡ chập chờn, và gói pytest-playwright cài rất gọn cho người dùng Python."
       },
       {
-        "question": "Script AI sinh ra dùng thẳng cho dự án thật được chưa?",
-        "answer": "Không nên. Hãy coi đó là bản nháp tốt: phải chạy thử, rà lại selector và assertion, kiểm dữ liệu test trước khi đưa vào bộ chạy chính thức. Test tự động mà sai thì còn nguy hơn không có, vì tạo cảm giác an toàn giả."
+        "question": "Test trong bài chạy ở đâu, tôi chạy lại được không?",
+        "answer": "Ví dụ demo trên trang công khai maiqa.vercel.app nên ai cũng chạy lại được (đã chạy thật: 3 và 6 test đều passed). Với web nội bộ, trỏ --base-url vào địa chỉ của bạn — có thể cần xử lý thêm bước đăng nhập."
       },
       {
         "question": "Có tốn phí không?",
-        "answer": "Playwright miễn phí (mã nguồn mở). Claude Code cần tài khoản để dùng — phần cài đặt và kết nối xem ở các bài hướng dẫn Claude Code khác trên trang."
+        "answer": "Playwright và pytest đều miễn phí (mã nguồn mở). Claude Code cần tài khoản để dùng — phần cài đặt và kết nối xem ở các bài hướng dẫn Claude Code khác trên trang."
       },
       {
-        "question": "Bộ test case dài thì xử lý thế nào?",
-        "answer": "Lưu mỗi màn hình thành một file riêng trong thư mục (ví dụ test-cases/), rồi để Claude Code đọc cả thư mục thay vì dán vào chat. Cách tổ chức này cũng giúp bước viết và review test case gọn hơn."
+        "question": "Script AI sinh ra dùng thẳng cho dự án thật được chưa?",
+        "answer": "Không nên. Hãy coi đó là bản nháp tốt: chạy thử, rà lại selector và assertion, kiểm dữ liệu test trước khi đưa vào bộ chạy chính thức. Test tự động mà sai còn nguy hơn không có, vì tạo cảm giác an toàn giả."
       }
     ],
-    "finalThought": "AI rút ngắn rất nhiều quãng đường từ test case sang script chạy được, nhưng tư duy chọn cái gì đáng kiểm, thiết kế kịch bản và xác nhận assertion đúng nghĩa nghiệp vụ vẫn là việc của con người. Hãy dùng AI để đi nhanh hơn, không phải để khỏi cần hiểu — vì test tự động viết sai sẽ âm thầm bỏ lọt lỗi mà không ai hay."
+    "finalThought": "AI rút ngắn rất nhiều quãng đường từ kịch bản sang test chạy được, nhưng chọn cái gì đáng kiểm và xác nhận assertion đúng nghĩa nghiệp vụ vẫn là việc của con người. Toàn bộ ví dụ ở đây đã chạy thật trên một trang web thực — bạn hoàn toàn có thể làm lại. Hãy dùng AI để đi nhanh hơn, không phải để khỏi cần hiểu, vì một test tự động viết sai sẽ âm thầm bỏ lọt lỗi mà không ai hay."
   },
   {
     "slug": "quy-trinh-review-test-case",
