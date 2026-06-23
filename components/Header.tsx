@@ -16,7 +16,7 @@ export function Header() {
             M
           </span>
           <span>
-            MAI<span className="text-brand-400">.tools</span>
+            maiqai<span className="text-brand-400">.com</span>
           </span>
         </Link>
 
