@@ -1,16 +1,367 @@
 [
   {
+    "slug": "claude-code-ket-noi-mysql-lab-qa",
+    "title": "Kết nối Claude Code với MySQL: QA truy vấn dữ liệu bằng câu hỏi thường thay vì SQL thuần",
+    "category": "db-testing",
+    "readingTime": 7,
+    "publishedAt": "2026-06-23",
+    "cover": "🔌",
+    "problem": "QA thường phải kiểm tra dữ liệu trong cơ sở dữ liệu để xác nhận test case — nhưng quy trình hiện tại khá rời rạc: mở MySQL Workbench, gõ câu SQL, sao chép kết quả, rồi quay lại màn hình đang làm việc để đối chiếu. Lặp đi lặp lại như vậy mỗi khi cần kiểm tra thêm một điều kiện.\n\nMCP (Model Context Protocol) là cơ chế cho phép Claude Code kết nối trực tiếp với các công cụ bên ngoài — trong đó có MySQL. Sau khi thiết lập, bạn chỉ cần hỏi Claude bằng tiếng Việt: 'Có đơn hàng nào trạng thái paid mà thiếu bản ghi thanh toán không?' — Claude tự dịch sang SQL, truy vấn DB, và trả kết quả ngay trong terminal.",
+    "tldr": [
+      "MCP là cầu nối giúp Claude Code giao tiếp trực tiếp với MySQL — không cần mở Workbench riêng.",
+      "Cần cài một package: @benborla29/mcp-server-mysql (chạy qua npx, không cần cài global).",
+      "Cấu hình một file JSON duy nhất: ~/.claude/settings.json — thêm host, port, user, password.",
+      "Sau khi restart Claude Code, hỏi bằng tiếng Việt là được — Claude hiểu schema và tự viết SQL."
+    ],
+    "tables": [
+      {
+        "title": "Làm việc với DB: cách cũ vs kết nối qua Claude",
+        "intro": "Sự khác biệt thực tế khi dùng Claude như một lớp truy vấn thay vì gõ SQL thủ công:",
+        "columns": [
+          "Tiêu chí",
+          "Cách cũ (Workbench)",
+          "Qua Claude Code + MCP"
+        ],
+        "rows": [
+          [
+            "Cách đặt câu hỏi",
+            "Viết SQL đúng cú pháp",
+            "Hỏi bằng tiếng Việt thường"
+          ],
+          [
+            "Biết tên bảng/cột?",
+            "Phải nhớ hoặc tra schema trước",
+            "Claude tự đọc schema khi kết nối"
+          ],
+          [
+            "Luồng làm việc",
+            "Switch qua lại giữa 2 cửa sổ",
+            "Hỏi thẳng trong terminal đang dùng"
+          ],
+          [
+            "Phân tích kết quả",
+            "Tự đọc và diễn giải số liệu",
+            "Claude giải thích luôn ý nghĩa"
+          ],
+          [
+            "Phù hợp với",
+            "Truy vấn phức tạp, cần kiểm soát",
+            "Kiểm tra nhanh, xác nhận test data"
+          ]
+        ],
+        "note": "⚠️ Claude qua MCP phù hợp để đọc dữ liệu (SELECT). Không nên dùng để thay đổi dữ liệu hoặc kết nối vào DB production."
+      }
+    ],
+    "stepsTitle": "🔌 Kết nối Claude Code với MySQL trong 3 bước",
+    "stepsSubtitle": "Từ lúc chưa có gì đến khi hỏi được Claude về dữ liệu trong DB — toàn bộ mất khoảng 10 phút.",
+    "steps": [
+      {
+        "title": "Bước 1 — Kiểm tra package bằng cách chạy thử",
+        "body": "Trước khi cấu hình, xác nhận package tồn tại và chạy được trên máy bằng cách mở CMD và chạy lệnh sau. npx sẽ tự tải về nếu chưa có:\n",
+        "code": "npx -y @benborla29/mcp-server-mysql",
+        "tip": "💡 Thấy cảnh báo 'npm warn deprecated node-domexception' là bình thường — đây chỉ là thông báo của một thư viện phụ, không ảnh hưởng đến hoạt động. Lệnh chạy xong và không báo lỗi đỏ là đạt."
+      },
+      {
+        "title": "Bước 2 — Thêm cấu hình vào settings.json",
+        "body": "Mở file cấu hình toàn cục của Claude Code tại đường dẫn: C:\\Users\\<tên_user>\\.claude\\settings.json\n\nThêm khối mcpServers vào trong file (giữ nguyên các nội dung đã có, chỉ thêm phần mới):",
+        "code": "{\n  \"mcpServers\": {\n    \"mysql-local\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@benborla29/mcp-server-mysql\"],\n      \"env\": {\n        \"MYSQL_HOST\": \"127.0.0.1\",\n        \"MYSQL_PORT\": \"3306\",\n        \"MYSQL_USER\": \"root\",\n        \"MYSQL_PASS\": \"\",\n        \"MYSQL_DB\": \"\"\n      }\n    }\n  }\n}",
+        "tip": "✅ MYSQL_PASS để trống nếu bạn dùng --initialize-insecure khi cài MySQL (không đặt mật khẩu root). MYSQL_DB để trống để Claude có thể truy cập tất cả database — hoặc điền tên DB cụ thể nếu muốn giới hạn phạm vi."
+      },
+      {
+        "title": "Bước 3 — Restart Claude Code và kiểm tra kết nối",
+        "body": "Đóng hẳn cửa sổ Claude Code desktop rồi mở lại — không chỉ đóng tab. Bước này bắt buộc vì Claude Code chỉ đọc cấu hình MCP một lần khi khởi động.\n\nSau khi mở lại, vào project và thử hỏi:",
+        "code": "Show all databases in MySQL\n\n-- hoặc hỏi cụ thể hơn:\nTrong database test_db có những bảng nào?",
+        "tip": "🎉 Nếu Claude liệt kê được danh sách database hoặc bảng — kết nối đã thành công. Nếu Claude báo không tìm thấy công cụ MySQL, kiểm tra lại file settings.json có đúng cú pháp JSON không (dùng jsonlint.com để kiểm tra nhanh)."
+      }
+    ],
+    "prompts": [
+      {
+        "goal": "Kiểm tra tính toàn vẹn dữ liệu sau khi chạy test",
+        "prompt": "Trong database [tên_db], kiểm tra bảng orders và bảng payments. Tìm các order có status = 'completed' nhưng không có bản ghi tương ứng trong bảng payments. Nếu có, liệt kê order_id và created_at của từng trường hợp.",
+        "exampleInput": "Database: shop_test\nBảng orders: order_id, user_id, status, created_at\nBảng payments: payment_id, order_id, amount, paid_at\nCó 3 order status='completed', trong đó 1 order không có payment record",
+        "result": "Tìm thấy 1 order không có bản ghi thanh toán:\n\norder_id: 1042\ncreated_at: 2026-06-20 14:32:11\n\nCâu SQL đã dùng:\nSELECT o.order_id, o.created_at\nFROM orders o\nLEFT JOIN payments p ON o.order_id = p.order_id\nWHERE o.status = 'completed' AND p.payment_id IS NULL;",
+        "testerNote": "Kết quả minh họa dựa trên cấu trúc bảng trong ví dụ đầu vào. Khi chạy thật, Claude sẽ tự đọc schema của DB bạn đang kết nối — tên cột có thể khác, nhưng logic LEFT JOIN vẫn áp dụng tương tự."
+      },
+      {
+        "goal": "Thống kê nhanh để xác nhận test data đã seed đúng",
+        "prompt": "Trong database [tên_db], đếm số lượng bản ghi trong bảng users theo trường role. Hiển thị dạng bảng: role | số lượng. Thêm một dòng tổng cộng ở cuối.",
+        "exampleInput": "Database: qa_testdata\nBảng users có cột: user_id, email, role, created_at\nDữ liệu đã seed: 10 admin, 50 member, 5 guest",
+        "result": "Kết quả thống kê bảng users:\n\nrole     | số lượng\n---------|----------\nadmin    | 10\nmember   | 50\nguest    | 5\n---------|----------\nTổng     | 65\n\nXác nhận: dữ liệu seed khớp với kế hoạch (10 admin, 50 member, 5 guest).",
+        "testerNote": "Prompt này phù hợp để kiểm tra nhanh sau bước seed data — đặc biệt hữu ích trước khi chạy regression test để đảm bảo môi trường đúng. Kết quả ví dụ là minh họa theo đầu vào mô tả."
+      },
+      {
+        "goal": "Tìm dữ liệu bất thường để viết bug report",
+        "prompt": "Trong bảng [tên_bảng], tìm các bản ghi có giá trị bất thường: email không chứa ký tự @, số điện thoại không đủ 10 chữ số, hoặc trường created_at ở tương lai (sau ngày hôm nay). Liệt kê ID và mô tả lỗi cụ thể cho từng bản ghi.",
+        "exampleInput": "Bảng: customers\nCột: customer_id, name, email, phone, created_at\nCó 2 bản ghi lỗi: email thiếu @, và 1 bản ghi created_at = 2027-01-01",
+        "result": "Tìm thấy 2 bản ghi có dữ liệu bất thường:\n\ncustomer_id: 88 — email 'nguyenvangmail.com' thiếu ký tự @\ncustomer_id: 201 — created_at '2027-01-01' là ngày trong tương lai\n\nGợi ý: Đây có thể là lỗi validation ở tầng backend — cần kiểm tra lại rule kiểm tra đầu vào trước khi lưu vào DB.",
+        "testerNote": "Kết quả ví dụ là minh họa theo dữ liệu mô tả trong đầu vào. Claude sẽ tự sinh SQL phù hợp với cấu trúc bảng thực của bạn — kết quả thực tế phụ thuộc vào dữ liệu trong DB đang kết nối."
+      }
+    ],
+    "finalThought": "Kết nối Claude Code với MySQL không thay thế Workbench hay kỹ năng SQL — nó thêm một lớp tiện lợi cho những tác vụ kiểm tra nhanh trong quá trình test. Khi cần xác nhận một điều kiện dữ liệu cụ thể mà không muốn gián đoạn luồng làm việc, hỏi thẳng trong terminal nhanh hơn switch cửa sổ. Còn với những truy vấn phức tạp quan trọng, vẫn nên kiểm tra lại SQL được sinh ra trước khi tin vào kết quả."
+  },
+  {
+    "slug": "setup-mysql-lab-cho-qa",
+    "title": "Dựng phòng Lab MySQL cho QA: vượt lỗi Permission Denied ngay từ bước đầu",
+    "category": "db-testing",
+    "readingTime": 6,
+    "publishedAt": "2026-06-23",
+    "cover": "🔧",
+    "tldr": [
+      "Cài MySQL cần 2 thứ riêng biệt: Server (bộ lõi xử lý dữ liệu) + Workbench (giao diện). Chỉ cài Workbench là báo lỗi kết nối ngay.",
+      "Dùng gói Zip Bundle: tìm file nặng nhất (~400–500MB) — đó mới là Server. Giải nén vào C:\\Program Files\\MySQL\\.",
+      "CMD phải mở bằng Run as administrator — thiếu bước này sẽ gặp ngay lỗi Permission Denied hoặc Install of the Service Denied.",
+      "Chạy 4 lệnh đúng thứ tự: cd → initialize-insecure → install → net start."
+    ],
+    "tables": [
+      {
+        "title": "MySQL Server vs MySQL Workbench — khác nhau chỗ nào?",
+        "intro": "Trước khi cài, cần phân biệt rõ hai thành phần này — cài thiếu một là lỗi ngay:",
+        "columns": [
+          "Thành phần",
+          "Vai trò",
+          "Nếu thiếu"
+        ],
+        "rows": [
+          [
+            "MySQL Server",
+            "Bộ lõi chạy ngầm: lưu trữ và xử lý dữ liệu thật",
+            "Workbench không kết nối được — báo lỗi 127.0.0.1:3306"
+          ],
+          [
+            "MySQL Workbench",
+            "Giao diện đồ họa: nơi gõ lệnh và xem kết quả",
+            "Vẫn dùng được — thay bằng DBeaver hoặc dòng lệnh"
+          ]
+        ],
+        "note": "⚠️ Bẫy phổ biến: chỉ cài Workbench mà quên cài Server → nhận ngay lỗi 'Failed to Connect to MySQL at 127.0.0.1:3306'."
+      }
+    ],
+    "stepsTitle": "🔧 Dựng phòng Lab trong 3 bước",
+    "stepsSubtitle": "Từ file zip đến kết nối thành công — làm đúng thứ tự sẽ tránh được phần lớn lỗi thường gặp.",
+    "steps": [
+      {
+        "title": "Bước 1 — Tải MySQL Server và Workbench",
+        "body": "Cần tải 2 gói riêng biệt:\n\n① MySQL Server — truy cập: https://dev.mysql.com/downloads/mysql/\nChọn hệ điều hành Windows, chọn loại gói ZIP Archive (không phải MSI Installer). File nặng khoảng 400–500MB.\n\n② MySQL Workbench — truy cập: https://dev.mysql.com/downloads/workbench/\nChọn Windows, tải file MSI về cài bình thường như phần mềm thông thường.",
+        "tip": "💡 Cả hai trang đều yêu cầu đăng nhập Oracle — bấm 'No thanks, just start my download' ở dưới để bỏ qua đăng ký."
+      },
+      {
+        "title": "Bước 2 — Giải nén và đặt đúng thư mục",
+        "body": "Trong gói Bundle có nhiều file zip. Tìm file nặng nhất (khoảng 400–500MB) tên dạng mysql-commercial-[phiên_bản]-winx64.zip — đây mới là Server, các file còn lại là driver phụ.\n\nGiải nén ra, đổi tên thư mục thành 'MySQL Server 9.7' (theo đúng phiên bản của bạn), rồi di chuyển vào đường dẫn hệ thống:",
+        "code": "C:\\Program Files\\MySQL\\MySQL Server 9.7\\",
+        "tip": "✅ Kiểm tra: mở thư mục vừa di chuyển và đảm bảo thấy thư mục bin bên trong. Thấy bin là bước này đã đúng."
+      },
+      {
+        "title": "Bước 3 — Kích hoạt Server bằng CMD quyền Administrator",
+        "body": "Đây là bước 99% người dùng bị lỗi vì mở CMD thường thay vì mở bằng quyền Administrator.\n\nCách mở đúng: nhấn phím Windows → gõ cmd → click chuột phải vào Command Prompt → chọn Run as administrator. Dòng đầu cửa sổ CMD phải là C:\\Windows\\system32> mới đúng.\n\nSau đó chạy lần lượt 4 lệnh sau:",
+        "code": "REM 1. Di chuyển vào thư mục bin\ncd \"C:\\Program Files\\MySQL\\MySQL Server 9.7\\bin\"\n\nREM 2. Khởi tạo dữ liệu, xóa trắng mật khẩu root (tiện cho môi trường học)\nmysqld --initialize-insecure\n\nREM 3. Đăng ký dịch vụ vào Windows\nmysqld --install MySQL97\n\nREM 4. Khởi động dịch vụ\nnet start MySQL97",
+        "tip": "🎉 Nếu thấy 'The MySQL97 service was started successfully.' — bộ lõi đã chạy thành công."
+      },
+      {
+        "title": "Bước 4 — Kết nối Workbench vào Server",
+        "body": "Mở MySQL Workbench, bấm dấu cộng (+) cạnh chữ MySQL Connections để tạo kết nối mới. Điền thông tin:\n\n• Connection Name: Local_Test\n• Hostname: 127.0.0.1\n• Port: 3306\n• Username: root\n\nBấm Test Connection. Khi hệ thống hỏi mật khẩu, để trống hoàn toàn và bấm OK — vì bước 2 dùng --initialize-insecure nên root chưa có mật khẩu.",
+        "tip": "💡 Sau khi vào được: đặt mật khẩu cho root ngay để bảo mật môi trường lab của bạn."
+      }
+    ],
+    "finalThought": "Tự tay xử lý lỗi Permission và cấu hình dịch vụ Windows không chỉ giúp bạn có phòng Lab để học SQL — nó còn rèn tư duy xử lý sự cố (troubleshooting), kỹ năng sống còn khi điều tra lỗi hệ thống thực tế sau này."
+  },
+  {
+    "slug": "sql-thu-tu-chay-khac-thu-tu-viet",
+    "title": "Thứ tự viết SQL khác thứ tự thực thi — kiến thức nền cho QA",
+    "excerpt": "Bạn hay nghĩ SQL thực thi từ SELECT xuống. Thực ra FROM được thực thi trước. Hiểu thứ tự này, bạn đọc và viết câu lệnh không còn bị loạn.",
+    "category": "db-testing",
+    "readingTime": 5,
+    "publishedAt": "2026-06-21",
+    "cover": "🔀",
+    "tldr": [
+      "Thứ tự VIẾT (SELECT đầu) khác thứ tự CHẠY (FROM đầu, SELECT gần cuối).",
+      "Máy chạy: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY.",
+      "Mẹo: đọc một câu SQL hãy bắt đầu từ FROM, đừng đọc từ SELECT."
+    ],
+    "tables": [
+      {
+        "title": "Thứ tự VIẾT so với thứ tự CHẠY",
+        "intro": "Cùng một câu lệnh, đây là khác biệt giữa thứ tự bạn gõ và thứ tự máy thực thi:",
+        "columns": [
+          "Thứ tự bạn VIẾT",
+          "Thứ tự SQL CHẠY",
+          "Ý nghĩa (dễ hiểu)"
+        ],
+        "rows": [
+          [
+            "1. SELECT",
+            "1. FROM / JOIN",
+            "Lấy dữ liệu từ bảng nào, gộp lại."
+          ],
+          [
+            "2. FROM / JOIN",
+            "2. WHERE",
+            "Lọc bỏ những dòng không cần."
+          ],
+          [
+            "3. WHERE",
+            "3. GROUP BY",
+            "Gom các dòng thành nhóm."
+          ],
+          [
+            "4. GROUP BY",
+            "4. HAVING",
+            "Lọc tiếp trên các nhóm vừa gom."
+          ],
+          [
+            "5. HAVING",
+            "5. SELECT",
+            "Chọn cột để hiển thị ra."
+          ],
+          [
+            "6. ORDER BY",
+            "6. ORDER BY",
+            "Sắp xếp kết quả."
+          ]
+        ],
+        "note": "💡 Mẹo nhớ: đọc và viết câu SQL hãy bắt đầu từ FROM — bạn sẽ không bị loạn khi gặp câu phức tạp."
+      }
+    ],
+    "stepsTitle": "🧠 Vận dụng tư duy: 2 ví dụ áp dụng ngay",
+    "stepsSubtitle": "Áp thứ tự thực thi vào hai tình huống hay gặp.",
+    "steps": [
+      {
+        "title": "Ví dụ cơ bản — câu SQL 4 bước",
+        "body": "Câu SQL đơn giản nhất chỉ có 4 thành phần. Dù bạn gõ SELECT lên đầu, máy không đọc theo thứ tự đó — hãy thử đọc theo số trong ngoặc bên dưới:",
+        "code": "SELECT name, email       -- (3) chọn cột hiển thị\nFROM customers           -- (1) lấy dữ liệu gốc\nWHERE city = 'HCM'       -- (2) lọc dữ liệu\nORDER BY name;           -- (4) sắp xếp kết quả"
+      },
+      {
+        "title": "Ví dụ nâng cao — câu SQL 6 bước",
+        "body": "Khi câu lệnh có thêm GROUP BY và HAVING, thứ tự đọc dài hơn — nhưng quy tắc vẫn như cũ: luôn bắt đầu từ FROM, không bao giờ từ SELECT:",
+        "code": "SELECT user_id, COUNT(*) AS so_don   -- (5) chọn cột hiển thị\nFROM orders                          -- (1) lấy dữ liệu gốc\nWHERE status = 'paid'                -- (2) lọc dữ liệu thô\nGROUP BY user_id                     -- (3) gom nhóm\nHAVING COUNT(*) > 5                  -- (4) lọc nhóm\nORDER BY so_don DESC;                -- (6) sắp xếp",
+        "tip": "💡 Mẹo đọc nhanh cho QA: Khi gặp một câu SQL dài, hãy dùng \"Chiến thuật Đọc Ngược\": lướt mắt xuống tìm FROM trước để biết gốc dữ liệu nằm ở đâu, sau đó dò ngược lên các điều kiện bên trên."
+      }
+    ],
+    "references": [
+      {
+        "label": "Kiến thức nền tảng về hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) và chuẩn ANSI SQL."
+      },
+      {
+        "label": "Microsoft Learn — SELECT (Transact-SQL): mục \"Logical processing order of the SELECT statement\".",
+        "url": "https://learn.microsoft.com/en-us/sql/t-sql/queries/select-transact-sql"
+      },
+      {
+        "label": "PostgreSQL Documentation — SELECT (mô tả thứ tự xử lý truy vấn).",
+        "url": "https://www.postgresql.org/docs/current/sql-select.html"
+      },
+      {
+        "label": "GeeksforGeeks — Order of Execution of SQL Queries.",
+        "url": "https://www.geeksforgeeks.org/order-of-execution-of-sql-queries/"
+      }
+    ],
+    "finalThought": "Mọi người thường nghĩ SELECT chạy đầu tiên, nhưng theo chuẩn ANSI SQL, FROM mới là bước khởi đầu. Nhớ một điều đơn giản này, bạn sẽ đọc và viết câu SQL rõ ràng hơn hẳn."
+  },
+  {
+    "slug": "kiem-chung-output-ai-cho-qa",
+    "title": "AI sinh test xong rồi — làm sao biết nó SAI? Sổ tay kiểm chứng output AI cho QA",
+    "category": "ai-qa",
+    "readingTime": 10,
+    "publishedAt": "2026-06-19",
+    "cover": "🔍",
+    "intro": {
+      "problem": "Năm 2026, AI làm gần như mọi việc bàn giấy của QA: sinh test case, viết script, bóc tách requirement, dựng dữ liệu. Vấn đề mới không còn là \"làm sao tạo ra\", mà là \"làm sao biết cái nó tạo ra có đúng không\". Kiểm chứng output AI không phải là chống AI hay làm lại từ đầu — mà là soi kết quả một cách có hệ thống trước khi dùng: dữ kiện lấy từ đâu, chỗ nào AI tự suy diễn, assertion có thật sự kiểm đúng thứ cần kiểm. Đây là phần khó thay thế nhất của nghề tester thời AI — biết output sai ở đâu và quyết định giữ/sửa/bỏ đòi hỏi kinh nghiệm mà AI không tự trao cho bạn."
+    },
+    "tldr": [
+      "\"Trông đúng\" không phải \"đúng\": output AI mượt nên dễ tin theo, nhất là test \"xanh\" giả.",
+      "AI hay sai theo vài kiểu cố định — biết trước thì bắt rất nhanh.",
+      "Quy tắc số 1: mọi dữ kiện trong output phải truy được về đầu vào; không truy được = nghi bịa.",
+      "Test xanh chưa đủ: thử làm hỏng app / đổi dữ liệu xem test có đỏ không.",
+      "Có thể nhờ chính AI soi lại output, nhưng quyết định cuối vẫn là người."
+    ],
+    "steps": [
+      {
+        "title": "Kiểu 1 — Bịa dữ kiện (số, ID, nguồn không có trong đầu vào)",
+        "body": "AI hay 'điền vào chỗ trống' bằng dữ kiện nghe hợp lý nhưng không có trong đầu vào: một con số ngưỡng, một mã lỗi, một trích dẫn tài liệu. Cách bắt: truy nguồn từng dữ kiện — mỗi số / ID / quy tắc trong output phải chỉ ra được nó lấy từ dòng nào của đầu vào. Không truy được = nghi bịa, đánh dấu 'cần xác nhận' rồi hỏi lại BA/dev."
+      },
+      {
+        "title": "Kiểu 2 — Kết quả mong đợi mơ hồ hoặc sai",
+        "body": "Những câu kiểu 'hệ thống hoạt động đúng', 'hiển thị phù hợp' nghe xuôi tai nhưng không kiểm được. Cách bắt: với mỗi case, hỏi 'làm sao biết nó đúng?'. Nếu không trả lời được bằng một điều quan sát được (thấy chữ X, chuyển sang trang Y, trả về mã Z) thì kết quả mong đợi đó vô dụng. Luôn đối chiếu lại requirement gốc.",
+        "linkSlug": "ai-viet-test-case-tu-user-story",
+        "linkLabel": "Xem cách viết kết quả mong đợi rõ ràng"
+      },
+      {
+        "title": "Kiểu 3 — Sót tổ hợp, giá trị biên, nhánh âm tính",
+        "body": "AI liệt kê happy path rất tốt, nhưng hay sót: tổ hợp nhiều điều kiện cùng lúc, giá trị biên (ngay trên/dưới ngưỡng), trường hợp âm tính hiếm. Cách bắt: soi lại bằng checklist kỹ thuật thiết kế test (phân vùng tương đương, giá trị biên, bảng quyết định) và hỏi thẳng 'còn thiếu dạng nào'. Đừng coi danh sách AI đưa ra là đã đủ.",
+        "linkSlug": "quy-trinh-review-test-case",
+        "linkLabel": "Checklist 7 nhóm soát không lọt case"
+      },
+      {
+        "title": "Kiểu 4 — Test \"xanh\" giả (assertion yếu, luôn pass)",
+        "body": "Nguy hiểm nhất với automation: test chạy qua hết nhưng assertion quá lỏng (chỉ kiểm 'có phần tử nào đó', không kiểm đúng nội dung) nên không bao giờ đỏ — vô dụng mà tưởng an toàn. Cách bắt: cố tình làm sai rồi xem test có đỏ không — đổi một chữ trong app, bỏ một bước, cho dữ liệu sai. Test không đỏ khi đáng lẽ phải đỏ = test rởm, phải siết assertion."
+      },
+      {
+        "title": "Kiểu 5 — Gộp nguồn cũ/mới thành câu trả lời mượt nhưng sai",
+        "body": "Khi đọc nhiều trang tài liệu hoặc nhiều file code, AI hay trộn thông tin từ phiên bản cũ và mới thành một câu trả lời trôi chảy nhưng lệch thực tế. Cách bắt: với mỗi kết luận quan trọng, hỏi 'lấy từ trang/file nào' rồi mở đúng nguồn đó đối chiếu. Ưu tiên nguồn có ghi ngày tháng / phiên bản.",
+        "linkSlug": "claude-code-ket-noi-confluence-doc-tai-lieu-du-an",
+        "linkLabel": "Xem cách bắt mâu thuẫn giữa các trang tài liệu"
+      },
+      {
+        "title": "Kiểu 6 — Tự tin sai ở vùng code phức tạp",
+        "body": "Với code bất đồng bộ, hàng đợi, race condition, múi giờ, AI hay trace sai nhưng vẫn trình bày chắc nịch. Cách bắt: ở những vùng rủi ro cao (thanh toán, xác thực, đồng bộ dữ liệu), không dùng output AI làm kết luận — coi nó là giả thuyết, tự đọc code và hỏi dev để xác nhận trước khi đưa vào test plan.",
+        "linkSlug": "claude-code-doc-codebase-tu-git-hieu-he-thong",
+        "linkLabel": "Xem cách trace luồng nghiệp vụ qua code"
+      }
+    ],
+    "prompts": [
+      {
+        "title": "Prompt 1 — Tách dữ kiện có căn cứ với dữ kiện AI tự thêm",
+        "goal": "Nhờ AI tự soi lại output của nó: dữ kiện nào lấy từ đầu vào, cái nào nó tự suy diễn — để bạn biết chỗ nào cần xác minh.",
+        "prompt": "Dưới đây là đầu vào và một output bạn vừa tạo. Hãy rà lại chính output đó và lập bảng: Dữ kiện | Lấy từ đâu trong đầu vào (trích dòng) | Hay do bạn tự suy diễn/giả định. Đánh dấu rõ những dữ kiện KHÔNG có trong đầu vào để tôi xác minh. Không bào chữa, không thêm dữ kiện mới.\n\n[DÁN ĐẦU VÀO + OUTPUT CẦN SOI VÀO ĐÂY]",
+        "exampleInput": "Đầu vào (requirement): \"Khóa tài khoản sau 5 lần đăng nhập sai.\"\nOutput AI cần soi (1 test case): \"Sai mật khẩu 5 lần → khóa tài khoản 30 phút, gửi email cảnh báo.\"",
+        "result": "AI trả về (soi đầu vào ở trên) — 2/3 dữ kiện là AI tự thêm, cần xác nhận với BA. Bảng truy nguồn:",
+        "resultGroups": [
+          {
+            "group": "",
+            "columns": [
+              "Dữ kiện trong output",
+              "Lấy từ đâu",
+              "Ghi chú"
+            ],
+            "rows": [
+              [
+                "Khóa sau 5 lần sai",
+                "requirement (có)",
+                "OK"
+              ],
+              [
+                "Khóa 30 phút",
+                "KHÔNG có trong đầu vào",
+                "⚠️ AI tự thêm — cần xác nhận"
+              ],
+              [
+                "Gửi email cảnh báo",
+                "KHÔNG có trong đầu vào",
+                "⚠️ AI tự thêm — cần xác nhận"
+              ]
+            ]
+          }
+        ],
+        "testerNote": "Cách nhanh để lộ chỗ AI 'điền vào chỗ trống'. Nhưng AI tự soi cũng có thể bỏ sót hoặc bào chữa cho lỗi của chính nó — vẫn nên tự đối chiếu lại đầu vào, đừng phó thác hoàn toàn việc kiểm cho đúng cái cần kiểm."
+      },
+      {
+        "title": "Prompt 2 — Bắt AI chỉ ra chỗ dễ sai nhất để tập trung kiểm",
+        "goal": "Nhờ AI tự chỉ những chỗ trong output dễ sai/rủi ro nhất + vì sao, để bạn dồn sức kiểm đúng chỗ thay vì rà đều.",
+        "prompt": "Dưới đây là một output bạn vừa tạo. Giả sử bạn là một QA khó tính review lại nó: chỉ ra 3-5 chỗ dễ sai hoặc rủi ro nhất, mỗi chỗ nói rõ vì sao đáng nghi và tôi nên kiểm gì để xác nhận. Xếp theo mức rủi ro giảm dần.\n\n[DÁN OUTPUT CẦN SOI VÀO ĐÂY]",
+        "exampleInput": "Output cần soi: file test Playwright cho màn đăng nhập (Page Object + 3 test), dùng get_by_label(\"Mật khẩu\"), get_by_role(\"link\", name=\"Tài khoản\"), mật khẩu mẫu \"MatKhau@123\".",
+        "result": "AI trả về (soi file test đăng nhập ở trên):\n\n1) (Cao) Selector get_by_label(\"Mật khẩu\") — nếu ô nhập không gắn <label> đúng chữ này, test sẽ đỏ ngay. Kiểm: mở trang xem nhãn thật của ô mật khẩu.\n2) (Cao) Assertion TC-01 chỉ kiểm \"thấy link Tài khoản\" — chưa chắc đã thật sự vào trang chủ (link đó có thể hiện ở nơi khác). Kiểm: xác nhận thêm URL hoặc một nội dung đặc trưng của trang chủ.\n3) (Trung bình) Mật khẩu mẫu \"MatKhau@123\" — có thể không thỏa policy thật của hệ thống. Kiểm: đối chiếu quy tắc mật khẩu trong requirement.\n\n→ Tập trung kiểm 2 chỗ \"Cao\" trước; chỗ \"Trung bình\" xử lý sau.",
+        "testerNote": "Prompt này giúp khoanh vùng nhưng không thay việc kiểm — AI chỉ đoán chỗ rủi ro dựa trên văn bản, không chạy thật. Dùng nó để biết nên kiểm ĐÂU trước, rồi tự kiểm / chạy thật để biết ĐÚNG hay SAI."
+      }
+    ],
+    "finalThought": "Thời AI làm được hết, người tester giỏi không phải người biết nhiều prompt — mà là người biết khi nào output sai và đủ bản lĩnh không tin theo. AI tạo ra trong vài giây; còn 'có dùng được không' vẫn là chữ ký của bạn. Đó là phần việc không bàn giao cho máy được."
+  },
+  {
     "slug": "ai-viet-script-automation-playwright-tu-test-case",
     "title": "Manual sang automation: để Claude Code viết test Playwright + Python, chạy thật trên web của bạn",
-    "excerpt": "Biết viết kịch bản test nhưng ngại dựng automation vì phải code? Bài này dùng Claude Code sinh test Playwright bằng Python cho một trang web thật — chạy `pytest` ra kết quả ngay — kèm Page Object, cách sửa khi test đỏ, và những chỗ bạn phải tự rà thay vì tin AI.",
     "category": "ai-qa",
     "readingTime": 11,
     "publishedAt": "2026-06-18",
     "cover": "🎭",
     "intro": {
-      "problem": "Nhiều tester thủ công nắm chắc kịch bản kiểm thử, nhưng đến bước automation thì khựng lại vì cú pháp, selector, xử lý bất đồng bộ — toàn thứ nghe như việc của lập trình viên. Viết tay từng test vừa lâu vừa dễ nản, trong khi tin tuyển dụng ngày càng đòi 'biết automation'. Cái khó thường không nằm ở kịch bản — cái đó bạn đã có — mà ở việc dịch nó sang code chạy được.",
-      "whatIs": "Claude Code là công cụ AI chạy trong thư mục dự án, đọc được cấu trúc trang rồi tạo ra file test thật trong repo. Playwright hỗ trợ Python; kết hợp với pytest (qua gói pytest-playwright) là cách viết test web gọn gàng cho người dùng Python. Bài này lấy chính trang MAI.tools làm ví dụ — một web thật đang chạy — nên mọi test đều chạy lại và kiểm chứng được.",
-      "whyThis": "So với việc dán từng đoạn vào ChatGPT, Claude Code thấy được cấu trúc trang thật nên đặt locator sát hơn, sinh nhiều file cùng lúc và sửa trực tiếp khi chạy lỗi. Toàn bộ ví dụ dưới đây đã được chạy thật bằng `pytest` trên maiqa.vercel.app — không phải code suông. Dù vậy, script AI sinh ra vẫn là bản nháp cần rà, không phải kết quả tin ngay."
+      "problem": "Tester nắm chắc kịch bản kiểm thử, nhưng đến bước automation thì khựng lại vì cú pháp, selector, xử lý bất đồng bộ — toàn thứ nghe như việc của lập trình viên. Claude Code chạy trong thư mục dự án, đọc được cấu trúc trang thật và sinh file test Playwright/Python trực tiếp trong repo. Bài này dùng MAI.tools làm ví dụ thật — mọi test đều đã chạy lại được bằng pytest trên môi trường thật. Dù vậy, script AI sinh ra vẫn là bản nháp cần rà, không phải kết quả tin ngay."
     },
     "tldr": [
       "Bạn vẫn là người quyết định kiểm gì; AI chỉ chuyển kịch bản thành code Python.",
@@ -69,59 +420,17 @@
         "testerNote": "Data-driven gọn, nhưng khi một từ khóa đỏ phải biết ngay từ nào — pytest tự gắn tham số vào tên test (test_tim_kiem_co_ket_qua[automation]). Cẩn thận phân biệt dữ liệu minh họa với dữ liệu thật; đừng để lộ tài khoản/dữ liệu nhạy cảm trong script."
       }
     ],
-    "pros": [
-      "Sinh test Python chạy được từ mô tả trang — không phải viết từ con số 0.",
-      "Có cả Page Object lẫn test, cấu trúc dễ bảo trì.",
-      "Hạ rào 'phải giỏi code' cho người mới chuyển sang automation.",
-      "Sửa lỗi nhanh vì AI đọc được cả thông báo lỗi lẫn mã nguồn."
-    ],
-    "cons": [
-      "Vẫn phải đọc hiểu Python để rà và sửa — không phải 'bấm nút là xong'.",
-      "Cần cài môi trường (Python, pytest-playwright, trình duyệt) ở bước đầu.",
-      "Locator phụ thuộc HTML thật; nếu AI không thấy trang thì dễ đoán sai."
-    ],
-    "bugs": [
-      "AI thường đoán selector chưa khớp trang thật khiến test đỏ lần đầu — bắt buộc chạy thật rồi sửa.",
-      "Lỗi 'strict mode' khi locator khớp nhiều phần tử là dấu hiệu locator còn mơ hồ — cần thu hẹp, đừng .first cho qua.",
-      "Dễ lạm dụng chờ cứng (time.sleep / wait_for_timeout) làm test chậm và chập chờn — nên dùng expect auto-wait.",
-      "Test 'passed' chưa chắc đúng: assertion yếu có thể luôn xanh — người phải xác nhận assertion kiểm đúng nghiệp vụ."
-    ],
-    "faq": [
-      {
-        "question": "Không biết Python thì có làm theo được không?",
-        "answer": "Bắt đầu được, vì AI lo phần dựng code. Nhưng để rà và sửa khi test đỏ, bạn cần đọc hiểu Python cơ bản — nên học song song cú pháp Python và API của Playwright. Càng hiểu, bạn càng kiểm soát được chất lượng thay vì phụ thuộc AI."
-      },
-      {
-        "question": "Vì sao chọn Playwright + Python, không phải Selenium?",
-        "answer": "Cách làm giống nhau — chỉ cần đổi yêu cầu trong prompt sang công cụ bạn dùng. Bài chọn Playwright vì nhanh, có auto-wait giúp test đỡ chập chờn, và gói pytest-playwright cài rất gọn cho người dùng Python."
-      },
-      {
-        "question": "Test trong bài chạy ở đâu, tôi chạy lại được không?",
-        "answer": "Ví dụ demo trên trang công khai maiqa.vercel.app nên ai cũng chạy lại được (đã chạy thật: 3 và 6 test đều passed). Với web nội bộ, trỏ --base-url vào địa chỉ của bạn — có thể cần xử lý thêm bước đăng nhập."
-      },
-      {
-        "question": "Có tốn phí không?",
-        "answer": "Playwright và pytest đều miễn phí (mã nguồn mở). Claude Code cần tài khoản để dùng — phần cài đặt và kết nối xem ở các bài hướng dẫn Claude Code khác trên trang."
-      },
-      {
-        "question": "Script AI sinh ra dùng thẳng cho dự án thật được chưa?",
-        "answer": "Không nên. Hãy coi đó là bản nháp tốt: chạy thử, rà lại selector và assertion, kiểm dữ liệu test trước khi đưa vào bộ chạy chính thức. Test tự động mà sai còn nguy hơn không có, vì tạo cảm giác an toàn giả."
-      }
-    ],
     "finalThought": "AI rút ngắn rất nhiều quãng đường từ kịch bản sang test chạy được, nhưng chọn cái gì đáng kiểm và xác nhận assertion đúng nghĩa nghiệp vụ vẫn là việc của con người. Toàn bộ ví dụ ở đây đã chạy thật trên một trang web thực — bạn hoàn toàn có thể làm lại. Hãy dùng AI để đi nhanh hơn, không phải để khỏi cần hiểu, vì một test tự động viết sai sẽ âm thầm bỏ lọt lỗi mà không ai hay."
   },
   {
     "slug": "quy-trinh-review-test-case",
     "title": "Review test case thế nào để KHÔNG lọt case? Quy trình chuẩn + checklist",
-    "excerpt": "Quy trình review test case cùng checklist 7 nhóm tiêu chí để bảo đảm không bỏ sót case, kèm cách ứng dụng AI hỗ trợ rà soát và bản Review Checklist tải về dạng Excel.",
     "category": "ai-qa",
     "readingTime": 11,
     "publishedAt": "2026-06-16",
     "cover": "🔍",
     "intro": {
-      "problem": "Viết xong một bộ test case dài, đọc lại vài lượt thấy đã ổn — nhưng chính người viết là người khó nhìn ra lỗ hổng của mình nhất. Một nhánh điều kiện bị bỏ quên, một kết quả mong đợi ghi còn mơ hồ, hai case thực ra kiểm cùng một thứ. Nếu đến lúc thực thi mới phát hiện thì đã tốn công làm lại; nếu lọt qua cả bước đó thì thành lỗi ngoài sản phẩm. Một bước review có quy trình và checklist rõ ràng chính là để chặn những thiếu sót này từ trước khi chạy case đầu tiên — và đây là cách tôi vẫn làm.",
-      "whatIs": "Review test case là bước kiểm tra chéo bộ test case trước khi thực thi — theo một quy trình và checklist rõ ràng — nhằm phát hiện sai sót sớm và bảo đảm không bỏ sót case. Quy trình trong bài được đúc kết từ kinh nghiệm thực tế của mình, gồm hai hình thức review phổ biến: peer review (soát chéo nhẹ) và inspection (soát kỹ, có biên bản), kèm checklist thực tế và cách dùng AI hỗ trợ rà soát ở vòng đầu.",
-      "whyThis": "Phát hiện sai sót ở khâu review tiết kiệm chi phí hơn nhiều so với sửa khi đã thực thi. Một checklist tốt giúp việc review trở nên có hệ thống thay vì phụ thuộc cảm tính và trí nhớ của người soát. AI bổ sung thêm một lớp rà soát nhanh: phát hiện case trùng lặp, thiếu dạng kiểm thử, hoặc kết quả mong đợi chưa rõ ràng."
+      "problem": "Viết xong test case, đọc lại vài lượt thấy ổn — nhưng chính người viết là người khó nhìn ra lỗ hổng của mình nhất. Một nhánh điều kiện bị bỏ quên, một kết quả mong đợi còn mơ hồ, hai case thực ra kiểm cùng một thứ. Review test case là bước soát chéo có hệ thống trước khi thực thi — phát hiện sai sót sớm bao giờ cũng rẻ hơn sửa khi đã chạy case. Bài này gồm quy trình thực tế với hai hình thức (peer review và inspection), checklist cụ thể, và cách dùng AI rà soát ở vòng đầu."
     },
     "tldr": [
       "Review test case = soát chéo trước khi chạy, theo quy trình + checklist — để KHÔNG lọt case/lỗi tới lúc test hay khách phát hiện.",
@@ -253,46 +562,17 @@
         "exampleInput": "requirement/dang-nhap.md (yêu cầu):\nREQ-01  Đăng nhập bằng email + mật khẩu\nREQ-02  Khóa tài khoản sau 5 lần sai\nREQ-03  Quên mật khẩu qua OTP\nREQ-04  Đăng nhập bằng Google\n\ntest-cases/dang-nhap.md hiện có: TC-01..TC-06 (đều cho luồng email + mật khẩu)"
       }
     ],
-    "faq": [
-      {
-        "question": "Nên tổ chức và lưu bộ test case thế nào để vừa quản lý vừa review được?",
-        "answer": "Mỗi màn hình lưu một file test case riêng (Markdown .md, .csv hoặc Excel .xlsx) trong một thư mục, ví dụ test-cases/dang-nhap.md, test-cases/dang-ky.md. Cách này vừa giữ lại lịch sử theo từng màn hình, vừa cho phép mở Claude Code ngay trong thư mục để nó đọc và soát từng file độc lập — không giới hạn độ dài như khung chat, và kết quả review ghi sang thư mục review/. Định dạng .md hoặc .csv là dễ cho AI đọc và đối chiếu nhất."
-      },
-      {
-        "question": "Khi nào cần inspection (formal) thay vì peer review?",
-        "answer": "Peer review (1 người soát, nhẹ, async) đủ cho phần lớn trường hợp. Dùng inspection (có moderator dẫn — không phải author, có scribe ghi biên bản, checklist + entry/exit criteria) cho module rủi ro cao: thanh toán, bảo mật, tính toán tiền, phân quyền."
-      },
-      {
-        "question": "AI review thay người được không?",
-        "answer": "Không. AI là lớp soát NHANH (bắt trùng, mơ hồ, thiếu dạng, lọt requirement); còn đúng/sai nghiệp vụ và ngữ cảnh dự án thì người quyết. Dùng AI để đỡ phần soát máy móc, KHÔNG để AI duyệt thay reviewer."
-      },
-      {
-        "question": "Review tốn thời gian, có đáng không?",
-        "answer": "Lỗi test case lọt xuống execute hoặc tới khách hàng tốn gấp nhiều lần công sửa. Checklist + AI giúp review nhanh và có hệ thống — đáng để dành 15-30 phút trước mỗi đợt."
-      },
-      {
-        "question": "Lưu checklist & findings ở đâu?",
-        "answer": "Đơn giản nhất: file Excel (tải Review Checklist trong Kho Template QA). Bài bản hơn: tool test management (TestRail, Xray, qTest) hoặc Jira — gắn finding như comment/sub-task vào từng case."
-      },
-      {
-        "question": "Làm sao chắc chắn không lọt case?",
-        "answer": "Đối chiếu RTM (requirement ↔ case) — đây là chốt chặn quan trọng nhất. Chạy Prompt 2 (kiểm độ phủ) + 'Prompt thách AI tìm case còn thiếu' trong bài Viết test case. Requirement không có case nào = phải bổ sung trước khi chốt."
-      }
-    ],
     "finalThought": "Review không phải 'đọc cho có' — là chốt chặn cuối trước khi test. Checklist biến nó thành quy trình có hệ thống (không sót vì quên); đối chiếu RTM đảm bảo không lọt requirement; AI thêm lớp soát nhanh vòng đầu. Nhưng người vẫn quyết định đúng/đủ. Quy trình đầy đủ: viết test case (xem bài riêng) → review theo checklist → author sửa & verify → chốt. Lưu Review Checklist + giữ format chuẩn để mỗi đợt review đều nhất quán."
   },
   {
     "slug": "claude-code-nho-format-quy-tac-qa",
     "title": "Để Claude Code luôn nhớ format & quy tắc QA của bạn: CLAUDE.md, lệnh tắt, skill, memory",
-    "excerpt": "Khi dùng AI cho QA lâu dài, việc phải nhắc lại quy tắc ở mỗi phiên ('xuất test case theo cột này', 'bug report gồm các mục kia') gây mất thời gian và thiếu nhất quán. Claude Code có sẵn 4 cơ chế ghi nhớ để lưu quy tắc một lần và áp dụng lâu dài — giúp cả nhóm dùng chung một chuẩn. Bài viết giải thích từng cơ chế, khi nào nên dùng, kèm file mẫu copy-paste.",
     "category": "ai-qa",
     "readingTime": 9,
     "publishedAt": "2026-06-16",
     "cover": "🧠",
     "intro": {
-      "problem": "Khi sử dụng AI cho công việc QA trong thời gian dài, bạn sẽ phải lặp lại các yêu cầu giống nhau ở mỗi phiên: 'xuất test case theo cột này', 'bug report gồm các mục kia', 'trả lời bằng tiếng Việt'... Nếu quên nhắc, kết quả mỗi lần một khác. Điều này gây mất thời gian và thiếu nhất quán, đặc biệt khi nhiều người trong nhóm cùng sử dụng.",
-      "whatIs": "Claude Code (bản dòng lệnh) có sẵn nhiều cơ chế 'ghi nhớ' để bạn lưu quy tắc MỘT LẦN, dùng lâu dài: CLAUDE.md (quy tắc luôn bật), lệnh tắt /command, skill (đóng gói cả quy trình), và ghi nhớ nhanh bằng dấu #.",
-      "whyThis": "Thay vì coi AI như công cụ 'dùng xong quên', bạn biến nó thành trợ lý CÓ trí nhớ về chuẩn của bạn. Đặc biệt CLAUDE.md commit vào git → cả nhóm chung một format, người mới mở dự án là có sẵn quy tắc."
+      "problem": "Khi dùng AI lâu dài cho công việc QA, bạn sẽ phải nhắc lại cùng một yêu cầu mỗi phiên: xuất test case theo cột này, bug report gồm các mục kia, trả lời bằng tiếng Việt... Quên nhắc là kết quả mỗi lần một khác. Claude Code có các cơ chế ghi nhớ để lưu quy tắc một lần, dùng lâu dài: CLAUDE.md (commit git, cả nhóm dùng chung), lệnh tắt /command, skill đóng gói quy trình, và ghi chú nhanh #. Thay vì nhắc lại mỗi phiên, bạn biến AI thành trợ lý có trí nhớ về chuẩn của mình."
     },
     "tldr": [
       "Claude Code có 4 'bộ nhớ' để khỏi dặn lại mỗi lần: CLAUDE.md, lệnh /command, skill, ghi nhớ nhanh #.",
@@ -321,42 +601,17 @@
         "linkLabel": "Ví dụ áp dụng: bài Viết test case từ user story"
       }
     ],
-    "faq": [
-      {
-        "question": "Cần biết lập trình không?",
-        "answer": "Không. Chỉ là tạo file text (.md) ghi quy tắc bằng tiếng Việt, rồi (nếu muốn chia sẻ) commit git. Biết tạo file + lưu là đủ."
-      },
-      {
-        "question": "CLAUDE.md khác ghi nhớ # thế nào?",
-        "answer": "CLAUDE.md: file bạn tự viết, commit git, cả team thấy, LUÔN nạp mỗi phiên — hợp để làm chuẩn chung. Ghi nhớ #/memory: bộ nhớ máy cá nhân, tiện ghi nhanh nhưng không chia sẻ. Quy tắc chuẩn → CLAUDE.md; ghi chú nhanh → #."
-      },
-      {
-        "question": "Muốn dùng cho MỌI dự án thì để ở đâu?",
-        "answer": "Đặt ở ~/.claude/CLAUDE.md (quy tắc cá nhân áp mọi dự án) hoặc ~/.claude/skills/ (skill dùng chung). Còn ./CLAUDE.md trong thư mục dự án thì chỉ áp dự án đó."
-      },
-      {
-        "question": "Đây chỉ dùng cho test case?",
-        "answer": "Không. Dùng cho MỌI quy tắc QA lặp lại: format bug report, quy ước đặt tên test case, mẫu checklist, giọng văn test summary, yêu cầu trả lời bằng tiếng Việt..."
-      },
-      {
-        "question": "Có yêu cầu phiên bản Claude Code không?",
-        "answer": "CLAUDE.md / lệnh /command / skill dùng được từ lâu. Riêng ghi nhớ nhanh bằng '#' (auto memory) cần Claude Code v2.1.59 trở lên — kiểm tra bằng: claude --version."
-      }
-    ],
     "finalThought": "Nguyên tắc quan trọng khi dùng AI cho QA lâu dài: thay vì nhắc lại, hãy lưu quy tắc. Nên bắt đầu với CLAUDE.md (đơn giản, luôn được nạp, chia sẻ cả nhóm); bổ sung /command khi cần gọi nhanh; dùng skill cho quy trình phức tạp; và '#' để ghi chú nhanh. Lưu một lần, format và quy tắc sẽ được áp dụng nhất quán qua mọi lần cập nhật."
   },
   {
     "slug": "ai-viet-test-case-tu-user-story",
     "title": "Dùng AI sinh bộ test case từ user story — tổ chức theo màn hình, phủ đủ kỹ thuật thiết kế test",
-    "excerpt": "Một user story có thể phát sinh hàng chục test case; nếu chỉ liệt kê rời rạc thì dễ thiếu sót. Bài viết hướng dẫn dùng AI sinh test case được TỔ CHỨC THEO MÀN HÌNH (UI, validate, logic, trạng thái, bảo mật...) và áp dụng đầy đủ kỹ thuật thiết kế test (phân vùng tương đương, giá trị biên, bảng quyết định...) — vừa bao phủ kỹ, vừa thuận tiện khi chuyển thành script automation. Kèm 3 prompt copy-paste và lưu ý kiểm soát rủi ro AI bịa thông tin.",
     "category": "ai-qa",
     "readingTime": 10,
     "publishedAt": "2026-06-16",
     "cover": "🧾",
     "intro": {
-      "problem": "Viết test case là công việc tốn thời gian và lặp lại nhiều nhất của QA. Một user story có thể phát sinh hàng chục case: luồng đúng, nhập sai, giá trị biên, bảo mật... Viết thủ công vừa lâu vừa dễ bỏ sót cả một dạng kiểm thử (thường gặp nhất là negative và giá trị biên).",
-      "whatIs": "AI (ChatGPT, Claude, Gemini — hoặc Claude Code nếu story nằm trong file/Confluence) có thể đọc mô tả màn hình / user story + tiêu chí nghiệm thu rồi sinh bộ test case ĐẦY ĐỦ, TỔ CHỨC THEO TỪNG NHÓM của màn hình (UI, validate, logic nghiệp vụ, trạng thái, phân quyền, tích hợp, bảo mật) và áp dụng các kỹ thuật thiết kế test bài bản — chứ không phải một danh sách phẳng lộn xộn.",
-      "whyThis": "AI rất giỏi liệt kê đủ dạng theo các kỹ thuật thiết kế test kinh điển (phân vùng tương đương, giá trị biên, bảng quyết định, chuyển trạng thái) — đúng chỗ con người hay sót khi viết tay. Quan trọng hơn: tổ chức theo nhóm/màn hình giúp BƯỚC SAU nhẹ đi nhiều — test case đã map đúng theo từng phần màn hình nên chuyển thành script automation dễ hơn hẳn."
+      "problem": "Viết test case thủ công vừa lâu vừa dễ bỏ sót — nhất là các dạng negative và giá trị biên. AI đọc user story và tiêu chí nghiệm thu rồi sinh bộ test case đầy đủ, tổ chức theo từng nhóm (UI, validate, logic nghiệp vụ, trạng thái, phân quyền, bảo mật...) dựa trên các kỹ thuật thiết kế test bài bản như phân vùng tương đương, giá trị biên, bảng quyết định. Kết quả đã tổ chức sẵn theo nhóm/màn hình nên chuyển sang script automation cũng dễ hơn hẳn."
     },
     "tldr": [
       "Dán mô tả màn hình/story → AI sinh MỘT bảng test case đầy đủ (cột Loại + Độ ưu tiên), tải thẳng vào 1 file Excel.",
@@ -631,65 +886,17 @@
         "exampleInput": "Bộ test case Đăng nhập đã có (từ Prompt 1):\nUI-01, UI-02, VAL-01..04, LOG-01..03, ST-01..02, SEC-01.\nYêu cầu: tìm case CÒN THIẾU, không lặp lại case đã có."
       }
     ],
-    "pros": [
-      "Sinh hàng chục case trong vài giây, phân loại sẵn happy/âm/biên/bảo mật.",
-      "Trả bảng dán thẳng Excel — đỡ gõ tay từng cột.",
-      "Giỏi gợi nhắc dạng case hay quên khi mệt (negative, biên, tổ hợp).",
-      "Dùng được mọi AI chat; story nằm trong file/Confluence thì Claude Code đọc thẳng."
-    ],
-    "cons": [
-      "AI BỊA 'kết quả mong đợi' khi story không nói rõ — bắt buộc đối chiếu tiêu chí nghiệm thu / BA.",
-      "Chất lượng phụ thuộc user story: story mơ hồ → case mơ hồ (rác vào rác ra)."
-    ],
-    "bugs": [
-      "Ra case trùng nhau hoặc quá chung chung ('kiểm tra chức năng chạy đúng') — phải cắt.",
-      "Đôi khi bịa luồng/nghiệp vụ không tồn tại trong hệ thống thật.",
-      "Sinh quá nhiều case không ưu tiên → ngợp; dùng Prompt 2 để lọc theo rủi ro."
-    ],
-    "faq": [
-      {
-        "question": "Nên dùng AI nào?",
-        "answer": "ChatGPT, Claude hay Gemini đều làm tốt việc này — chỉ cần dán user story vào chat. Nếu story nằm trong file Word/PDF hoặc trên Confluence, dùng Claude Code để nó đọc thẳng (xem bài 'Đọc & phân tích requirement' và 'Kết nối Confluence')."
-      },
-      {
-        "question": "Sinh xong dùng luôn được không?",
-        "answer": "KHÔNG nên. Coi là bản nháp: rà lại, cắt case thừa, sửa 'kết quả mong đợi' cho đúng nghiệp vụ, đối chiếu tiêu chí nghiệm thu. AI giúp nhanh phần liệt kê + format, không thay phần đảm bảo đúng."
-      },
-      {
-        "question": "User story công ty là bảo mật — dán vào AI có sao không?",
-        "answer": "Hỏi bộ phận IT/bảo mật trước khi dán nội dung nội bộ vào công cụ AI ngoài. Tuân thủ NDA và chính sách công ty."
-      },
-      {
-        "question": "Khác gì bài 'Đọc & phân tích requirement'?",
-        "answer": "Bài kia: tìm chỗ requirement MƠ HỒ/MÂU THUẪN để làm rõ TRƯỚC khi viết. Bài này: VIẾT RA test case sau khi requirement đã rõ. Làm bài kia trước, bài này sau — đúng thứ tự quy trình."
-      },
-      {
-        "question": "Lấy mẫu (format) test case ở đâu?",
-        "answer": "Kho Template QA có sẵn các định dạng: step-based, BDD/Gherkin, data-driven. Dùng cấu trúc cột đó cho AI điền để ra đúng định dạng team bạn đang dùng."
-      },
-      {
-        "question": "AI có áp dụng đúng các kỹ thuật thiết kế test không?",
-        "answer": "Có, nếu prompt yêu cầu rõ (phân vùng tương đương, giá trị biên, bảng quyết định, chuyển trạng thái). Nhưng với bảng quyết định nhiều điều kiện, AI dễ thiếu tổ hợp — bạn tự liệt kê ma trận điều kiện để kiểm độ đầy đủ. Coi AI là trợ lý áp kỹ thuật nhanh, còn bạn kiểm phần 'đủ hay chưa'."
-      },
-      {
-        "question": "Nên tổ chức test case theo màn hình hay theo story?",
-        "answer": "Theo MÀN HÌNH (UI/validate/logic/trạng thái/...) nếu test hoặc tự động hóa từng màn hình — vì map thẳng sang cấu trúc script (Page Object), viết automation sau nhàn hơn. Theo STORY/LUỒNG nếu test end-to-end xuyên nhiều màn hình. Thực tế hay kết hợp: case theo màn hình + vài case luồng chính."
-      }
-    ],
     "finalThought": "Sinh test case là việc AI hỗ trợ hiệu quả nhất cho QA — nhanh và bao phủ đủ dạng. Nhưng 'sinh ra' khác với 'đúng' và 'đủ': AI đảm nhiệm phần liệt kê, áp kỹ thuật và định dạng; còn bạn chịu trách nhiệm tính đúng nghiệp vụ, kiểm tra tổ hợp trong bảng quyết định và xác định ưu tiên. Lưu ý: tổ chức theo màn hình ngay từ đầu sẽ giúp bước viết script automation về sau thuận lợi hơn nhiều."
   },
   {
     "slug": "ket-noi-claude-code-voi-confluence-jira-atlassian",
     "title": "Cách kết nối Claude Code với Confluence & Jira (Atlassian) — 2 cách: qua App và qua CLI",
-    "excerpt": "Để Claude đọc được tài liệu Confluence hay ticket Jira, cần kết nối 1 lần với Atlassian. Bài này hướng dẫn 2 cách: bật connector trong App (đơn giản, không cần dòng lệnh) hoặc qua Claude Code CLI — kèm cách xử lý lỗi hay gặp.",
     "category": "ai-qa",
     "readingTime": 7,
     "publishedAt": "2026-06-16",
     "cover": "🔌",
     "intro": {
-      "problem": "Trước khi nhờ Claude đọc tài liệu Confluence hay ticket Jira, bạn cần kết nối Claude với tài khoản Atlassian — chỉ thực hiện một lần. Nhiều người gặp vướng ngay ở bước này: chưa rõ bắt đầu từ đâu, hoặc gặp lỗi khi chạy lệnh.",
-      "whatIs": "Kết nối này thực hiện qua MCP — một 'cầu nối' chuẩn cho phép AI truy cập công cụ/dữ liệu bên ngoài. Atlassian có cầu nối chính thức tên 'Atlassian Rovo', dùng cho cả Confluence + Jira.",
-      "whyThis": "Có 2 cách kết nối, kết quả như nhau: qua App (bấm + đăng nhập, đơn giản nhất) hoặc qua Claude Code CLI (dòng lệnh). Chọn cách hợp với cách bạn đang dùng Claude."
+      "problem": "Để Claude đọc được tài liệu Confluence hay ticket Jira, bạn cần kết nối tài khoản Atlassian một lần duy nhất — nhiều người gặp vướng ngay ở bước này vì chưa rõ bắt đầu từ đâu. Kết nối thực hiện qua MCP — cầu nối chuẩn cho phép AI truy cập công cụ và dữ liệu bên ngoài. Atlassian có cầu nối chính thức tên Atlassian Rovo dùng cho cả Confluence lẫn Jira. Có 2 cách: qua App (bấm và đăng nhập, đơn giản nhất) hoặc qua Claude Code CLI — kết quả như nhau."
     },
     "tldr": [
       "Kết nối làm đúng 1 lần — sau đó mọi việc dùng Confluence/Jira chỉ cần gõ prompt.",
@@ -718,42 +925,17 @@
         "linkLabel": "Tiếp theo: 3 prompt hỏi đáp tài liệu Confluence"
       }
     ],
-    "faq": [
-      {
-        "question": "Nên chọn cách App hay CLI?",
-        "answer": "Chọn App nếu bạn dùng Claude qua giao diện (nhanh, không cài gì). Chọn CLI nếu bạn quen dòng lệnh hoặc cần tự động hóa. Hai cách cho kết quả như nhau — không cần làm cả hai."
-      },
-      {
-        "question": "Gõ lệnh báo \"'claude' is not recognized\" là sao?",
-        "answer": "Máy chưa cài Claude Code (bản CLI), hoặc terminal được mở trước khi cài. Cài bằng: npm install -g @anthropic-ai/claude-code, sau đó mở cửa sổ terminal MỚI rồi thử lại 'claude --version'."
-      },
-      {
-        "question": "Tài liệu công ty là bảo mật — kết nối có an toàn không?",
-        "answer": "Phải hỏi bộ phận IT/bảo mật TRƯỚC. Claude chỉ thấy đúng những trang tài khoản bạn được phép xem (không vượt quyền), nhưng nội dung gửi tới API để xử lý — nhiều công ty có quy định cấm kết nối công cụ ngoài, hãy tuân thủ."
-      },
-      {
-        "question": "Đang dùng được thì bị mất kết nối / token hết hạn?",
-        "answer": "Kết nối lại: cách App bấm lại connector và đăng nhập; cách CLI gõ '/mcp' → Authenticate. Làm lại 1 lần là chạy tiếp."
-      },
-      {
-        "question": "Confluence của tôi là bản tự host (Data Center), không phải Cloud?",
-        "answer": "Tùy cầu nối MCP có hỗ trợ bản Cloud hay Data Center. Kiểm tra tài liệu MCP của Atlassian cho đúng phiên bản bạn dùng trước khi kết nối."
-      }
-    ],
     "finalThought": "Kết nối một lần là dùng lâu dài. Bước tiếp theo: xem bài 'Kết nối Claude Code với Confluence để hỏi đáp tài liệu' để biết 3 prompt tra cứu tài liệu thực tế. Lưu ý xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật."
   },
   {
     "slug": "claude-code-ket-noi-confluence-doc-tai-lieu-du-an",
     "title": "Kết nối Claude Code với Confluence để hỏi đáp toàn bộ tài liệu dự án",
-    "excerpt": "Spec, biên bản họp, hướng dẫn, tài liệu API... nằm rải rác trên hàng trăm trang Confluence khiến việc tra cứu tốn nhiều thời gian. Sau khi kết nối Claude Code với Confluence, bạn có thể đặt câu hỏi bằng tiếng Việt và nhận câu trả lời được tổng hợp kèm liên kết tới trang gốc. Bài viết gồm 3 bước, 3 prompt và lưu ý khi AI đọc tài liệu chưa chính xác.",
     "category": "ai-qa",
     "readingTime": 11,
     "publishedAt": "2026-06-16",
     "cover": "🔗",
     "intro": {
-      "problem": "Tài liệu dự án — spec, biên bản họp, hướng dẫn, tài liệu API — thường nằm rải rác trên hàng chục đến hàng trăm trang Confluence. Mỗi lần cần một thông tin, bạn phải mở từng trang và phỏng đoán từ khóa tìm kiếm, khá tốn thời gian. Người mới tham gia dự án (QA, dev) có khi mất vài ngày chỉ để đọc hết wiki.",
-      "whatIs": "Claude Code kết nối được với Confluence thông qua MCP — một 'cầu nối' chuẩn cho phép AI truy cập công cụ/dữ liệu bên ngoài. Sau khi kết nối và đăng nhập tài khoản Atlassian một lần, bạn hỏi bằng tiếng Việt ngay trong Claude Code; nó tự tìm, đọc các trang Confluence và trả lời kèm link trang gốc.",
-      "whyThis": "Khác việc tự search Confluence (phải đoán đúng từ khóa, mở đọc từng trang), Claude đọc nhiều trang cùng lúc, tổng hợp xuyên trang và trích link nguồn để bạn kiểm chứng. Quan trọng: nó chỉ thấy đúng những trang tài khoản bạn được phép xem — không vượt quyền."
+      "problem": "Tài liệu dự án thường rải rác trên hàng chục đến hàng trăm trang Confluence — mỗi lần cần thông tin phải mở từng trang, đoán từ khóa tìm kiếm, khá tốn thời gian. Claude Code kết nối Confluence qua MCP: đăng nhập Atlassian một lần, sau đó hỏi bằng tiếng Việt ngay trong Claude Code — nó tự tìm, đọc nhiều trang cùng lúc và trả lời kèm link trang gốc. Lưu ý: Claude chỉ thấy đúng những trang tài khoản bạn được phép xem, không vượt quyền."
     },
     "tldr": [
       "Kết nối Claude Code với Confluence 1 lần (xem bài hướng dẫn kết nối riêng) → sau đó chỉ cần gõ prompt để hỏi đáp tài liệu.",
@@ -804,57 +986,17 @@
         "exampleInput": "Trang: 'Order States' (đơn hết hạn sau \"một thời gian\"), 'Refund Policy' (phí hủy 10%), 'CSKH FAQ' (phí 5%).\nKhông có trang nào mô tả: thanh toán thành công nhưng tạo đơn lỗi; hoàn tiền cho đơn trả góp."
       }
     ],
-    "pros": [
-      "Hỏi đáp tài liệu bằng tiếng Việt ngay trong Claude Code, kèm link trang gốc để kiểm chứng.",
-      "Tổng hợp xuyên nhiều trang rải rác — đỡ phải mở từng trang rồi ghép tay.",
-      "Chỉ truy cập đúng phạm vi tài khoản bạn được phép xem — không vượt quyền, an tâm hơn về bảo mật.",
-      "Onboarding dự án mới nhanh: hỏi tổng quan rồi đào sâu theo nhu cầu, thay vì đọc hết wiki."
-    ],
-    "cons": [
-      "Phụ thuộc search của Confluence: đặt từ khóa lệch → sót trang. Phải hỏi lại hoặc chỉ rõ space/tên trang.",
-      "Không tự phân biệt trang mới/cũ — dễ trả lời theo tài liệu lỗi thời nếu bạn không yêu cầu ưu tiên trang mới."
-    ],
-    "bugs": [
-      "AI có thể gộp nội dung nhiều trang thành một câu trả lời 'mượt' nhưng trộn lẫn cái đúng/sai. Luôn mở link gốc để kiểm.",
-      "Trang Confluence có macro/bảng phức tạp (Jira macro, sơ đồ draw.io, bảng lồng nhau) → AI đọc không trọn, cần xem lại thủ công.",
-      "Kết nối MCP cần đăng nhập lại định kỳ (token hết hạn). Nếu Claude báo không truy cập được Confluence, chạy lại bước xác thực '/mcp'."
-    ],
-    "faq": [
-      {
-        "question": "Cần quyền gì để dùng?",
-        "answer": "Một tài khoản Atlassian có quyền xem các space/trang bạn cần đọc. Claude chỉ thấy đúng những gì tài khoản bạn thấy — không xem được trang bị giới hạn."
-      },
-      {
-        "question": "Tài liệu công ty là bảo mật — kết nối AI có an toàn không?",
-        "answer": "Phải hỏi bộ phận IT/bảo mật của công ty TRƯỚC. Nội dung trang được gửi tới API để xử lý (Anthropic công bố không dùng dữ liệu API để train). Nhưng nhiều công ty có quy định cấm kết nối công cụ ngoài vào Confluence nội bộ — tuân thủ chính sách nơi bạn làm."
-      },
-      {
-        "question": "Khác gì bài 'Claude Code đọc requirement' (file local)?",
-        "answer": "Bài kia: tài liệu là file (PDF/Word/Markdown) trên máy bạn. Bài này: tài liệu nằm online trên Confluence, rải nhiều trang. Cùng mục tiêu hiểu nghiệp vụ, khác nguồn — kết hợp cả hai để phủ hết tài liệu dự án."
-      },
-      {
-        "question": "Có đọc được cả Jira (ticket, issue) không?",
-        "answer": "Cùng cầu nối Atlassian thường truy cập được cả Jira. Bạn có thể hỏi Claude về ticket liên quan tới một chức năng, hoặc đối chiếu yêu cầu trong Jira với tài liệu Confluence."
-      },
-      {
-        "question": "Confluence của tôi là bản tự host (Data Center), không phải Cloud?",
-        "answer": "Tùy cầu nối MCP có hỗ trợ bản Cloud hay Data Center. Kiểm tra tài liệu MCP của Atlassian cho đúng phiên bản bạn đang dùng trước khi cài."
-      }
-    ],
     "finalThought": "Confluence là nơi lưu trữ tài liệu dự án, nhưng khối lượng lớn cũng khiến việc tra cứu khó khăn. Kết nối Claude Code cho phép bạn đặt câu hỏi cho toàn bộ kho tài liệu thay vì dò từng trang — rất phù hợp khi mới tham gia dự án hoặc cần tổng hợp thông tin gấp. Lưu ý: tài liệu có thể đã lỗi thời và AI dựa vào tìm kiếm nên có thể bỏ sót — hãy luôn mở liên kết trang gốc để kiểm chứng, ưu tiên trang cập nhật mới nhất, và xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật."
   },
   {
     "slug": "claude-code-doc-codebase-tu-git-hieu-he-thong",
     "title": "Dùng Claude Code đọc code từ Git để hiểu hệ thống khi dự án thiếu tài liệu",
-    "excerpt": "Khi tiếp nhận dự án cũ với tài liệu lỗi thời hoặc không có, lại không còn dev gốc để hỏi, QA rất khó xác định phạm vi kiểm thử. Bài viết hướng dẫn clone repo, dùng Claude Code đọc và phân tích mã nguồn để dựng lại kiến trúc, lần theo luồng nghiệp vụ và chỉ ra các điểm cần test kỹ. Gồm 3 bước, 3 prompt và lưu ý khi AI đọc code chưa chính xác.",
     "category": "ai-qa",
     "readingTime": 12,
     "publishedAt": "2026-06-16",
     "cover": "🗺️",
     "intro": {
-      "problem": "QA thường gặp tình huống: tiếp nhận dự án bàn giao hoặc hệ thống cũ với tài liệu lỗi thời hoặc không có, và không còn dev gốc để trao đổi. Khi chưa hiểu hệ thống vận hành thế nào thì rất khó xác định cần test gì — dễ bỏ sót luồng quan trọng hoặc test sai trọng tâm.",
-      "whatIs": "Claude Code là công cụ dòng lệnh (CLI) của Anthropic, chạy ngay trong thư mục mã nguồn. Sau khi clone repo về máy, mở Claude Code tại đó, nó đọc trực tiếp toàn bộ code và trả lời bằng tiếng Việt: hệ thống gồm những gì, luồng nào chạy ra sao, file nào xử lý gì.",
-      "whyThis": "Khác với đọc tài liệu (thường lỗi thời, viết một đằng code một nẻo), đọc CODE là đọc 'sự thật' — hệ thống thực sự làm gì nằm trong code. Claude Code đọc được nhiều file/thư mục cùng lúc và trích dẫn 'file X, dòng Y' để bạn mở kiểm chứng."
+      "problem": "QA tiếp nhận dự án cũ không có tài liệu, không còn dev gốc để hỏi — không hiểu hệ thống thì khó xác định cần test gì, dễ bỏ sót luồng quan trọng. Claude Code chạy trong thư mục mã nguồn, đọc trực tiếp toàn bộ code và trả lời bằng tiếng Việt. Khác tài liệu thường lỗi thời, đọc code là đọc sự thật — Claude trích dẫn cụ thể file và dòng để bạn mở kiểm chứng."
     },
     "tldr": [
       "Clone repo → mở Claude Code trong thư mục đó → hỏi bằng tiếng Việt, nó đọc trực tiếp code (không cần upload).",
@@ -906,46 +1048,56 @@
         "title": "Prompt 4 — Trích business rules từ code (đối chiếu BA)",
         "goal": "Đọc ngược các quy tắc nghiệp vụ ẩn trong code thành bảng — phân biệt rule thật vs bug, làm đầu vào hỏi BA.",
         "prompt": "Với góc nhìn QA, đọc codebase và TRÍCH các quy tắc nghiệp vụ (business rules) đang cài trong code. Trả về bảng các cột: ID | Quy tắc nghiệp vụ | Vị trí trong code (file:dòng) | Loại (Tính toán/Ngưỡng-điều kiện/Validate/Phân quyền/Trạng thái) | Nguồn (Code/Config/DB/Flag) | Trạng thái (mặc định 'Cần hỏi BA') | Câu hỏi cho BA.\n\nBắt buộc:\n- Tách riêng mỗi con số 'magic' (ngưỡng, phí, số ngày) thành 1 rule cần hỏi vì sao.\n- Đánh dấu 'Nghi là bug' cho chỗ trông sai (thiếu kiểm phân quyền, validate hở).\n- Chỉ mô tả hành vi code thực có; 'vì sao' không chắc thì ghi 'cần xác nhận', đừng bịa.",
-        "result": "Claude Code trả về (ví dụ, rút gọn):\n\n| ID | Quy tắc | Vị trí | Loại | Trạng thái | Câu hỏi cho BA |\n| BR-01 | Khóa TK sau 5 lần sai | auth.service.js:55 | Ngưỡng | Cần hỏi BA | Vì sao 5? Khóa bao lâu? |\n| BR-02 | Phí ship = vùng + phụ phí − KM | order.service.js:80 | Tính toán | Nghi vấn | Combo nhiều KM tính sao? |\n| BR-03 | Hủy đơn KHÔNG kiểm chủ sở hữu | order.controller.js:95 | Phân quyền | Nghi là bug | User A hủy đơn user B — đúng ý? |\n| BR-04 | Giữ giỏ hàng 30 ngày | cart.config.js:8 | Ngưỡng | Cần hỏi BA | Con số 30 ngày từ đâu? |\n\n→ Đổ bảng này vào template 'Business Rules Catalog' (Kho Template QA) để theo dõi + mang đi clarify với BA.",
+        "result": "Claude Code trả về (ví dụ minh họa). Đổ bảng này vào template Business Rules Catalog (Kho Template QA) để theo dõi và mang đi clarify với BA:",
         "testerNote": "AI mô tả ĐÚNG hành vi code (kiểm được qua file:dòng) nhưng dễ BỊA 'lý do nghiệp vụ'. Coi mọi rule là 'Cần hỏi BA' đến khi business xác nhận — vì code có thể đang chứa bug trông như rule. Nhớ đối chiếu thêm config/DB/feature flag: nhiều rule KHÔNG nằm trong code mà ở dữ liệu/cấu hình.",
-        "exampleInput": "auth.service.js:55      if (failedCount >= 5) lockAccount()\norder.service.js:80     shippingFee = base[region] + surcharge - discount\norder.controller.js:95  deleteOrder(): chỉ requireLogin()\ncart.config.js:8        CART_TTL_DAYS = 30"
-      }
-    ],
-    "pros": [
-      "Đọc nhiều file/thư mục cùng lúc + trích 'file:dòng' → kiểm chứng nhanh, không phải grep thủ công.",
-      "Hiểu hệ thống không tài liệu trong vài chục phút thay vì nhiều ngày đọc code tay.",
-      "Trace luồng nghiệp vụ xuyên nhiều tầng — chỉ đúng chỗ validate/phân quyền để biết test ở đâu.",
-      "Gợi ý điểm rủi ro cần test → QA không quen code vẫn xác định được trọng tâm test."
-    ],
-    "cons": [
-      "KHÔNG chạy code — chỉ đọc tĩnh. Hiểu 'code viết gì' chứ không chứng minh 'chạy có đúng không'. Vẫn phải test thật.",
-      "Code rối / đặt tên xấu / bất đồng bộ phức tạp → AI dễ suy diễn sai. Phải verify bằng chạy thử + hỏi dev."
-    ],
-    "bugs": [
-      "Repo lớn vượt ngưỡng ngữ cảnh → AI đọc lướt, bỏ sót. Khoanh vùng: chỉ mở 1 module/thư mục cần hiểu.",
-      "Hệ thống microservice rải nhiều repo, hoặc code event-driven/queue → AI khó trace xuyên dịch vụ. Phải clone đủ + chỉ rõ.",
-      "AI có thể 'tự tin bịa' tên hàm/luồng không tồn tại nếu code không rõ ràng. Luôn mở đúng file nó trích để kiểm."
-    ],
-    "faq": [
-      {
-        "question": "Tôi là QA manual, không rành lập trình — dùng được không?",
-        "answer": "Dùng được để hiểu LUỒNG nghiệp vụ và biết cần test gì, vì AI giải thích bằng tiếng Việt dễ hiểu. Còn hiểu sâu chi tiết kỹ thuật từng dòng thì cần chút nền lập trình. Cứ bắt đầu bằng Prompt 1 và 2 — đủ để nắm hệ thống."
-      },
-      {
-        "question": "Repo quá lớn, AI đọc không xuể thì sao?",
-        "answer": "Khoanh vùng. Thay vì mở Claude Code ở gốc repo, cd vào thư mục module cần hiểu (vd: cd src/payment) rồi mở. Hoặc nói rõ trong prompt: 'chỉ đọc thư mục src/order'. AI đọc sâu 1 vùng tốt hơn đọc lướt cả repo khổng lồ."
-      },
-      {
-        "question": "Code công ty là bảo mật — clone về rồi gửi cho AI có sao không?",
-        "answer": "Đây là điều BẮT BUỘC kiểm tra trước. Nội dung code gửi tới API của Anthropic để xử lý (Anthropic công bố không dùng dữ liệu API để train). Nhưng nhiều công ty cấm đưa mã nguồn ra dịch vụ ngoài — PHẢI hỏi quản lý/bộ phận bảo mật trước khi dùng với code thật."
-      },
-      {
-        "question": "Cần cài gì để bắt đầu?",
-        "answer": "Cần: (1) git; (2) Claude Code (npm install -g @anthropic-ai/claude-code) + tài khoản Anthropic; (3) quyền truy cập repo (URL + token/SSH nếu repo riêng tư). Sau đó chỉ là git clone → cd → claude."
-      },
-      {
-        "question": "Khác gì bài 'Claude Code đọc requirement'?",
-        "answer": "Bài 'đọc requirement' dùng khi CÓ tài liệu đặc tả. Bài này dùng khi KHÔNG có tài liệu hoặc tài liệu lỗi thời → đọc thẳng code (sự thật của hệ thống). Hai cách bổ trợ nhau: có tài liệu thì đối chiếu tài liệu ↔ code để tìm chỗ lệch."
+        "exampleInput": "auth.service.js:55      if (failedCount >= 5) lockAccount()\norder.service.js:80     shippingFee = base[region] + surcharge - discount\norder.controller.js:95  deleteOrder(): chỉ requireLogin()\ncart.config.js:8        CART_TTL_DAYS = 30",
+        "resultGroups": [
+          {
+            "group": "",
+            "columns": [
+              "ID",
+              "Quy tắc",
+              "Vị trí",
+              "Loại",
+              "Trạng thái",
+              "Câu hỏi cho BA"
+            ],
+            "rows": [
+              [
+                "BR-01",
+                "Khóa TK sau 5 lần sai",
+                "auth.service.js:55",
+                "Ngưỡng",
+                "Cần hỏi BA",
+                "Vì sao 5? Khóa bao lâu?"
+              ],
+              [
+                "BR-02",
+                "Phí ship = vùng + phụ phí − KM",
+                "order.service.js:80",
+                "Tính toán",
+                "Nghi vấn",
+                "Combo nhiều KM tính sao?"
+              ],
+              [
+                "BR-03",
+                "Hủy đơn KHÔNG kiểm chủ sở hữu",
+                "order.controller.js:95",
+                "Phân quyền",
+                "Nghi là bug",
+                "User A hủy đơn user B — đúng ý?"
+              ],
+              [
+                "BR-04",
+                "Giữ giỏ hàng 30 ngày",
+                "cart.config.js:8",
+                "Ngưỡng",
+                "Cần hỏi BA",
+                "Con số 30 ngày từ đâu?"
+              ]
+            ]
+          }
+        ]
       }
     ],
     "finalThought": "Khi dự án không có tài liệu, mã nguồn chính là tài liệu đáng tin cậy nhất — và Claude Code giúp bạn đọc nó nhanh hơn nhiều lần. Lưu ý: AI đọc code ở dạng tĩnh, không thực thi — nó giúp bạn HIỂU để xác định phạm vi test, chứ không thay thế việc kiểm thử thực tế. Hãy kết hợp với bài 'Phân tích requirement' (khi có tài liệu), luôn mở đúng tệp AI trích dẫn để kiểm chứng, và xác nhận chính sách bảo mật của công ty trước khi clone mã nguồn thật."
@@ -953,15 +1105,12 @@
   {
     "slug": "claude-code-doc-phan-tich-requirement-cho-qa",
     "title": "Dùng Claude Code phân tích requirement: phát hiện điểm mơ hồ, mâu thuẫn & gợi ý test scenario",
-    "excerpt": "Một bản đặc tả dài 40 trang, dù đọc kỹ vẫn có thể bỏ lọt requirement mâu thuẫn — và chỉ phát hiện khi đã vào giai đoạn test. Claude Code có thể đọc cả thư mục tài liệu, chỉ ra điểm mơ hồ/thiếu sót và gợi ý test scenario. Bài viết dành cho QA: 4 bước cài đặt, 3 prompt copy-paste và lưu ý 'soi lỗi AI'.",
     "category": "ai-qa",
     "readingTime": 11,
     "publishedAt": "2026-06-16",
     "cover": "📋",
     "intro": {
-      "problem": "QA nào cũng từng gặp: bản đặc tả (BRD/SRS/user story) dài vài chục trang, dù đọc kỹ vẫn bỏ lọt một requirement mâu thuẫn hoặc mơ hồ — đến giai đoạn test mới phát hiện, lúc đó chi phí sửa cao hơn nhiều lần. Đọc và rà soát tài liệu là công việc phức tạp nhưng cũng dễ sai sót nhất trong quy trình QA.",
-      "whatIs": "Claude Code là công cụ dòng lệnh (CLI) của Anthropic. Bạn để cả thư mục tài liệu (file .md, .txt, .pdf, user story export...) vào một folder, mở Claude Code ngay tại đó, rồi 'trò chuyện' bằng tiếng Việt: nó đọc toàn bộ file, trả lời có dẫn chứng từ chính tài liệu. Cài 1 lệnh npm, hoặc dùng bản desktop.",
-      "whyThis": "Khác chatbot thường (phải copy-paste từng đoạn), Claude Code đọc trực tiếp NHIỀU file trong thư mục cùng lúc — hợp với bộ tài liệu requirement rải rác nhiều file. Nó cũng trích dẫn 'theo mục 3.2 file SRS.md' để bạn kiểm chứng, thay vì nói chung chung."
+      "problem": "QA hay bỏ lọt requirement mâu thuẫn hoặc mơ hồ khi đọc đặc tả dài — đến lúc test mới phát hiện thì chi phí sửa đã cao hơn nhiều. Claude Code để cả thư mục tài liệu (file .md, .txt, .pdf, user story export...) vào một folder, rồi trò chuyện bằng tiếng Việt: nó đọc nhiều file cùng lúc và trích dẫn theo mục, theo file cụ thể để bạn kiểm chứng — không cần copy-paste từng đoạn như chatbot thường."
     },
     "tldr": [
       "Claude Code đọc cả THƯ MỤC tài liệu (nhiều file) cùng lúc — hợp bộ requirement rải rác, không phải copy-paste từng đoạn.",
@@ -1012,28 +1161,6 @@
         "result": "Claude Code trả về (ví dụ, rút gọn):\n\nHAPPY PATH\n• TS-01: Đăng nhập đúng email+mật khẩu → vào trang chủ [SRS 2.1]\n• TS-02: Quên mật khẩu, nhập OTP đúng còn hạn → đặt lại mật khẩu thành công [SRS 2.3]\n\nNEGATIVE\n• TS-03: Sai mật khẩu → báo lỗi, không tiết lộ email tồn tại hay không [SRS 2.1 + ghi chú bảo mật]\n• TS-04: Bỏ trống email → validate phía client\n• TS-05: Email sai định dạng → báo lỗi định dạng\n\nBOUNDARY\n• TS-06: Sai mật khẩu đúng 5 lần → tài khoản bị khóa [SRS 2.5]\n• TS-07: Nhập OTP ngay khi vừa hết hạn → từ chối, cho gửi lại (LƯU Ý: requirement chưa rõ mục này — xem Prompt 2)\n\nBẢO MẬT\n• TS-08: Thử brute force > 5 lần → kiểm tra cơ chế khóa + captcha\n• TS-09: Nhập chuỗi SQL injection vào ô email → không lỗi 500, không lộ query\n\n→ QA review, bỏ scenario không hợp, rồi mới triển khai thành test case chi tiết (có thể nhờ Claude Code viết tiếp từng cái).",
         "testerNote": "Claude Code sinh scenario rất nhanh nhưng hay 'rập khuôn' — nó liệt kê đủ loại nhưng có thể bỏ qua nghiệp vụ đặc thù của dự án bạn. Đừng dùng thẳng: review lại, bổ sung scenario theo hiểu biết miền nghiệp vụ. Đặc biệt cảnh giác scenario nó gắn vào requirement 'chưa rõ' (như TS-07) — đó là dấu hiệu requirement cần clarify chứ không phải test luôn.",
         "exampleInput": "SRS.md (trích): 2.1 đăng nhập email + mật khẩu; 2.3 quên mật khẩu qua OTP; 2.5 khóa sau 5 lần sai.\nGhi chú bảo mật: thông báo lỗi không tiết lộ email có tồn tại hay không."
-      }
-    ],
-    "faq": [
-      {
-        "question": "Claude Code có miễn phí không? Khác gì ChatGPT?",
-        "answer": "Claude Code cần tài khoản Anthropic (gói trả phí hoặc API key — thường công ty cấp). Khác biệt chính với ChatGPT web: nó đọc TRỰC TIẾP nhiều file trong thư mục trên máy bạn cùng lúc, không phải copy-paste từng đoạn. Rất hợp khi requirement nằm rải rác nhiều file."
-      },
-      {
-        "question": "Tài liệu công ty là bảo mật — gửi cho AI có an toàn không?",
-        "answer": "Đây là điểm BẮT BUỘC kiểm tra trước. Nội dung file được gửi tới API của Anthropic để xử lý (Anthropic công bố không dùng dữ liệu API để train). Nhưng trước khi dùng cho tài liệu mật, PHẢI hỏi quản lý/bộ phận bảo mật của công ty xem chính sách có cho phép không. Nhiều công ty có quy định riêng về dữ liệu rời mạng nội bộ."
-      },
-      {
-        "question": "File PDF/Word/Excel có đọc được không?",
-        "answer": "Đọc được phần lớn, nhưng .md/.txt cho kết quả chính xác nhất. PDF dạng scan (ảnh) thì không đọc nổi chữ — cần OCR trước. Khuyên: copy nội dung requirement quan trọng sang .md trước khi phân tích, vừa nhanh vừa chính xác."
-      },
-      {
-        "question": "AI phân tích xong có tin được luôn để gửi BA không?",
-        "answer": "KHÔNG nên gửi thẳng. Coi output là 'bản nháp checklist nghi vấn'. Với mỗi điểm AI nêu (nhất là 'thiếu sót/mâu thuẫn'), tự mở file gốc xác minh — vì AI đôi khi suy diễn thừa. Sau khi lọc, danh sách đó cực kỳ giá trị cho buổi clarify với BA/PO."
-      },
-      {
-        "question": "Tôi không rành dòng lệnh (terminal) thì sao?",
-        "answer": "Chỉ cần thuộc 3 lệnh: cài (npm install -g ...), di chuyển thư mục (cd ten-thu-muc), và chạy (claude). Sau đó mọi thứ là trò chuyện bằng tiếng Việt bình thường. Hoặc dùng tiện ích Claude trong VS Code nếu bạn quen IDE hơn."
       }
     ],
     "finalThought": "Claude Code không thay được tư duy QA — quyết định test gì, độ ưu tiên, hiểu nghiệp vụ vẫn là bạn. Nhưng nó rút ngắn đáng kể bước đọc và rà soát requirement — bước phức tạp và dễ bỏ sót nhất. Quan trọng nhất với QA: dùng nó để PHÁT HIỆN requirement mơ hồ/mâu thuẫn sớm, trước khi vào sprint test. Luôn kiểm chứng lại mọi điểm AI nêu, và xác nhận chính sách bảo mật của công ty trước khi đưa tài liệu thật vào."

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const nav = [
   { href: "/ai-qa", label: "AI cho QA", short: "🧪 QA / Test" },
+  { href: "/db-testing", label: "DB Testing", short: "🗄️ DB Testing" },
   { href: "/kho-template-qa", label: "Kho Template", short: "🧩 Template" },
   { href: "/kho-prompt", label: "Kho Prompt", short: "📚 Prompt" },
 ];

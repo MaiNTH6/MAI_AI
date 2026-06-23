@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
           article: a,
           score: Math.max(
             matchScore(q, a.title),
-            matchScore(q, a.excerpt) * 0.5
+            matchScore(q, a.excerpt ?? "") * 0.5
           ),
         }))
         .filter((r) => r.score > 0)

@@ -10,6 +10,14 @@ export const categories: Category[] = [
     emoji: "🧪",
   },
   {
+    slug: "db-testing",
+    title: "DB Testing (Kiểm thử cơ sở dữ liệu)",
+    shortTitle: "DB Testing",
+    description:
+      "Kiểm thử ở tầng cơ sở dữ liệu cho QA: đối chiếu dữ liệu sau thao tác, ràng buộc, toàn vẹn tham chiếu, quy tắc nghiệp vụ — có AI hỗ trợ viết SQL.",
+    emoji: "🗄️",
+  },
+  {
     slug: "kho-prompt",
     title: "Kho Prompt (Câu lệnh)",
     shortTitle: "Kho Prompt",

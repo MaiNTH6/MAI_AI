@@ -1,4 +1,4 @@
-export type CategorySlug = "ai-qa" | "kho-prompt";
+export type CategorySlug = "ai-qa" | "db-testing" | "kho-prompt";
 
 export interface Category {
   slug: CategorySlug;
@@ -37,6 +37,8 @@ export interface ComparisonRow {
 export interface SetupStep {
   title: string;
   body: string;
+  code?: string; // khối mã (vd câu SQL) hiển thị dạng code block
+  tip?: string; // mẹo nổi bật (💡 box) hiển thị sau code block
   image?: string; // đường dẫn ảnh dưới /public, vd: /images/xxx.png
   imageAlt?: string; // chú thích ảnh
   linkSlug?: string; // slug bài viết liên quan → hiện link bấm được
@@ -79,10 +81,23 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface ContentTable {
+  title?: string; // tiêu đề bảng
+  intro?: string; // câu dẫn trước bảng
+  columns: string[];
+  rows: string[][];
+  note?: string; // ghi chú dưới bảng (vd "💡 QA Insight: ...")
+}
+
+export interface ArticleReference {
+  label: string; // mô tả nguồn
+  url?: string; // link (nếu có) — không có thì chỉ hiện chữ
+}
+
 export interface Article {
   slug: string;
   title: string;
-  excerpt: string;
+  excerpt?: string;
   category: CategorySlug;
   toolSlug?: string; // nếu là bài review một tool cụ thể
   readingTime: number; // phút
@@ -102,8 +117,13 @@ export interface Article {
 
   // === Phần value-first (đặt sau Quick Verdict, trước Use-case) ===
   intro?: ArticleIntro; // Mở bài: vấn đề + giới thiệu trợ lý + vì sao chọn cái này
+  lead?: string; // Mở bài dạng prose (không hộp màu) — cho bài kiến thức; tách đoạn bằng \n\n
   tldr?: string[]; // 3-5 bullet siêu ngắn "Đọc 30 giây"
-  comparisonTable?: ComparisonRow[]; // bảng trước/sau
+  stepsTitle?: string; // tiêu đề tuỳ biến cho khối steps (mặc định "Thiết lập trong N bước")
+  stepsSubtitle?: string; // mô tả dưới tiêu đề steps
+  comparisonTable?: ComparisonRow[]; // bảng trước/sau (đã ngừng render)
+  tables?: ContentTable[]; // bảng nội dung (HTML thật) trong thân bài
+  references?: ArticleReference[]; // Tài liệu tham khảo / nguồn
   videoUrl?: string; // YouTube watch URL hoặc embed URL
   videoTitle?: string;
   steps?: SetupStep[]; // 3-5 bước thiết lập tool

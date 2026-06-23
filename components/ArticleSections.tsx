@@ -3,7 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import type {
   ArticleIntro,
+  ArticleReference,
   ComparisonRow,
+  ContentTable,
   FAQItem,
   PromptExample,
   SetupStep,
@@ -51,6 +53,21 @@ export function IntroBox({ intro }: { intro: ArticleIntro }) {
         </div>
       )}
     </section>
+  );
+}
+
+/* ---------------- LEAD (mở bài dạng prose, không hộp màu) ---------------- */
+
+export function LeadBox({ text }: { text: string }) {
+  if (!text) return null;
+  return (
+    <div className="not-prose my-6 space-y-3 text-lg leading-relaxed text-slate-700">
+      {text.split("\n\n").map((p, i) => (
+        <p key={i} className="m-0">
+          {p}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -157,16 +174,24 @@ export function VideoBox({ url, title }: { url: string; title?: string }) {
 
 /* ---------------- SETUP STEPS ---------------- */
 
-export function StepsBox({ steps }: { steps: SetupStep[] }) {
+export function StepsBox({
+  steps,
+  title,
+  subtitle,
+}: {
+  steps: SetupStep[];
+  title?: string;
+  subtitle?: string;
+}) {
   if (!steps?.length) return null;
+  const sub =
+    subtitle ?? "Mất khoảng 10-15 phút lần đầu, sau đó chỉ việc dùng.";
   return (
     <section className="not-prose my-10">
       <h2 className="text-2xl font-bold text-slate-900 mb-1">
-        🚀 Thiết lập trong {steps.length} bước
+        {title || `🚀 Thiết lập trong ${steps.length} bước`}
       </h2>
-      <p className="text-slate-600 mb-5 text-sm">
-        Mất khoảng 10-15 phút lần đầu, sau đó chỉ việc dùng.
-      </p>
+      {sub && <p className="text-slate-600 mb-5 text-sm">{sub}</p>}
       <ol className="space-y-3">
         {steps.map((s, i) => (
           <li
@@ -181,6 +206,16 @@ export function StepsBox({ steps }: { steps: SetupStep[] }) {
               <div className="mt-1 text-slate-700 text-sm leading-relaxed whitespace-pre-line">
                 {s.body}
               </div>
+              {s.code && (
+                <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-100 font-mono">
+                  {s.code}
+                </pre>
+              )}
+              {s.tip && (
+                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 leading-relaxed">
+                  {s.tip}
+                </div>
+              )}
               {s.image && (
                 <figure className="mt-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -369,11 +404,13 @@ export function PromptsBox({ prompts }: { prompts: PromptExample[] }) {
   return (
     <section className="not-prose my-10">
       <h2 className="text-2xl font-bold text-slate-900 mb-1">
-        💬 {prompts.length} Prompt copy-paste sẵn cho bạn
+        🔍 {prompts.length} prompt — kèm chỗ AI hay sai cần bắt
       </h2>
       <p className="text-slate-600 mb-5 text-sm">
-        Bấm <strong>Copy prompt</strong> → dán vào trợ lý AI bạn đang dùng
-        (Claude Code, ChatGPT, Claude...) → nhấn Enter. Xong.
+        AI sinh kết quả chỉ trong vài giây — việc của bạn là <strong>kiểm lại</strong>.
+        Mỗi prompt kèm ví dụ kết quả và <strong>🔍 Góc soi lỗi của Tester</strong> (chỗ
+        AI hay sai, nên xem trước khi dùng). Bấm <strong>Copy</strong> → dán vào Claude
+        Code / ChatGPT.
       </p>
       <div className="space-y-5">
         {prompts.map((p, i) => (
@@ -503,6 +540,91 @@ export function FaqBox({ items }: { items: FAQItem[] }) {
           <FaqItem key={i} q={q} index={i} />
         ))}
       </div>
+    </section>
+  );
+}
+
+/* ---------------- CONTENT TABLES (bảng nội dung trong thân bài) ---------------- */
+
+export function ContentTablesBox({ tables }: { tables: ContentTable[] }) {
+  if (!tables?.length) return null;
+  return (
+    <section className="not-prose my-10 space-y-8">
+      {tables.map((t, ti) => (
+        <div key={ti}>
+          {t.title && (
+            <h2 className="text-2xl font-bold text-slate-900 mb-1">{t.title}</h2>
+          )}
+          {t.intro && <p className="text-slate-600 mb-4 text-sm">{t.intro}</p>}
+          <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200">
+            <table className="w-full text-sm border-collapse bg-white">
+              <thead>
+                <tr className="bg-slate-100">
+                  {t.columns.map((c, ci) => (
+                    <th
+                      key={ci}
+                      className="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-900"
+                    >
+                      {c}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {t.rows.map((r, ri) => (
+                  <tr key={ri} className="even:bg-slate-50/60">
+                    {r.map((cell, ci) => (
+                      <td
+                        key={ci}
+                        className="border border-slate-200 px-3 py-2 align-top text-slate-700"
+                      >
+                        {cell || <span className="text-slate-300">—</span>}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {t.note && (
+            <div className="mt-3 rounded-lg bg-brand-50 ring-1 ring-brand-100 px-4 py-3 text-sm text-slate-700">
+              {t.note}
+            </div>
+          )}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/* ---------------- REFERENCES (Tài liệu tham khảo) ---------------- */
+
+export function ReferencesBox({ items }: { items: ArticleReference[] }) {
+  if (!items?.length) return null;
+  return (
+    <section className="not-prose my-10 rounded-2xl border border-slate-200 bg-slate-50/60 p-6">
+      <h2 className="text-lg font-bold text-slate-900 mb-3">
+        📚 Tài liệu tham khảo
+      </h2>
+      <ul className="space-y-2 text-sm text-slate-700">
+        {items.map((r, i) => (
+          <li key={i} className="flex gap-2">
+            <span className="text-slate-400">•</span>
+            {r.url ? (
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-700 hover:underline"
+              >
+                {r.label}
+              </a>
+            ) : (
+              <span>{r.label}</span>
+            )}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

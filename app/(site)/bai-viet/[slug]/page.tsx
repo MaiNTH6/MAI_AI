@@ -7,12 +7,15 @@ import { PricingTable } from "@/components/PricingTable";
 import { AffiliateButton } from "@/components/AffiliateButton";
 import {
   IntroBox,
+  LeadBox,
   TldrBox,
+  ContentTablesBox,
   VideoBox,
   StepsBox,
   PromptsBox,
   VisualFeaturesBox,
   FaqBox,
+  ReferencesBox,
 } from "@/components/ArticleSections";
 
 interface PageProps {
@@ -68,9 +71,11 @@ export default async function ArticlePage({ params }: PageProps) {
           <span>Tác giả: Mai.tools</span>
         </div>
 
-        <p className="mt-6 text-xl text-slate-700 leading-relaxed">
-          {article.excerpt}
-        </p>
+        {article.excerpt && (
+          <p className="mt-6 text-xl text-slate-700 leading-relaxed">
+            {article.excerpt}
+          </p>
+        )}
 
         {/* Quick Verdict — 10s value */}
         {article.rating !== undefined && <QuickVerdict article={article} />}
@@ -78,8 +83,14 @@ export default async function ArticlePage({ params }: PageProps) {
         {/* Intro: Đặt vấn đề + Giới thiệu trợ lý */}
         {article.intro && <IntroBox intro={article.intro} />}
 
+        {/* Mở bài dạng prose (bài kiến thức) */}
+        {article.lead && <LeadBox text={article.lead} />}
+
         {/* TLDR — 30s value */}
         {article.tldr && <TldrBox items={article.tldr} />}
+
+        {/* Bảng nội dung (HTML thật) */}
+        {article.tables && <ContentTablesBox tables={article.tables} />}
 
         {/* Video hướng dẫn */}
         {article.videoUrl && (
@@ -87,7 +98,13 @@ export default async function ArticlePage({ params }: PageProps) {
         )}
 
         {/* Setup steps */}
-        {article.steps && <StepsBox steps={article.steps} />}
+        {article.steps && (
+          <StepsBox
+            steps={article.steps}
+            title={article.stepsTitle}
+            subtitle={article.stepsSubtitle}
+          />
+        )}
 
         {/* Prompt copy-paste */}
         {article.prompts && <PromptsBox prompts={article.prompts} />}
@@ -188,6 +205,9 @@ export default async function ArticlePage({ params }: PageProps) {
 
         {/* FAQ */}
         {article.faq && <FaqBox items={article.faq} />}
+
+        {/* Tài liệu tham khảo */}
+        {article.references && <ReferencesBox items={article.references} />}
 
         {/* Final thought — H2 đổi theo có/không affiliate */}
         {article.finalThought && (

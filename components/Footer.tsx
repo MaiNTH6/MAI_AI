@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const footerNav = [
   { href: "/ai-qa", label: "AI cho QA / Kiểm thử" },
+  { href: "/db-testing", label: "DB Testing" },
   { href: "/kho-template-qa", label: "Kho Template QA" },
   { href: "/kho-prompt", label: "Kho Prompt" },
 ];

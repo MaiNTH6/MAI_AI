@@ -11,3 +11,6 @@ tsconfig.tsbuildinfo
 
 # Tài liệu demo/nội bộ — không đẩy lên git
 demo-review/
+
+# MCP local config (connection details)
+.mcp.json
