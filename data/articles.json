@@ -97,7 +97,8 @@
         "testerNote": "Kết quả ví dụ là minh họa theo dữ liệu mô tả trong đầu vào. Claude sẽ tự sinh SQL phù hợp với cấu trúc bảng thực của bạn — kết quả thực tế phụ thuộc vào dữ liệu trong DB đang kết nối."
       }
     ],
-    "finalThought": "Kết nối Claude Code với MySQL không thay thế Workbench hay kỹ năng SQL — nó thêm một lớp tiện lợi cho những tác vụ kiểm tra nhanh trong quá trình test. Khi cần xác nhận một điều kiện dữ liệu cụ thể mà không muốn gián đoạn luồng làm việc, hỏi thẳng trong terminal nhanh hơn switch cửa sổ. Còn với những truy vấn phức tạp quan trọng, vẫn nên kiểm tra lại SQL được sinh ra trước khi tin vào kết quả."
+    "finalThought": "Kết nối Claude Code với MySQL không thay thế Workbench hay kỹ năng SQL — nó thêm một lớp tiện lợi cho những tác vụ kiểm tra nhanh trong quá trình test. Khi cần xác nhận một điều kiện dữ liệu cụ thể mà không muốn gián đoạn luồng làm việc, hỏi thẳng trong terminal nhanh hơn switch cửa sổ. Còn với những truy vấn phức tạp quan trọng, vẫn nên kiểm tra lại SQL được sinh ra trước khi tin vào kết quả.",
+    "coverImage": "https://images.unsplash.com/photo-1483736762161-1d107f3c78e1?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "setup-mysql-lab-cho-qa",
@@ -162,7 +163,8 @@
         "tip": "💡 Sau khi vào được: đặt mật khẩu cho root ngay để bảo mật môi trường lab của bạn."
       }
     ],
-    "finalThought": "Tự tay xử lý lỗi Permission và cấu hình dịch vụ Windows không chỉ giúp bạn có phòng Lab để học SQL — nó còn rèn tư duy xử lý sự cố (troubleshooting), kỹ năng sống còn khi điều tra lỗi hệ thống thực tế sau này."
+    "finalThought": "Tự tay xử lý lỗi Permission và cấu hình dịch vụ Windows không chỉ giúp bạn có phòng Lab để học SQL — nó còn rèn tư duy xử lý sự cố (troubleshooting), kỹ năng sống còn khi điều tra lỗi hệ thống thực tế sau này.",
+    "coverImage": "https://images.unsplash.com/photo-1483736762161-1d107f3c78e1?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "sql-thu-tu-chay-khac-thu-tu-viet",
@@ -253,7 +255,8 @@
         "url": "https://www.geeksforgeeks.org/order-of-execution-of-sql-queries/"
       }
     ],
-    "finalThought": "Mọi người thường nghĩ SELECT chạy đầu tiên, nhưng theo chuẩn ANSI SQL, FROM mới là bước khởi đầu. Nhớ một điều đơn giản này, bạn sẽ đọc và viết câu SQL rõ ràng hơn hẳn."
+    "finalThought": "Mọi người thường nghĩ SELECT chạy đầu tiên, nhưng theo chuẩn ANSI SQL, FROM mới là bước khởi đầu. Nhớ một điều đơn giản này, bạn sẽ đọc và viết câu SQL rõ ràng hơn hẳn.",
+    "coverImage": "https://images.unsplash.com/photo-1483736762161-1d107f3c78e1?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "kiem-chung-output-ai-cho-qa",
