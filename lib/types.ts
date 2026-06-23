@@ -102,7 +102,8 @@ export interface Article {
   toolSlug?: string; // nếu là bài review một tool cụ thể
   readingTime: number; // phút
   publishedAt: string; // YYYY-MM-DD
-  cover: string; // emoji placeholder, đổi sang ảnh thật sau
+  cover: string; // emoji fallback
+  coverImage?: string; // ảnh bìa thật — đường dẫn /images/covers/xxx.jpg hoặc URL Unsplash
   rating?: number;
   pros?: string[];
   cons?: string[];
