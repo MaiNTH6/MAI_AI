@@ -351,7 +351,8 @@
         "testerNote": "Prompt này giúp khoanh vùng nhưng không thay việc kiểm — AI chỉ đoán chỗ rủi ro dựa trên văn bản, không chạy thật. Dùng nó để biết nên kiểm ĐÂU trước, rồi tự kiểm / chạy thật để biết ĐÚNG hay SAI."
       }
     ],
-    "finalThought": "Thời AI làm được hết, người tester giỏi không phải người biết nhiều prompt — mà là người biết khi nào output sai và đủ bản lĩnh không tin theo. AI tạo ra trong vài giây; còn 'có dùng được không' vẫn là chữ ký của bạn. Đó là phần việc không bàn giao cho máy được."
+    "finalThought": "Thời AI làm được hết, người tester giỏi không phải người biết nhiều prompt — mà là người biết khi nào output sai và đủ bản lĩnh không tin theo. AI tạo ra trong vài giây; còn 'có dùng được không' vẫn là chữ ký của bạn. Đó là phần việc không bàn giao cho máy được.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "ai-viet-script-automation-playwright-tu-test-case",
@@ -420,7 +421,8 @@
         "testerNote": "Data-driven gọn, nhưng khi một từ khóa đỏ phải biết ngay từ nào — pytest tự gắn tham số vào tên test (test_tim_kiem_co_ket_qua[automation]). Cẩn thận phân biệt dữ liệu minh họa với dữ liệu thật; đừng để lộ tài khoản/dữ liệu nhạy cảm trong script."
       }
     ],
-    "finalThought": "AI rút ngắn rất nhiều quãng đường từ kịch bản sang test chạy được, nhưng chọn cái gì đáng kiểm và xác nhận assertion đúng nghĩa nghiệp vụ vẫn là việc của con người. Toàn bộ ví dụ ở đây đã chạy thật trên một trang web thực — bạn hoàn toàn có thể làm lại. Hãy dùng AI để đi nhanh hơn, không phải để khỏi cần hiểu, vì một test tự động viết sai sẽ âm thầm bỏ lọt lỗi mà không ai hay."
+    "finalThought": "AI rút ngắn rất nhiều quãng đường từ kịch bản sang test chạy được, nhưng chọn cái gì đáng kiểm và xác nhận assertion đúng nghĩa nghiệp vụ vẫn là việc của con người. Toàn bộ ví dụ ở đây đã chạy thật trên một trang web thực — bạn hoàn toàn có thể làm lại. Hãy dùng AI để đi nhanh hơn, không phải để khỏi cần hiểu, vì một test tự động viết sai sẽ âm thầm bỏ lọt lỗi mà không ai hay.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "quy-trinh-review-test-case",
@@ -562,7 +564,8 @@
         "exampleInput": "requirement/dang-nhap.md (yêu cầu):\nREQ-01  Đăng nhập bằng email + mật khẩu\nREQ-02  Khóa tài khoản sau 5 lần sai\nREQ-03  Quên mật khẩu qua OTP\nREQ-04  Đăng nhập bằng Google\n\ntest-cases/dang-nhap.md hiện có: TC-01..TC-06 (đều cho luồng email + mật khẩu)"
       }
     ],
-    "finalThought": "Review không phải 'đọc cho có' — là chốt chặn cuối trước khi test. Checklist biến nó thành quy trình có hệ thống (không sót vì quên); đối chiếu RTM đảm bảo không lọt requirement; AI thêm lớp soát nhanh vòng đầu. Nhưng người vẫn quyết định đúng/đủ. Quy trình đầy đủ: viết test case (xem bài riêng) → review theo checklist → author sửa & verify → chốt. Lưu Review Checklist + giữ format chuẩn để mỗi đợt review đều nhất quán."
+    "finalThought": "Review không phải 'đọc cho có' — là chốt chặn cuối trước khi test. Checklist biến nó thành quy trình có hệ thống (không sót vì quên); đối chiếu RTM đảm bảo không lọt requirement; AI thêm lớp soát nhanh vòng đầu. Nhưng người vẫn quyết định đúng/đủ. Quy trình đầy đủ: viết test case (xem bài riêng) → review theo checklist → author sửa & verify → chốt. Lưu Review Checklist + giữ format chuẩn để mỗi đợt review đều nhất quán.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "claude-code-nho-format-quy-tac-qa",
@@ -601,7 +604,8 @@
         "linkLabel": "Ví dụ áp dụng: bài Viết test case từ user story"
       }
     ],
-    "finalThought": "Nguyên tắc quan trọng khi dùng AI cho QA lâu dài: thay vì nhắc lại, hãy lưu quy tắc. Nên bắt đầu với CLAUDE.md (đơn giản, luôn được nạp, chia sẻ cả nhóm); bổ sung /command khi cần gọi nhanh; dùng skill cho quy trình phức tạp; và '#' để ghi chú nhanh. Lưu một lần, format và quy tắc sẽ được áp dụng nhất quán qua mọi lần cập nhật."
+    "finalThought": "Nguyên tắc quan trọng khi dùng AI cho QA lâu dài: thay vì nhắc lại, hãy lưu quy tắc. Nên bắt đầu với CLAUDE.md (đơn giản, luôn được nạp, chia sẻ cả nhóm); bổ sung /command khi cần gọi nhanh; dùng skill cho quy trình phức tạp; và '#' để ghi chú nhanh. Lưu một lần, format và quy tắc sẽ được áp dụng nhất quán qua mọi lần cập nhật.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "ai-viet-test-case-tu-user-story",
@@ -886,7 +890,8 @@
         "exampleInput": "Bộ test case Đăng nhập đã có (từ Prompt 1):\nUI-01, UI-02, VAL-01..04, LOG-01..03, ST-01..02, SEC-01.\nYêu cầu: tìm case CÒN THIẾU, không lặp lại case đã có."
       }
     ],
-    "finalThought": "Sinh test case là việc AI hỗ trợ hiệu quả nhất cho QA — nhanh và bao phủ đủ dạng. Nhưng 'sinh ra' khác với 'đúng' và 'đủ': AI đảm nhiệm phần liệt kê, áp kỹ thuật và định dạng; còn bạn chịu trách nhiệm tính đúng nghiệp vụ, kiểm tra tổ hợp trong bảng quyết định và xác định ưu tiên. Lưu ý: tổ chức theo màn hình ngay từ đầu sẽ giúp bước viết script automation về sau thuận lợi hơn nhiều."
+    "finalThought": "Sinh test case là việc AI hỗ trợ hiệu quả nhất cho QA — nhanh và bao phủ đủ dạng. Nhưng 'sinh ra' khác với 'đúng' và 'đủ': AI đảm nhiệm phần liệt kê, áp kỹ thuật và định dạng; còn bạn chịu trách nhiệm tính đúng nghiệp vụ, kiểm tra tổ hợp trong bảng quyết định và xác định ưu tiên. Lưu ý: tổ chức theo màn hình ngay từ đầu sẽ giúp bước viết script automation về sau thuận lợi hơn nhiều.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "ket-noi-claude-code-voi-confluence-jira-atlassian",
@@ -925,7 +930,8 @@
         "linkLabel": "Tiếp theo: 3 prompt hỏi đáp tài liệu Confluence"
       }
     ],
-    "finalThought": "Kết nối một lần là dùng lâu dài. Bước tiếp theo: xem bài 'Kết nối Claude Code với Confluence để hỏi đáp tài liệu' để biết 3 prompt tra cứu tài liệu thực tế. Lưu ý xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật."
+    "finalThought": "Kết nối một lần là dùng lâu dài. Bước tiếp theo: xem bài 'Kết nối Claude Code với Confluence để hỏi đáp tài liệu' để biết 3 prompt tra cứu tài liệu thực tế. Lưu ý xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "claude-code-ket-noi-confluence-doc-tai-lieu-du-an",
@@ -986,7 +992,8 @@
         "exampleInput": "Trang: 'Order States' (đơn hết hạn sau \"một thời gian\"), 'Refund Policy' (phí hủy 10%), 'CSKH FAQ' (phí 5%).\nKhông có trang nào mô tả: thanh toán thành công nhưng tạo đơn lỗi; hoàn tiền cho đơn trả góp."
       }
     ],
-    "finalThought": "Confluence là nơi lưu trữ tài liệu dự án, nhưng khối lượng lớn cũng khiến việc tra cứu khó khăn. Kết nối Claude Code cho phép bạn đặt câu hỏi cho toàn bộ kho tài liệu thay vì dò từng trang — rất phù hợp khi mới tham gia dự án hoặc cần tổng hợp thông tin gấp. Lưu ý: tài liệu có thể đã lỗi thời và AI dựa vào tìm kiếm nên có thể bỏ sót — hãy luôn mở liên kết trang gốc để kiểm chứng, ưu tiên trang cập nhật mới nhất, và xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật."
+    "finalThought": "Confluence là nơi lưu trữ tài liệu dự án, nhưng khối lượng lớn cũng khiến việc tra cứu khó khăn. Kết nối Claude Code cho phép bạn đặt câu hỏi cho toàn bộ kho tài liệu thay vì dò từng trang — rất phù hợp khi mới tham gia dự án hoặc cần tổng hợp thông tin gấp. Lưu ý: tài liệu có thể đã lỗi thời và AI dựa vào tìm kiếm nên có thể bỏ sót — hãy luôn mở liên kết trang gốc để kiểm chứng, ưu tiên trang cập nhật mới nhất, và xác nhận chính sách bảo mật của công ty trước khi kết nối với tài liệu thật.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "claude-code-doc-codebase-tu-git-hieu-he-thong",
@@ -1100,7 +1107,8 @@
         ]
       }
     ],
-    "finalThought": "Khi dự án không có tài liệu, mã nguồn chính là tài liệu đáng tin cậy nhất — và Claude Code giúp bạn đọc nó nhanh hơn nhiều lần. Lưu ý: AI đọc code ở dạng tĩnh, không thực thi — nó giúp bạn HIỂU để xác định phạm vi test, chứ không thay thế việc kiểm thử thực tế. Hãy kết hợp với bài 'Phân tích requirement' (khi có tài liệu), luôn mở đúng tệp AI trích dẫn để kiểm chứng, và xác nhận chính sách bảo mật của công ty trước khi clone mã nguồn thật."
+    "finalThought": "Khi dự án không có tài liệu, mã nguồn chính là tài liệu đáng tin cậy nhất — và Claude Code giúp bạn đọc nó nhanh hơn nhiều lần. Lưu ý: AI đọc code ở dạng tĩnh, không thực thi — nó giúp bạn HIỂU để xác định phạm vi test, chứ không thay thế việc kiểm thử thực tế. Hãy kết hợp với bài 'Phân tích requirement' (khi có tài liệu), luôn mở đúng tệp AI trích dẫn để kiểm chứng, và xác nhận chính sách bảo mật của công ty trước khi clone mã nguồn thật.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   },
   {
     "slug": "claude-code-doc-phan-tich-requirement-cho-qa",
@@ -1163,6 +1171,7 @@
         "exampleInput": "SRS.md (trích): 2.1 đăng nhập email + mật khẩu; 2.3 quên mật khẩu qua OTP; 2.5 khóa sau 5 lần sai.\nGhi chú bảo mật: thông báo lỗi không tiết lộ email có tồn tại hay không."
       }
     ],
-    "finalThought": "Claude Code không thay được tư duy QA — quyết định test gì, độ ưu tiên, hiểu nghiệp vụ vẫn là bạn. Nhưng nó rút ngắn đáng kể bước đọc và rà soát requirement — bước phức tạp và dễ bỏ sót nhất. Quan trọng nhất với QA: dùng nó để PHÁT HIỆN requirement mơ hồ/mâu thuẫn sớm, trước khi vào sprint test. Luôn kiểm chứng lại mọi điểm AI nêu, và xác nhận chính sách bảo mật của công ty trước khi đưa tài liệu thật vào."
+    "finalThought": "Claude Code không thay được tư duy QA — quyết định test gì, độ ưu tiên, hiểu nghiệp vụ vẫn là bạn. Nhưng nó rút ngắn đáng kể bước đọc và rà soát requirement — bước phức tạp và dễ bỏ sót nhất. Quan trọng nhất với QA: dùng nó để PHÁT HIỆN requirement mơ hồ/mâu thuẫn sớm, trước khi vào sprint test. Luôn kiểm chứng lại mọi điểm AI nêu, và xác nhận chính sách bảo mật của công ty trước khi đưa tài liệu thật vào.",
+    "coverImage": "https://plus.unsplash.com/premium_photo-1683121699283-12af1b88dfea?w=800&q=80&auto=format&fit=crop"
   }
 ]
