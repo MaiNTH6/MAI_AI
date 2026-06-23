@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/LegalPage";
 export const metadata = {
   title: "Điều khoản & Miễn trừ trách nhiệm",
   description:
-    "Điều khoản sử dụng, miễn trừ trách nhiệm nội dung và tuyên bố về thương hiệu của MAI.tools.",
+    "Điều khoản sử dụng, miễn trừ trách nhiệm nội dung và tuyên bố về thương hiệu của maiqai.com.",
 };
 
 export default function Page() {
@@ -15,7 +15,7 @@ export default function Page() {
     >
       <h2>1. Tính chất nội dung</h2>
       <p>
-        Toàn bộ nội dung trên MAI.tools mang tính <strong>tham khảo và giáo
+        Toàn bộ nội dung trên maiqai.com mang tính <strong>tham khảo và giáo
         dục</strong>. Bạn tự chịu trách nhiệm khi áp dụng vào công việc của mình.
         Mình cố gắng kiểm chứng thông tin, nhưng công cụ AI thay đổi liên tục —
         kết quả thực tế có thể khác với mô tả.
@@ -25,7 +25,7 @@ export default function Page() {
       <p>
         Các công cụ AI được nhắc tới (NotebookLM, Gamma, Canva, ChatGPT, Claude,
         Claude Code...) là sản phẩm của các bên thứ ba. Khi sử dụng, bạn tuân
-        theo điều khoản &amp; chính sách của chính hãng đó. MAI.tools không kiểm
+        theo điều khoản &amp; chính sách của chính hãng đó. maiqai.com không kiểm
         soát và không chịu trách nhiệm về hoạt động, giá cả, hay thay đổi của
         các công cụ này.
       </p>
@@ -33,7 +33,7 @@ export default function Page() {
       <h2>3. Tuyên bố về thương hiệu</h2>
       <p>
         Mọi tên thương hiệu, logo, nhãn hiệu được nhắc đến thuộc về chủ sở hữu
-        tương ứng. MAI.tools <strong>không liên kết, không được tài trợ và không
+        tương ứng. maiqai.com <strong>không liên kết, không được tài trợ và không
         đại diện</strong> cho bất kỳ hãng nào. Việc nhắc tên chỉ nhằm mục đích
         hướng dẫn, đánh giá khách quan.
       </p>
@@ -43,13 +43,13 @@ export default function Page() {
         Một số hướng dẫn (đặc biệt cho QA/Kiểm thử) liên quan tới việc đưa tài
         liệu hoặc mã nguồn cho công cụ AI xử lý. Trước khi làm với dữ liệu của
         công ty/khách hàng, bạn <strong>phải tuân thủ thỏa thuận bảo mật (NDA)
-        và chính sách nội bộ</strong> nơi bạn làm việc. MAI.tools không chịu
+        và chính sách nội bộ</strong> nơi bạn làm việc. maiqai.com không chịu
         trách nhiệm cho việc rò rỉ dữ liệu do người dùng tự gây ra.
       </p>
 
       <h2>5. Bản quyền</h2>
       <p>
-        Nội dung hướng dẫn, prompt và template do MAI.tools biên soạn. Bạn được
+        Nội dung hướng dẫn, prompt và template do maiqai.com biên soạn. Bạn được
         tự do sử dụng cho công việc cá nhân. Nếu chia sẻ lại, vui lòng ghi nguồn
         và không sao chép nguyên si cho mục đích thương mại.
       </p>

@@ -73,7 +73,7 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-content py-4 text-xs text-slate-500 flex flex-col sm:flex-row gap-2 justify-between">
-          <div>© {new Date().getFullYear()} MAI.tools — Made with ❤ in Vietnam.</div>
+          <div>© {new Date().getFullYear()} maiqai.com — Made with ❤ in Vietnam.</div>
           <div>Không thu thập email hay dữ liệu cá nhân của bạn.</div>
         </div>
       </div>

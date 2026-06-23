@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: PageProps) {
           <span>•</span>
           <span>{article.readingTime} phút đọc</span>
           <span>•</span>
-          <span>Tác giả: Mai.tools</span>
+          <span>Tác giả: maiqai.com</span>
         </div>
 
         {article.excerpt && (

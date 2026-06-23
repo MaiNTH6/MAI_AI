@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/LegalPage";
 export const metadata = {
   title: "Chính sách quyền riêng tư",
   description:
-    "MAI.tools không thu thập email hay dữ liệu cá nhân, không dùng cookie theo dõi.",
+    "maiqai.com không thu thập email hay dữ liệu cá nhân, không dùng cookie theo dõi.",
 };
 
 export default function Page() {
@@ -14,7 +14,7 @@ export default function Page() {
       lastUpdated="16/06/2026"
     >
       <p>
-        Tóm tắt một câu: <strong>MAI.tools không thu thập bất kỳ dữ liệu cá nhân
+        Tóm tắt một câu: <strong>maiqai.com không thu thập bất kỳ dữ liệu cá nhân
         nào của bạn.</strong>
       </p>
 
@@ -41,7 +41,7 @@ export default function Page() {
       <p>
         Một số bài có liên kết tới công cụ AI (NotebookLM, Gamma, Canva...). Khi
         bạn bấm sang trang của họ, chính sách quyền riêng tư của hãng đó sẽ áp
-        dụng — MAI.tools không kiểm soát những trang này.
+        dụng — maiqai.com không kiểm soát những trang này.
       </p>
 
       <h2>4. Nếu có thay đổi trong tương lai</h2>
