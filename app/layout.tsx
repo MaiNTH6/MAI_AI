@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     "Hướng dẫn thực chiến ứng dụng AI cho dân QA/Kiểm thử: đọc requirement, đọc code, viết test case, sinh test data. Kèm template Excel + prompt copy-paste sẵn.",
   metadataBase: new URL("https://maiqai.com"),
   alternates: { canonical: "/" },
+  verification: { google: "vs4v9x4NqFPp2yCJ-9W30A7II6uUF9EX1vdIM0YowTo" },
   openGraph: {
     type: "website",
     locale: "vi_VN",
