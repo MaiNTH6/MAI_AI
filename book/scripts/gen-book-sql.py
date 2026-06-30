@@ -1078,7 +1078,7 @@ def build():
         Spacer(1, 4),
         color_box("HÀNH ĐỘNG",
             "Trên giao diện, khách <b>C001</b> đặt mua <b>2</b> chiếc iPhone 15 Pro Max "
-            "(PROD_001, giá 30.000.000). Hệ thống sinh đơn mới <b>ORD_005</b>. Tồn kho PROD_001 "
+            "(PROD_001, giá 30.000.000). Hệ thống sinh đơn mới <b>ORD_006</b>. Tồn kho PROD_001 "
             "trước khi đặt là <b>50</b>. Sau thao tác, DB phải thể hiện đúng bốn điều dưới đây.",
             LAMBER, AMBER, colors.HexColor("#b45309"))))
     story.append(Spacer(1, 6))
@@ -1087,7 +1087,7 @@ def build():
     story.append(code_box(
         "SELECT order_id, customer_id, total_amount, status, order_date\n"
         "FROM   Orders\n"
-        "WHERE  order_id = 'ORD_005';"))
+        "WHERE  order_id = 'ORD_006';"))
     story.append(Paragraph(
         "Kỳ vọng: customer_id = C001, total_amount = 60.000.000, status hợp lệ (vd PENDING), "
         "order_date = hôm nay.", st_small))
@@ -1097,7 +1097,7 @@ def build():
     story.append(code_box(
         "SELECT product_id, quantity, price\n"
         "FROM   Order_Items\n"
-        "WHERE  order_id = 'ORD_005';"))
+        "WHERE  order_id = 'ORD_006';"))
     story.append(Paragraph(
         "Kỳ vọng đúng 1 dòng: PROD_001, quantity = 2, price = 30.000.000 (giá tại thời điểm mua). "
         "Nếu ra 2 dòng → double-submit (Câu 2, 29); nếu rỗng → đơn tạo mà thiếu chi tiết (Câu 15, 38).",
@@ -1119,7 +1119,7 @@ def build():
         "       SUM(oi.quantity * oi.price) AS tinh_tu_items\n"
         "FROM   Orders o\n"
         "JOIN   Order_Items oi ON o.order_id = oi.order_id\n"
-        "WHERE  o.order_id = 'ORD_005'\n"
+        "WHERE  o.order_id = 'ORD_006'\n"
         "GROUP  BY o.total_amount;"))
     story.append(Paragraph(
         "Hai con số phải bằng nhau (60.000.000 = 2 × 30.000.000). Lệch là lỗi tính tiền — đúng mẫu Câu 11, "
@@ -1176,17 +1176,17 @@ def build():
     story.append(Spacer(1, 4))
     story.append(code_box(
         "START TRANSACTION;\n"
-        "  INSERT INTO Orders      VALUES ('ORD_005','C001',60000000,'PENDING',CURDATE());\n"
-        "  INSERT INTO Order_Items VALUES (8,'ORD_005','PROD_001',2,30000000);\n"
+        "  INSERT INTO Orders      VALUES ('ORD_006','C001',60000000,'PENDING',CURDATE());\n"
+        "  INSERT INTO Order_Items VALUES (10,'ORD_006','PROD_001',2,30000000);\n"
         "  UPDATE Products SET stock = stock - 2 WHERE product_id = 'PROD_001';\n"
         "ROLLBACK;   -- giả lập một bước lỗi → huỷ TẤT CẢ\n"
         "\n"
-        "-- Kiểm: không được còn dấu vết nào của ORD_005\n"
-        "SELECT * FROM Orders      WHERE order_id = 'ORD_005';   -- phải rỗng\n"
-        "SELECT * FROM Order_Items WHERE order_id = 'ORD_005';   -- phải rỗng\n"
+        "-- Kiểm: không được còn dấu vết nào của ORD_006\n"
+        "SELECT * FROM Orders      WHERE order_id = 'ORD_006';   -- phải rỗng\n"
+        "SELECT * FROM Order_Items WHERE order_id = 'ORD_006';   -- phải rỗng\n"
         "SELECT stock FROM Products WHERE product_id = 'PROD_001'; -- phải vẫn = 50"))
     story.append(Paragraph(
-        "Nếu sau ROLLBACK vẫn còn ORD_005, hoặc kho đã bị trừ → ứng dụng <b>không bọc transaction đúng</b>: "
+        "Nếu sau ROLLBACK vẫn còn ORD_006, hoặc kho đã bị trừ → ứng dụng <b>không bọc transaction đúng</b>: "
         "lỗi nửa chừng sẽ để lại dữ liệu rác. Bài học cho tester: <b>luôn test cả luồng lỗi</b>, đừng chỉ "
         "test luồng thành công.", st_small))
     story.append(Spacer(1, 8))

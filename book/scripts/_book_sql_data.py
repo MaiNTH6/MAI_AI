@@ -349,8 +349,8 @@ ENTRIES = [
  "note":
    "Câu lệnh này kiểm tra chiều <b>Orders → Customers</b> (đơn hàng không có khách hàng).<br/>"
    "Cần kiểm tra thêm các chiều khác:<br/>"
-   "(1) <b>Order_Items → Products</b>: item có product_id không tồn tại — cùng kỹ thuật "
-   "LEFT JOIN ... IS NULL, chỉ đổi cặp bảng (xem thêm Bài tập 5.1).<br/>"
+   "(1) <b>Order_Items → Products</b>: item có product_id không tồn tại — phát hiện bằng "
+   "cùng kỹ thuật LEFT JOIN ... IS NULL (hoặc NOT EXISTS), chỉ đổi cặp bảng.<br/>"
    "(2) <b>Order_Items → Orders</b>: item thuộc order_id không tồn tại.<br/>"
    "Cả hai đều là orphan nhưng ở tầng bảng khác nhau.",
 },
@@ -1709,7 +1709,7 @@ ENTRIES = [
    ]
  ),
  "result_note":
-   "50% đơn hoàn tất, 25% bị hủy. Với dữ liệu test ít, tỷ lệ này không phản ánh thực tế. "
+   "40% đơn hoàn tất, 40% bị hủy, 20% chờ xử lý. Với dữ liệu test ít, tỷ lệ này không phản ánh thực tế. "
    "Câu này có giá trị thật khi chạy trên dữ liệu production đủ lớn.",
  "note":
    "Hai lưu ý khi dùng câu này trên production:<br/>"
@@ -3410,8 +3410,10 @@ EXERCISES = [
             "FROM   Order_Items\n"
             "GROUP  BY product_id\n"
             "HAVING COUNT(DISTINCT order_id) > 1;",
-     "answer": "PROD_001 (thuộc 2 đơn: ORD_001 và ORD_002). Lưu ý COUNT(DISTINCT order_id) "
-               "khác COUNT(*): PROD_001 có 3 dòng item nhưng item 1 và 7 cùng thuộc ORD_001."},
+     "answer": "PROD_001, PROD_002, PROD_004 — mỗi sản phẩm nằm trong 2 đơn khác nhau "
+               "(PROD_001: ORD_001+ORD_002; PROD_002: ORD_001+ORD_005; PROD_004: ORD_002+ORD_005). "
+               "Lưu ý COUNT(DISTINCT order_id) khác COUNT(*): PROD_001 có 3 dòng item nhưng item 1 "
+               "và 7 cùng thuộc ORD_001 nên chỉ tính 1 đơn cho lần đó."},
 
     # ---- PHẦN 2 — Ràng buộc nghiệp vụ ----
     {"part": 1, "code": "2.1",
@@ -3490,8 +3492,9 @@ EXERCISES = [
             "           FROM   Orders o2\n"
             "           JOIN   Customers c2 ON o2.customer_id = c2.customer_id\n"
             "           GROUP  BY o2.customer_id) x);",
-     "answer": "C001 (32M). Trung bình ba khách có đơn = 20M; chỉ C001 vượt. Mẫu 'so với trung "
-               "bình của chính tập' là nền của phân tích outlier — Câu 48 dùng CTE để viết gọn hơn."},
+     "answer": "C001 (47M). Trung bình ba khách có đơn = 25M ((47+20+8)/3); chỉ C001 vượt. Mẫu "
+               "'so với trung bình của chính tập' là nền của phân tích outlier — Câu 48 dùng CTE "
+               "để viết gọn hơn (lưu ý: Câu 48 chỉ tính đơn COMPLETED nên số khác bài này)."},
 
     # ---- PHẦN 4 — Biên và dữ liệu bất thường ----
     {"part": 3, "code": "4.1",
