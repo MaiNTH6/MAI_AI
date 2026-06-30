@@ -1,5 +1,4 @@
 {
-  "enableAllProjectMcpServers": true,
   "permissions": {
     "allow": [
       "Bash(npm install *)",
@@ -65,7 +64,10 @@
       "Bash(rm -rf .next)",
       "mcp__Claude_Preview__preview_start",
       "Bash(node build_cv_en.js)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "mcp__mysql-local__mysql_query",
+      "Bash(python book/scripts/gen-book-sql.py)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true
 }

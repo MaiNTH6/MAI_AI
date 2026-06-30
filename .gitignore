@@ -9,6 +9,10 @@ next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo
 
+# Python build cache
+__pycache__/
+*.pyc
+
 # Tài liệu demo/nội bộ — không đẩy lên git
 demo-review/
 

@@ -39,7 +39,7 @@
 --  Bug2 = PROD_003: stock = -5 (tồn kho âm)
 --  Bug3 = C004/C005: cùng email trung_email@email.com
 --  + Data bổ sung cho Câu 2–10: NULL email, khoảng trắng thừa, orphan record,
---    trùng composite key, trùng case-insensitive, full duplicate, ENUM sai, gap ID
+--    trùng composite key, trùng case-insensitive, full duplicate, ENUM sai, soft-delete
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS ecommerce_test;
@@ -72,7 +72,8 @@ CREATE TABLE Orders (
   customer_id  VARCHAR(10),               -- nullable intentionally: Câu 5
   total_amount DECIMAL(15,2) NOT NULL,
   status       VARCHAR(20),
-  order_date   DATE          NOT NULL
+  order_date   DATE          NOT NULL,
+  deleted_at   DATETIME      DEFAULT NULL -- Câu 10: soft-delete
 );
 
 CREATE TABLE Order_Items (
@@ -119,13 +120,15 @@ INSERT INTO Products (product_id, product_name, category, price, stock) VALUES
   ('PROD_007', 'Chuot gaming Razer',        'Phu kien',   1500000, NULL);
 
 -- ── Orders ───────────────────────────────────────────────────
-INSERT INTO Orders (order_id, customer_id, total_amount, status, order_date) VALUES
-  ('ORD_001', 'C001', 32000000, 'COMPLETED', '2026-06-20'),
+INSERT INTO Orders (order_id, customer_id, total_amount, status, order_date, deleted_at) VALUES
+  ('ORD_001', 'C001', 32000000, 'COMPLETED', '2026-06-20', NULL),
   -- Bug1: ghi 20M nhưng Order_Items tính ra 31M
-  ('ORD_002', 'C002', 20000000, 'COMPLETED', '2026-06-22'),
-  ('ORD_003', 'C003',  8000000, 'CANCELLED', '2026-06-23'),
+  ('ORD_002', 'C002', 20000000, 'COMPLETED', '2026-06-22', NULL),
+  ('ORD_003', 'C003',  8000000, 'CANCELLED', '2026-06-23', NULL),
   -- Câu 5: orphan — customer_id C999 không tồn tại trong Customers
-  ('ORD_004', 'C999',  5000000, 'PENDING',   '2026-06-24');
+  ('ORD_004', 'C999',  5000000, 'PENDING',   '2026-06-24', NULL),
+  -- Câu 10: soft-delete — đơn đã bị hủy và xóa mềm nhưng vẫn nằm trong bảng
+  ('ORD_005', 'C001', 15000000, 'CANCELLED', '2026-06-25', '2026-06-25 10:30:00');
 
 -- ── Order_Items (explicit item_id để kiểm soát gap) ─────────
 INSERT INTO Order_Items (item_id, order_id, product_id, quantity, price) VALUES
@@ -136,7 +139,10 @@ INSERT INTO Order_Items (item_id, order_id, product_id, quantity, price) VALUES
   (5, 'ORD_002', 'PROD_004', 1,  1000000),
   (6, 'ORD_003', 'PROD_003', 1,  8000000),
   -- Câu 2: duplicate composite key (cùng order_id + product_id với item_id=1)
-  (7, 'ORD_001', 'PROD_001', 1, 30000000);
+  (7, 'ORD_001', 'PROD_001', 1, 30000000),
+  -- Câu 10: items thuộc đơn đã soft-delete (ORD_005)
+  (8, 'ORD_005', 'PROD_004', 1,  1000000),
+  (9, 'ORD_005', 'PROD_002', 1,  2000000);
 
 -- ── Kiểm tra nhanh sau khi setup ────────────────────────────
 SELECT '=== SETUP XONG ===' AS thong_bao;
@@ -194,8 +200,6 @@ SELECT '--- Cau 9: Tier ngoai danh sach ---' AS check_name;
 SELECT customer_id, customer_name, membership_tier
 FROM Customers WHERE membership_tier NOT IN ('Standard','Silver','Gold','Platinum');
 
-SELECT '--- Cau 10: Gap trong item_id ---' AS check_name;
-SELECT t1.item_id + 1 AS id_bi_thieu
-FROM Order_Items t1
-WHERE NOT EXISTS (SELECT 1 FROM Order_Items t2 WHERE t2.item_id = t1.item_id + 1)
-  AND t1.item_id < (SELECT MAX(item_id) FROM Order_Items);
+SELECT '--- Cau 10: Soft-delete leak ---' AS check_name;
+SELECT order_id, total_amount, status, deleted_at
+FROM Orders WHERE deleted_at IS NOT NULL;
