@@ -50,6 +50,11 @@ DROP TABLE IF EXISTS Order_Items;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Customers;
+-- Dọn luôn 2 bảng thuộc bản dữ liệu mở rộng (Payments, Audit_Log) phòng khi
+-- cùng schema từng được nạp bởi ecommerce_test_setup_expanded.sql — đảm bảo
+-- ecommerce_test luôn đúng 4 bảng như mô tả trong sách, không lẫn dữ liệu thừa.
+DROP TABLE IF EXISTS Payments;
+DROP TABLE IF EXISTS Audit_Log;
 
 CREATE TABLE Customers (
   customer_id     VARCHAR(10)   PRIMARY KEY,

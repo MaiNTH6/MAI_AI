@@ -13,7 +13,9 @@ PARTS = [
     ("PHẦN 2", "Ràng buộc nghiệp vụ",
      "Mỗi hệ thống đều có những quy tắc bất thành văn: tổng tiền không thể âm, "
      "tồn kho không thể dưới không, trạng thái phải nằm trong danh sách cho phép. "
-     "Khi tầng ứng dụng quên kiểm tra, dữ liệu sai sẽ lặng lẽ trôi vào database."),
+     "Khi tầng ứng dụng quên kiểm tra, dữ liệu sai sẽ lặng lẽ trôi vào database. "
+     "Nhóm này cũng trang bị hai công cụ nền tảng: đọc schema một hệ thống lạ khi "
+     "chưa có tài liệu, và xác minh ràng buộc đã khai báo có thực sự tồn tại không."),
     ("PHẦN 3", "Đối soát và tính toán",
      "Phần lớn bug tài chính không nằm ở một bản ghi đơn lẻ mà ở chỗ hai con số "
      "đáng lẽ bằng nhau lại lệch nhau. Nhóm này tập trung vào kỹ thuật đối soát: "
@@ -581,8 +583,15 @@ ENTRIES = [
  ],
  "explain":
    "<b>NOT IN + danh sách tường minh</b> là cách nhanh nhất để kiểm tra ENUM không được enforce ở tầng DB.<br/>"
-   "Áp dụng tương tự cho cột status của Orders:<br/>"
-   "NOT IN ('COMPLETED','PENDING','CANCELLED','PROCESSING').",
+   "Pattern này áp dụng cho MỌI cột có danh sách giá trị cố định trong hệ thống — chỉ đổi tên "
+   "cột/bảng và danh sách hợp lệ, cấu trúc câu lệnh giữ nguyên:<br/>"
+   "(1) <b>Orders.status</b>: <b>NOT IN ('COMPLETED','PENDING','CANCELLED','PROCESSING')</b> "
+   "— chạy trên data mẫu cho kết quả rỗng (4 trạng thái đều hợp lệ, xác nhận sạch).<br/>"
+   "(2) <b>Customers.status</b>: <b>NOT IN ('ACTIVE','INACTIVE','SUSPENDED')</b> "
+   "— cũng cho kết quả rỗng, nhưng lưu ý data mẫu toàn ACTIVE nên chưa kiểm thử được "
+   "luồng deactivate/suspend tài khoản — khi viết test case cần bổ sung data có đủ trạng thái.<br/>"
+   "Kết quả rỗng không phải thất bại — đó là confirmation hệ thống đang đúng, và câu lệnh "
+   "nên chạy định kỳ hoặc sau mỗi lần migrate dữ liệu để phát hiện sớm giá trị lạ.",
  "result_table": (
    ["customer_id","customer_name","membership_tier"],
    [["C010","Khach Test VIP","VIP"]],
@@ -595,7 +604,8 @@ ENTRIES = [
    "Ví dụ: <b>WHERE tier NOT IN ('Standard', NULL)</b> — không trả về dòng nào, "
    "kể cả dòng có tier = 'VIP'.<br/>"
    "Quy tắc: <b>luôn đảm bảo danh sách NOT IN không chứa NULL</b> — "
-   "hoặc dùng NOT EXISTS thay thế để an toàn hơn.",
+   "hoặc dùng NOT EXISTS thay thế để an toàn hơn. Bẫy này áp dụng cho mọi cột ENUM, "
+   "không riêng membership_tier.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -741,12 +751,12 @@ ENTRIES = [
 # ─────────────────────────────────────────────────────────
 {
  "part": 1, "id": 12,
- "title": "Phát hiện tồn kho âm",
+ "title": "Phát hiện tồn kho âm hoặc NULL",
  "situation":
-   "Nghiệp vụ yêu cầu tồn kho không thể xuống dưới 0. Nhưng nếu thiếu validation "
-   "hoặc có race condition khi nhiều người cùng đặt hàng, cột <b>stock</b> vẫn "
-   "có thể mang giá trị âm mà không bị hệ thống chặn.",
- "before_label": "Bảng Products — dòng đỏ: stock âm (Bug-C):",
+   "Cột <b>stock</b> có hai kiểu lỗi cần soi cùng lúc: giá trị <b>âm</b> (bán quá số lượng "
+   "thực có) và giá trị <b>NULL</b> (chưa từng được nhập kho). Hai lỗi này có nguyên nhân và "
+   "cách xử lý khác hẳn nhau, nhưng đều khiến trang sản phẩm hiển thị sai tình trạng còn hàng.",
+ "before_label": "Bảng Products — dòng đỏ: stock âm (Bug-C) và stock NULL:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
    ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000",50],
@@ -757,107 +767,54 @@ ENTRIES = [
    ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
    ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
  ],
- "before_bugs": [2],
+ "before_bugs": [2, 6],
  "before_col_widths": [65, 178, 65, 90, 95],
  "sql": (
    "SELECT product_id,\n"
    "       product_name,\n"
    "       stock\n"
    "FROM   Products\n"
-   "WHERE  stock < 0;"
+   "WHERE  stock < 0\n"
+   "    OR stock IS NULL;"
  ),
  "clauses": [
    ("FROM Products",
     "MySQL tải toàn bộ bảng <b>Products</b>."),
-   ("WHERE stock < 0",
-    "Lọc sản phẩm có tồn kho âm — vi phạm ràng buộc nghiệp vụ. "
-    "Đổi thành <b>stock &lt;= 0</b> nếu muốn bắt cả trường hợp hết hàng."),
+   ("WHERE stock < 0\n    OR stock IS NULL",
+    "Hai điều kiện gộp bằng OR: <b>stock &lt; 0</b> bắt tồn kho âm; "
+    "<b>stock IS NULL</b> bắt dữ liệu chưa nhập. Không thể dùng <b>= NULL</b> vì "
+    "NULL = NULL trả về UNKNOWN, không phải TRUE — đây là lỗi phổ biến nhất khi mới học SQL."),
    ("SELECT product_id, product_name, stock",
     "Chiếu đủ thông tin để QA xác định sản phẩm và mức độ lệch."),
  ],
  "explain":
-   "Câu lệnh đơn giản nhưng <b>cực kỳ quan trọng</b> trong kiểm thử e-commerce.<br/>"
-   "Tồn kho âm thường xảy ra ở hai tình huống:<br/>"
-   "(1) <b>Thiếu CHECK constraint</b>: DB không có quy tắc chặn giá trị âm. "
-   "Khi code chạy UPDATE stock = stock - 1 lúc stock đang = 0, "
-   "DB chấp nhận ngay — kết quả stock = -1 mà không báo lỗi gì.<br/>"
-   "(2) <b>Race condition</b>: Hai người cùng đặt hàng lúc còn 1 sản phẩm. "
-   "Cả hai cùng đọc stock = 1 trong tích tắc, cùng kiểm tra 'còn hàng', "
-   "rồi cùng trừ 1 — kết quả cuối là stock = -1. "
-   "Xảy ra vì hai thao tác chạy song song, không chờ nhau.<br/>"
-   "Phát hiện sớm giúp team thêm CHECK constraint hoặc khóa giao dịch kịp thời.",
+   "Câu lệnh đơn giản nhưng <b>cực kỳ quan trọng</b> trong kiểm thử e-commerce — gộp hai loại "
+   "lỗi cùng một cột để có báo cáo đầy đủ trong một lần chạy.<br/>"
+   "<b>Tồn kho âm</b> thường xảy ra ở hai tình huống: (1) <b>Thiếu CHECK constraint</b> — DB "
+   "chấp nhận ngay UPDATE stock = stock - 1 dù stock đang = 0, không báo lỗi gì; "
+   "(2) <b>Race condition</b> — hai người cùng đặt hàng lúc còn 1 sản phẩm, cả hai cùng đọc "
+   "stock = 1, cùng kiểm tra 'còn hàng', cùng trừ 1 → kết quả cuối stock = -1.<br/>"
+   "<b>Tồn kho NULL</b> nghĩa là <b>không có thông tin</b> — khác hẳn với stock = 0 (hết hàng "
+   "nhưng đã biết rõ số lượng). Mọi phép so sánh với NULL đều trả về UNKNOWN nên bắt buộc "
+   "dùng IS NULL/IS NOT NULL, không thể dùng = hay !=.",
  "result_table": (
    ["product_id","product_name","stock"],
-   [["PROD_003","Tai nghe Sony WH-1000XM5",-5]],
+   [
+     ["PROD_003","Tai nghe Sony WH-1000XM5",-5],
+     ["PROD_007","Chuot gaming Razer","(NULL)"],
+   ]
  ),
  "result_note":
-   "PROD_003 tồn kho = -5. Cần điều tra: lỗi dữ liệu hay hệ thống "
-   "đã cho phép bán quá số lượng?",
+   "2 sản phẩm lỗi, hai nguyên nhân khác nhau: PROD_003 tồn kho = -5 (bán quá số lượng — "
+   "điều tra race condition hoặc logic trừ kho); PROD_007 tồn kho = NULL (chưa nhập kho — "
+   "bổ sung dữ liệu hoặc thêm DEFAULT 0 vào schema).",
  "note":
-   "Thêm <b>CHECK constraint</b> vào DB để ngăn từ đầu:<br/>"
+   "Thêm <b>CHECK constraint</b> vào DB để ngăn giá trị âm từ đầu:<br/>"
    "<b>ALTER TABLE Products ADD CONSTRAINT chk_stock CHECK (stock &gt;= 0);</b><br/>"
-   "Constraint này chỉ chặn INSERT/UPDATE mới — dữ liệu âm đã có vẫn giữ nguyên.<br/>"
-   "Kết hợp với <b>Câu 13</b> (stock IS NULL) để kiểm tra đầy đủ cột stock:<br/>"
-   "(1) Câu 12: stock âm — bán quá số lượng.<br/>"
-   "(2) Câu 13: stock NULL — dữ liệu chưa được điền.",
-},
-# ─────────────────────────────────────────────────────────
-{
- "part": 1, "id": 13,
- "title": "Phát hiện tồn kho bị NULL",
- "situation":
-   "Cột stock bị NULL khác với stock = 0 (hết hàng). NULL nghĩa là "
-   "<b>không có thông tin</b> — hệ thống không biết còn hay hết. "
-   "Nếu không phân biệt, trang sản phẩm có thể hiển thị sai trạng thái "
-   "'còn hàng' cho sản phẩm thực ra chưa được nhập kho.",
- "before_label": "Bảng Products — dòng đỏ: stock = NULL (dữ liệu thiếu):",
- "before_cols": ["product_id","product_name","category","price","stock"],
- "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000",50],
-   ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000",100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000",-5],
-   ["PROD_004","Sac du phong Anker","Phu kien","1.000.000",20],
-   ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
-   ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
-   ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
- ],
- "before_bugs": [6],
- "before_col_widths": [65, 178, 65, 90, 95],
- "sql": (
-   "SELECT product_id,\n"
-   "       product_name,\n"
-   "       stock\n"
-   "FROM   Products\n"
-   "WHERE  stock IS NULL;"
- ),
- "clauses": [
-   ("FROM Products",
-    "MySQL tải toàn bộ bảng <b>Products</b>."),
-   ("WHERE stock IS NULL",
-    "<b>IS NULL</b> là toán tử duy nhất để so sánh với NULL. "
-    "Không thể dùng <b>= NULL</b> vì NULL = NULL trả về UNKNOWN, không phải TRUE."),
-   ("SELECT product_id, product_name, stock",
-    "Chiếu ra để QA xác định và bổ sung giá trị còn thiếu."),
- ],
- "explain":
-   "NULL trong SQL không phải số không, không phải chuỗi rỗng — là giá trị <b>không xác định</b>.<br/>"
-   "Mọi phép so sánh với NULL đều trả về UNKNOWN: "
-   "<b>stock = NULL → UNKNOWN</b>, <b>stock != NULL → UNKNOWN</b>.<br/>"
-   "Do đó phải dùng <b>IS NULL</b> hoặc <b>IS NOT NULL</b> — không thể dùng = hay !=.<br/>"
-   "Đây là lỗi lập trình phổ biến nhất khi mới làm việc với SQL.",
- "result_table": (
-   ["product_id","product_name","stock"],
-   [["PROD_007","Chuot gaming Razer","(NULL)"]],
- ),
- "result_note":
-   "PROD_007 chưa có thông tin tồn kho. Cần điền giá trị thực hoặc "
-   "quyết định giá trị mặc định trước khi cho phép bán.",
- "note":
-   "Kết hợp Câu 12 và Câu 13 thành một câu để có báo cáo đầy đủ:<br/>"
-   "<b>WHERE stock IS NULL OR stock &lt; 0</b><br/>"
-   "Kết quả: PROD_003 (stock = -5) và PROD_007 (stock = NULL) — hai loại lỗi, hai cách xử lý:<br/>"
-   "(1) stock âm → điều tra race condition hoặc logic trừ kho.<br/>"
-   "(2) stock NULL → bổ sung dữ liệu hoặc thêm DEFAULT 0 vào schema.",
+   "Constraint này chỉ chặn INSERT/UPDATE mới — dữ liệu âm đã có vẫn giữ nguyên, "
+   "vẫn cần chạy câu lệnh trên để dọn dữ liệu cũ.<br/>"
+   "CHECK không chặn được NULL (NULL luôn vượt qua mọi CHECK trừ khi thêm NOT NULL) — "
+   "muốn bắt buộc phải nhập, thêm riêng <b>NOT NULL</b> cho cột stock.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -918,7 +875,15 @@ ENTRIES = [
    "Nếu hệ thống có sản phẩm miễn phí hợp lệ, đổi thành <b>CHECK (price &gt;= 0)</b> "
    "để cho phép price = 0 có chủ đích.<br/>"
    "Tránh đặt <b>DEFAULT 0</b> cho cột price: khi tạo sản phẩm mới mà quên nhập giá, "
-   "DB sẽ tự điền 0 thay vì báo lỗi — sản phẩm lặng lẽ lên sàn với giá miễn phí.",
+   "DB sẽ tự điền 0 thay vì báo lỗi — sản phẩm lặng lẽ lên sàn với giá miễn phí.<br/>"
+   "Cùng kỹ thuật này áp dụng được cho <b>Order_Items.price</b> (giá tại thời điểm bán) — "
+   "chỉ đổi <b>WHERE price &lt;= 0</b> (cột này NOT NULL theo schema nên không cần nhánh IS "
+   "NULL). Hai cột price mang ý nghĩa khác nhau: Products.price là <b>giá niêm yết hiện tại</b>, "
+   "Order_Items.price là <b>giá đã chốt lúc khách mua</b> — chúng có thể lệch nhau hợp lệ khi "
+   "giá niêm yết đổi sau khi đơn đã tạo (xem Câu 24). Vì vậy cần kiểm tra độc lập trên cả hai "
+   "bảng, đặc biệt sau khi deploy tính năng coupon, flash sale, hoặc discount. Thêm CHECK "
+   "tương ứng cho Order_Items: <b>ALTER TABLE Order_Items ADD CONSTRAINT chk_item_price "
+   "CHECK (price &gt; 0);</b>",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1026,7 +991,7 @@ ENTRIES = [
    "(1) PROD_005: trùng tên PROD_002 — sản phẩm bị nhân đôi.<br/>"
    "(2) PROD_006: price = NULL — chưa định giá.<br/>"
    "(3) PROD_007: stock = NULL — chưa nhập kho.<br/>"
-   "Kết hợp với Câu 13 và Câu 14 để phân tích từng trường hợp.",
+   "Kết hợp với Câu 12 và Câu 14 để phân tích từng trường hợp.",
  "result_table": (
    ["product_id","product_name","price","stock"],
    [
@@ -1040,10 +1005,10 @@ ENTRIES = [
    "PROD_006 chưa có giá, PROD_007 chưa có tồn kho.",
  "note":
    "Sản phẩm chưa bán không nhất thiết là lỗi — có thể là hàng mới chưa ra mắt.<br/>"
-   "Để phân biệt, kết hợp thêm điều kiện từ Câu 13 và Câu 14:<br/>"
+   "Để phân biệt, kết hợp thêm điều kiện từ Câu 12 và Câu 14:<br/>"
    "(1) <b>PROD_005</b>: trùng với PROD_002 → xác nhận bằng Câu 8 rồi xóa bản thừa.<br/>"
    "(2) <b>PROD_006</b>: price = NULL → cần nhập giá (Câu 14).<br/>"
-   "(3) <b>PROD_007</b>: stock = NULL → cần nhập tồn kho (Câu 13).",
+   "(3) <b>PROD_007</b>: stock = NULL → cần nhập tồn kho (Câu 12).",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1119,63 +1084,166 @@ ENTRIES = [
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 1, "id": 18,
- "title": "Kiểm tra trạng thái đơn hàng ngoài danh sách cho phép",
+ "part": 1, "id": 13,
+ "title": "Khám phá schema bằng INFORMATION_SCHEMA khi chưa có tài liệu",
  "situation":
-   "Cột <b>status</b> trong Orders chỉ nên chứa các giá trị đã định nghĩa: "
-   "PENDING, COMPLETED, CANCELLED, PROCESSING. "
-   "Nếu DB không dùng ENUM và tầng ứng dụng thiếu validation, "
-   "giá trị lạ như 'DONE', 'PAID', 'done' vẫn có thể trôi vào.",
- "before_label": "Bảng Orders — kiểm tra cột status (không có giá trị lạ):",
- "before_cols": ["order_id","customer_id","total_amount","status","order_date"],
+   "QA mới nhận một hệ thống không có tài liệu database — chỉ có quyền SELECT, "
+   "không biết có bao nhiêu bảng, cột nào kiểu gì, cột nào bắt buộc. Trước khi viết "
+   "được bất kỳ câu lệnh soi lỗi nào, cần một cách tra cứu schema ngay trong chính SQL, "
+   "không phụ thuộc tài liệu hay sơ đồ ER có thể đã lỗi thời.",
+ "before_label": "Những gì QA nhìn thấy qua SELECT * — không biết cấu trúc đứng sau:",
+ "before_cols": ["customer_id","customer_name","email","membership_tier","status"],
  "before_rows": [
-   ["ORD_001","C001","32.000.000","COMPLETED","2026-06-20"],
-   ["ORD_002","C002","20.000.000","COMPLETED","2026-06-22"],
-   ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
-   ["ORD_004","C999","5.000.000","PENDING","2026-06-24"],
-   ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "Silver",   "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "Standard", "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "Gold",     "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "Standard", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "Standard", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "Standard", "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "Standard", "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "Gold",     "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "Silver",   "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "VIP",      "ACTIVE"],
  ],
  "before_bugs": [],
- "before_col_widths": [65, 80, 105, 95, 148],
+ "before_col_widths": [55, 145, 225, 68],
  "sql": (
-   "SELECT order_id,\n"
-   "       customer_id,\n"
-   "       status\n"
-   "FROM   Orders\n"
-   "WHERE  status NOT IN\n"
-   "  ('COMPLETED','PENDING',\n"
-   "   'CANCELLED','PROCESSING');"
+   "SELECT table_name,\n"
+   "       COUNT(*) AS so_cot,\n"
+   "       SUM(CASE WHEN is_nullable='YES'\n"
+   "                THEN 1 ELSE 0 END) AS so_cot_nullable,\n"
+   "       SUM(CASE WHEN column_key='PRI'\n"
+   "                THEN 1 ELSE 0 END) AS so_khoa_chinh\n"
+   "FROM   information_schema.columns\n"
+   "WHERE  table_schema = 'ecommerce_test'\n"
+   "GROUP  BY table_name\n"
+   "ORDER  BY table_name;"
  ),
  "clauses": [
-   ("FROM Orders",
-    "MySQL tải toàn bộ bảng <b>Orders</b>."),
-   ("WHERE status NOT IN\n  ('COMPLETED','PENDING',\n   'CANCELLED','PROCESSING')",
-    "<b>NOT IN</b> lọc tất cả giá trị không nằm trong danh sách cho phép. "
-    "Danh sách phải đồng bộ với enum trong code — thêm/xóa giá trị phải cập nhật cả hai nơi."),
-   ("SELECT order_id, customer_id, status",
-    "Chiếu ra để QA xác nhận giá trị lạ và truy tìm nguồn gốc."),
+   ("FROM information_schema.columns",
+    "<b>information_schema</b> là schema hệ thống có sẵn trong mọi DB MySQL — chứa metadata "
+    "mô tả chính các bảng/cột trong DB, không cần quyền đặc biệt ngoài SELECT."),
+   ("WHERE table_schema\n  = 'ecommerce_test'",
+    "Lọc đúng database đang khảo sát — information_schema chứa metadata của TẤT CẢ database "
+    "trên server, không lọc sẽ trả về lẫn lộn."),
+   ("SUM(CASE WHEN ...\n  THEN 1 ELSE 0 END)",
+    "Đếm có điều kiện: đếm số cột cho phép NULL và số cột là khóa chính, "
+    "cho cái nhìn nhanh về độ \"chặt\" của từng bảng."),
+   ("GROUP BY table_name",
+    "Gom theo từng bảng để có một dòng tổng quan mỗi bảng."),
  ],
  "explain":
-   "Câu lệnh trả về <b>kết quả rỗng</b> — đây là trạng thái bình thường, "
-   "xác nhận tất cả đơn hàng đang có status hợp lệ.<br/>"
-   "Kết quả rỗng không phải thất bại — đó là confirmation hệ thống đang đúng.<br/>"
-   "Trong thực tế, câu này nên chạy định kỳ hoặc sau mỗi lần migrate dữ liệu "
-   "để phát hiện sớm nếu có giá trị lạ xuất hiện.<br/>"
-   "Câu 9 áp dụng cùng kỹ thuật cho cột membership_tier của Customers.",
+   "<b>information_schema.columns</b> là bản đồ schema luôn cập nhật — không như tài liệu "
+   "viết tay có thể đã lỗi thời từ lâu.<br/>"
+   "Mỗi DB có 4 bảng (Customers, Order_Items, Orders, Products), mỗi bảng có 1 khóa chính. "
+   "Orders nhiều cột nullable nhất (3/6) — gợi ý nhiều trường tùy chọn, đáng kiểm tra kỹ.<br/>"
+   "Lưu ý: <b>table_name có thể trả về chữ thường</b> dù tên gốc viết hoa (tùy hệ điều hành "
+   "server MySQL chạy) — luôn kiểm tra case thật trước khi lọc WHERE table_name = '...'.",
  "result_table": (
-   ["order_id","customer_id","status"],
-   [],
+   ["table_name","so_cot","so_cot_nullable","so_khoa_chinh"],
+   [
+     ["customers",   5, 3, 1],
+     ["order_items", 5, 2, 1],
+     ["orders",      6, 3, 1],
+     ["products",    5, 3, 1],
+   ]
  ),
  "result_note":
-   "Kết quả rỗng — tất cả đơn hàng có status hợp lệ. "
-   "Câu này vẫn cần chạy định kỳ: một lần sạch không có nghĩa là mãi mãi sạch.",
+   "4 bảng, mỗi bảng 1 khóa chính. Orders có 6 cột (nhiều nhất, vì có thêm order_date và "
+   "deleted_at) với 3 cột nullable — nên soi kỹ khi tìm dữ liệu thiếu.",
  "note":
-   "Cảnh báo với <b>NOT IN + NULL</b>: nếu có dòng nào status = NULL, "
-   "dòng đó sẽ KHÔNG được trả về bởi NOT IN.<br/>"
-   "Để bắt cả NULL, thêm điều kiện:<br/>"
-   "<b>WHERE status NOT IN (...) OR status IS NULL</b><br/>"
-   "Câu 9 (membership_tier) và Câu 18 (status) là cặp đôi để kiểm tra "
-   "toàn bộ trường dạng ENUM trong hệ thống.",
+   "Khi cần đào sâu một bảng cụ thể (kiểu dữ liệu từng cột, độ dài chuỗi tối đa...), bỏ "
+   "GROUP BY và lọc thêm theo table_name:<br/>"
+   "<b>SELECT column_name, column_type, is_nullable, column_key</b><br/>"
+   "<b>FROM information_schema.columns</b><br/>"
+   "<b>WHERE table_schema='ecommerce_test' AND table_name='Customers'</b><br/>"
+   "<b>ORDER BY ordinal_position;</b><br/>"
+   "Đây là bước đầu tiên nên làm trước khi viết bất kỳ câu lệnh nào trên một hệ thống lạ — "
+   "biến \"đoán mò cấu trúc\" thành \"đọc trực tiếp từ nguồn đáng tin nhất\".",
+},
+# ─────────────────────────────────────────────────────────
+{
+ "part": 1, "id": 18,
+ "title": "Kiểm tra ràng buộc UNIQUE/FOREIGN KEY có thực sự được enforce",
+ "situation":
+   "Sách liên tục khuyên \"thêm UNIQUE cho email\", \"thêm FOREIGN KEY cho customer_id\" — "
+   "nhưng làm sao biết những ràng buộc đó <b>đã tồn tại hay chưa</b> trên một hệ thống cụ thể? "
+   "Đừng tin lời đồn hay tài liệu cũ — tra trực tiếp metadata để biết DB đang thực sự bảo vệ "
+   "những gì.",
+ "before_label": "Bảng Customers — dòng đỏ: 2 email trùng (C004/C005) lẽ ra phải bị UNIQUE chặn:",
+ "before_cols": ["customer_id","customer_name","email","status"],
+ "before_rows": [
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "ACTIVE"],
+ ],
+ "before_bugs": [3, 4],
+ "before_col_widths": [55, 145, 225, 68],
+ "sql": (
+   "SELECT tc.table_name,\n"
+   "       tc.constraint_type,\n"
+   "       kcu.column_name\n"
+   "FROM   information_schema.table_constraints tc\n"
+   "LEFT JOIN information_schema.key_column_usage kcu\n"
+   "       ON tc.constraint_name = kcu.constraint_name\n"
+   "      AND tc.table_schema = kcu.table_schema\n"
+   "      AND tc.table_name = kcu.table_name\n"
+   "WHERE  tc.table_schema = 'ecommerce_test'\n"
+   "ORDER  BY tc.table_name, tc.constraint_type;"
+ ),
+ "clauses": [
+   ("FROM information_schema\n  .table_constraints tc",
+    "Bảng hệ thống liệt kê MỌI ràng buộc đã khai báo: PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK."),
+   ("LEFT JOIN information_schema\n  .key_column_usage kcu",
+    "Nối thêm để biết ràng buộc đó áp dụng trên <b>cột nào</b>. Bắt buộc dùng <b>LEFT JOIN</b> "
+    "thay vì JOIN thường: ràng buộc <b>CHECK không có dòng tương ứng</b> trong "
+    "key_column_usage (CHECK không gắn với một cột theo kiểu khóa), nên INNER JOIN sẽ ÂM "
+    "THẦM loại CHECK constraint khỏi kết quả — đúng loại lỗi khó nhận ra vì không báo gì cả."),
+   ("WHERE tc.table_schema\n  = 'ecommerce_test'",
+    "Giới hạn đúng database đang kiểm tra."),
+ ],
+ "explain":
+   "Kết quả chỉ trả về <b>4 PRIMARY KEY</b> — đúng 1 cho mỗi bảng — và <b>không có một UNIQUE "
+   "hay FOREIGN KEY nào khác</b>.<br/>"
+   "Đây chính là lời giải thích kỹ thuật cho lý do Câu 1 bắt được email trùng (C004/C005): "
+   "không hề có UNIQUE constraint trên cột email để chặn từ đầu.<br/>"
+   "Tương tự, Câu 5 bắt được ORD_004 trỏ tới customer_id không tồn tại vì <b>không có FOREIGN "
+   "KEY</b> nào ràng buộc Orders.customer_id phải khớp Customers.customer_id — DB chấp nhận "
+   "mọi giá trị, đúng hay sai.",
+ "result_table": (
+   ["table_name","constraint_type","column_name"],
+   [
+     ["customers",   "PRIMARY KEY", "customer_id"],
+     ["order_items", "PRIMARY KEY", "item_id"],
+     ["orders",      "PRIMARY KEY", "order_id"],
+     ["products",    "PRIMARY KEY", "product_id"],
+   ]
+ ),
+ "result_note":
+   "Chỉ có khóa chính. Không một ràng buộc tham chiếu hay duy nhất nào tồn tại — toàn bộ "
+   "việc giữ \"sạch\" dữ liệu trong hệ thống này hiện đang dựa hoàn toàn vào tầng ứng dụng, "
+   "không có lưới an toàn ở tầng DB.",
+ "note":
+   "Khi báo cáo phát hiện thiếu ràng buộc, đừng chỉ nói \"nên thêm UNIQUE\" — hãy nói rõ "
+   "<b>ĐANG thiếu</b> kèm bằng chứng truy vấn này, để team không tranh cãi \"chắc đã có rồi\".<br/>"
+   "Thêm ràng buộc thực tế:<br/>"
+   "<b>ALTER TABLE Customers ADD CONSTRAINT uq_email UNIQUE (email);</b><br/>"
+   "<b>ALTER TABLE Orders ADD CONSTRAINT fk_customer</b><br/>"
+   "<b>  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id);</b><br/>"
+   "Lưu ý: thêm UNIQUE sẽ THẤT BẠI nếu dữ liệu trùng (C004/C005) chưa được dọn trước — "
+   "phải chạy Câu 1 xử lý dữ liệu cũ rồi mới ALTER TABLE được.<br/>"
+   "Nếu hệ thống ĐÃ có CHECK constraint, kết quả sẽ hiện dòng <b>constraint_type = CHECK</b> "
+   "với <b>column_name = NULL</b> (do CHECK không gắn cột theo kiểu khóa) — để xem chính xác "
+   "điều kiện CHECK kiểm tra gì, tra thêm bảng riêng:<br/>"
+   "<b>SELECT constraint_name, check_clause FROM information_schema.check_constraints</b><br/>"
+   "<b>WHERE constraint_schema = 'ecommerce_test';</b>",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1496,7 +1564,7 @@ ENTRIES = [
     "Cách hiển thị này đưa dòng lỗi lên đầu bảng kết quả."),
  ],
  "explain":
-   "Phép nhân đơn giản nhưng phản ánh ngay <b>hai loại lỗi dữ liệu</b> từ Câu 12–14:<br/>"
+   "Phép nhân đơn giản nhưng phản ánh ngay <b>hai loại lỗi dữ liệu</b> từ Câu 12 và Câu 14:<br/>"
    "(1) <b>stock âm</b>: PROD_003 cho gia_tri_kho = -40.000.000 — không thể có kho giá trị âm.<br/>"
    "(2) <b>NULL</b>: PROD_006 (price NULL) và PROD_007 (stock NULL) cho gia_tri_kho = NULL "
    "— không thể tính được giá trị kho, ảnh hưởng trực tiếp đến báo cáo tổng tài sản.",
@@ -1714,7 +1782,7 @@ ENTRIES = [
  "note":
    "Hai lưu ý khi dùng câu này trên production:<br/>"
    "(1) <b>Trạng thái lạ</b>: nếu xuất hiện status không trong danh sách chuẩn, "
-   "đây là dòng bất thường cần điều tra — kết hợp với Câu 18.<br/>"
+   "đây là dòng bất thường cần điều tra — kết hợp với Câu 9 (kỹ thuật ENUM check).<br/>"
    "(2) <b>Tỷ lệ thay đổi đột ngột</b>: CANCELLED tăng từ 10% lên 30% sau một sprint "
    "là tín hiệu cần xem lại luồng checkout hoặc thanh toán.",
 },
@@ -2311,128 +2379,160 @@ ENTRIES = [
 # ─────────────────────────────────────────────────────────
 {
  "part": 3, "id": 36,
- "title": "Kiểm tra status của Customers ngoài danh sách cho phép",
+ "title": "Phát hiện dữ liệu test/demo còn sót trong dữ liệu thật",
  "situation":
-   "Câu 9 và Câu 18 đã kiểm tra membership_tier và order status. "
-   "Cột <b>status</b> của Customers cũng cần kiểm tra tương tự: "
-   "chỉ nên chứa ACTIVE, INACTIVE, SUSPENDED. "
-   "Giá trị lạ như 'active' (viết thường) hoặc 'BLOCKED' "
-   "có thể phá vỡ logic phân quyền ứng dụng.",
- "before_label": "Bảng Customers — kiểm tra cột status (tất cả đang ACTIVE):",
- "before_cols": ["customer_id","customer_name","membership_tier","status"],
+   "Trong lúc dựng môi trường hoặc thử nghiệm tính năng, dev/QA hay tạo tài khoản và bản ghi "
+   "có tên gợi ý rõ ràng là test ('Test', 'Demo', 'Fake'...). Vấn đề là những bản ghi này đôi "
+   "khi <b>quên dọn</b> trước khi lên production — làm sai lệch số liệu báo cáo, hoặc tệ hơn, "
+   "biến thành lỗ hổng nếu tài khoản test có quyền cao.",
+ "before_label": "Bảng Customers — dòng đỏ: tên gợi ý dữ liệu test/demo:",
+ "before_cols": ["customer_id","customer_name","email","status"],
  "before_rows": [
-   ["C001","Nguyen Van A",      "Silver",   "ACTIVE"],
-   ["C002","Tran Van B",        "Standard", "ACTIVE"],
-   ["C003","Le Thi C",          "Gold",     "ACTIVE"],
-   ["C004","Khach Hang Ao Bug", "Standard", "ACTIVE"],
-   ["C005","Khach Hang Trung",  "Standard", "ACTIVE"],
-   ["C006","Pham Van X",        "Standard", "ACTIVE"],
-   ["C007","Nguyen Thi Y",      "Standard", "ACTIVE"],
-   ["C008","  Pham Van D  ",    "Gold",     "ACTIVE"],
-   ["C009","Nguyen Van A (2)",  "Silver",   "ACTIVE"],
-   ["C010","Khach Test VIP",    "VIP",      "ACTIVE"],
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "ACTIVE"],
  ],
- "before_bugs": [],
- "before_col_widths": [55, 145, 115, 178],
+ "before_bugs": [3, 9],
+ "before_col_widths": [55, 145, 225, 68],
  "sql": (
    "SELECT customer_id,\n"
    "       customer_name,\n"
-   "       status\n"
+   "       email\n"
    "FROM   Customers\n"
-   "WHERE  status NOT IN\n"
-   "  ('ACTIVE','INACTIVE','SUSPENDED');"
+   "WHERE  LOWER(customer_name) LIKE '%test%'\n"
+   "    OR LOWER(customer_name) LIKE '%demo%'\n"
+   "    OR LOWER(customer_name) LIKE '%fake%'\n"
+   "    OR LOWER(customer_name) LIKE '%ao bug%'\n"
+   "    OR LOWER(IFNULL(email,'')) LIKE '%test%'\n"
+   "    OR LOWER(IFNULL(email,'')) LIKE '%demo%';"
  ),
  "clauses": [
-   ("FROM Customers",
-    "MySQL tải toàn bộ bảng <b>Customers</b>."),
-   ("WHERE status NOT IN\n  ('ACTIVE','INACTIVE','SUSPENDED')",
-    "<b>NOT IN</b> lọc ra mọi giá trị không thuộc danh sách cho phép. "
-    "Danh sách phải được đồng bộ với enum trong application code."),
-   ("SELECT customer_id, customer_name,\n  status",
-    "Chiếu đủ thông tin để QA xác định tài khoản bị ảnh hưởng."),
+   ("LOWER(customer_name)\n  LIKE '%test%'",
+    "<b>LOWER</b> chuẩn hóa trước khi so khớp — bắt được cả 'Test', 'TEST', 'test'. "
+    "<b>%...%</b> tìm chuỗi con ở bất kỳ vị trí nào trong tên."),
+   ("LOWER(IFNULL(email,''))\n  LIKE '%test%'",
+    "<b>IFNULL(email,'')</b> thay NULL bằng chuỗi rỗng trước khi LOWER — tránh LOWER(NULL) "
+    "trả về NULL khiến LIKE luôn UNKNOWN và bỏ sót dòng có email NULL."),
+   ("OR ... OR ...",
+    "Mỗi từ khóa nghi vấn ('test', 'demo', 'fake'...) là một nhánh OR riêng — danh sách "
+    "từ khóa nên được team thống nhất và cập nhật theo quy ước đặt tên test data thực tế."),
  ],
  "explain":
-   "Ba câu 9, 18, và 36 tạo thành bộ kiểm tra ENUM hoàn chỉnh cho hệ thống:<br/>"
-   "(1) <b>Câu 9</b>: membership_tier của Customers — phát hiện 'VIP' không hợp lệ.<br/>"
-   "(2) <b>Câu 18</b>: status của Orders — xác nhận chỉ có 4 trạng thái chuẩn.<br/>"
-   "(3) <b>Câu 36</b>: status của Customers — kết quả rỗng, dữ liệu sạch.<br/>"
-   "Kết quả rỗng ở đây là confirmation tốt — nhưng vẫn cần chạy định kỳ.",
+   "Kỹ thuật <b>LIKE '%từ_khóa%'</b> trên nhiều cột — khác hẳn các câu trùng lặp/ENUM trước đó "
+   "vì đây là tìm kiếm theo <b>ngữ nghĩa từ khóa</b>, không phải so khớp giá trị chính xác.<br/>"
+   "Bắt được 2 bản ghi: C004 'Khach Hang Ao Bug' (tên tự đặt là dữ liệu giả) và C010 'Khach "
+   "Test VIP' (có chữ 'Test' rõ ràng) — cả hai đều là tài khoản dựng cho mục đích minh họa "
+   "trong data mẫu của chính cuốn sách này.<br/>"
+   "Trên hệ thống thật, danh sách từ khóa cần mở rộng theo quy ước nội bộ: 'qa_', 'sample_', "
+   "tên miền nội bộ dùng để test (vd '@company-test.com')...",
  "result_table": (
-   ["customer_id","customer_name","status"],
-   [],
+   ["customer_id","customer_name","email"],
+   [
+     ["C004","Khach Hang Ao Bug","trung_email@email.com"],
+     ["C010","Khach Test VIP","vip@email.com"],
+   ]
  ),
  "result_note":
-   "Kết quả rỗng — tất cả 10 khách hàng đều có status = ACTIVE. "
-   "Cộng với Câu 9 phát hiện C010 có membership_tier = VIP không hợp lệ: "
-   "status hợp lệ, nhưng tier vẫn còn giá trị sai.",
+   "2 bản ghi nghi là dữ liệu test/demo. Trước khi xóa: xác nhận với team xem có phải seed "
+   "data cố ý giữ lại cho mục đích nào đó không — đừng xóa chỉ vì tên 'nghe giống' test.",
  "note":
-   "Lưu ý: tất cả khách đều là ACTIVE trong data mẫu — chưa kiểm thử được "
-   "luồng deactivate/suspend tài khoản.<br/>"
-   "Khi viết test case, cần thêm test data có đủ các trạng thái:<br/>"
-   "(1) INACTIVE: tài khoản tự hủy hoặc không hoạt động lâu.<br/>"
-   "(2) SUSPENDED: bị khóa bởi admin vì vi phạm.<br/>"
-   "Thiếu data đa dạng = test coverage không đầy đủ.",
+   "LIKE theo từ khóa có hai rủi ro cần lường trước:<br/>"
+   "(1) <b>Dương tính giả (false positive)</b>: khách hàng thật tên trùng từ khóa (vd công ty "
+   "tên 'Testco') sẽ bị bắt nhầm — luôn xác nhận thủ công trước khi xóa hàng loạt.<br/>"
+   "(2) <b>Âm tính giả (false negative)</b>: dữ liệu test đặt tên khéo léo không chứa từ khóa "
+   "nào sẽ lọt qua — đây là giới hạn cố hữu của tìm kiếm theo từ khóa, không phải lỗi kỹ thuật.<br/>"
+   "Phòng ngừa tận gốc: thêm cột <b>is_test_data BOOLEAN</b> để đánh dấu tường minh ngay từ "
+   "lúc tạo, thay vì suy luận ngược từ tên gọi.",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 3, "id": 37,
- "title": "Kiểm tra giá bán âm hoặc bằng 0 trong Order_Items",
+ "title": "Dò bản ghi gần-trùng bằng SOUNDEX (lỗi gõ chính tả)",
  "situation":
-   "Câu 14 đã kiểm tra price trong bảng Products. "
-   "Câu này kiểm tra <b>price trong Order_Items</b> — giá tại thời điểm mua. "
-   "Nếu giá bán = 0 hoặc âm bị ghi vào đơn, khách hàng được mua miễn phí "
-   "hoặc hệ thống hoàn tiền nhiều hơn số đã thu.",
- "before_label": "Bảng Order_Items — kiểm tra price có hợp lệ không (tất cả > 0):",
- "before_cols": ["item_id","order_id","product_id","quantity","price"],
+   "Câu 6 và Câu 35 bắt trùng nhờ chuẩn hóa hoa/thường và khoảng trắng — nhưng cả hai đều cần "
+   "chuỗi gốc <b>giống hệt nhau</b> sau khi chuẩn hóa. Lỗi gõ chính tả thật ('Nguyen Van A' "
+   "gõ thành 'Nguyen Van Ah' hay đọc sai dấu) tạo ra chuỗi khác hẳn về mặt ký tự dù phát âm "
+   "gần như nhau — LOWER/TRIM không bắt được loại trùng này.",
+ "before_label": "Bảng Customers — dòng đỏ: hai tên phát âm giống nhau (SOUNDEX trùng):",
+ "before_cols": ["customer_id","customer_name","email","status"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "ACTIVE"],
  ],
- "before_bugs": [],
- "before_col_widths": [50, 75, 90, 65, 213],
+ "before_bugs": [0, 8],
+ "before_col_widths": [55, 145, 225, 68],
  "sql": (
-   "SELECT item_id,\n"
-   "       order_id,\n"
-   "       product_id,\n"
-   "       price\n"
-   "FROM   Order_Items\n"
-   "WHERE  price <= 0;"
+   "SELECT a.customer_id  AS id_a,\n"
+   "       a.customer_name AS ten_a,\n"
+   "       b.customer_id  AS id_b,\n"
+   "       b.customer_name AS ten_b\n"
+   "FROM   Customers a\n"
+   "JOIN   Customers b\n"
+   "       ON SOUNDEX(a.customer_name) = SOUNDEX(b.customer_name)\n"
+   "      AND a.customer_id < b.customer_id;"
  ),
  "clauses": [
-   ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b>."),
-   ("WHERE price <= 0",
-    "Lọc item có giá âm hoặc bằng 0. "
-    "Không cần kiểm tra IS NULL vì cột price trong Order_Items "
-    "được định nghĩa NOT NULL trong schema."),
-   ("SELECT item_id, order_id,\n  product_id, price",
-    "Chiếu đủ thông tin để QA truy ngược: item nào, thuộc đơn nào, sản phẩm gì."),
+   ("SOUNDEX(a.customer_name)\n  = SOUNDEX(b.customer_name)",
+    "<b>SOUNDEX</b> chuyển chuỗi thành mã 4 ký tự đại diện cho cách phát âm — hai chuỗi viết "
+    "khác nhau nhưng đọc gần giống sẽ cho cùng mã."),
+   ("FROM Customers a\n  JOIN Customers b",
+    "<b>Self-join</b>: bảng tự ghép với chính nó để so sánh từng cặp bản ghi. "
+    "Vì điều kiện JOIN bọc trong hàm SOUNDEX(), MySQL không dùng được index — "
+    "đây là phép so khớp toàn bảng × toàn bảng, xem cảnh báo hiệu năng ở phần Ghi chú."),
+   ("AND a.customer_id\n  < b.customer_id",
+    "Điều kiện chống trùng cặp: nếu không có dòng này, mỗi cặp sẽ xuất hiện 2 lần (A-B và "
+    "B-A) và mỗi dòng còn tự khớp với chính nó."),
  ],
  "explain":
-   "Câu 14 kiểm tra Products.price (giá niêm yết), "
-   "câu này kiểm tra Order_Items.price (giá đã bán).<br/>"
-   "Hai cột này có thể khác nhau (xem Câu 24) — nên cần kiểm tra độc lập.<br/>"
-   "Kết quả rỗng trong data mẫu — tất cả giá bán đều hợp lệ.<br/>"
-   "Trên production, câu này đặc biệt quan trọng sau khi deploy "
-   "tính năng coupon, flash sale, hoặc discount.",
+   "SOUNDEX là kỹ thuật <b>fuzzy matching</b> — khác hẳn so khớp chính xác (Câu 1, 8) hay "
+   "chuẩn hóa hoa/thường-khoảng trắng (Câu 6, 35): nó so khớp theo <b>âm đọc</b>, không theo "
+   "ký tự.<br/>"
+   "C001 'Nguyen Van A' và C009 'Nguyen Van A (2)' cho cùng mã SOUNDEX vì SOUNDEX bỏ qua "
+   "khoảng trắng và ký tự không phải chữ cái khi mã hóa — cùng một cặp trùng mà Câu 31 (regex "
+   "ký tự lạ) đã phát hiện, nay được xác nhận bằng một kỹ thuật hoàn toàn khác.<br/>"
+   "SOUNDEX được thiết kế gốc cho tiếng Anh nên kém chính xác với tên có dấu tiếng Việt — "
+   "hữu ích nhất khi dữ liệu đã được chuyển về không dấu hoặc cho các trường mã/tên tiếng Anh.",
  "result_table": (
-   ["item_id","order_id","product_id","price"],
-   [],
+   ["id_a","ten_a","id_b","ten_b"],
+   [["C001","Nguyen Van A","C009","Nguyen Van A (2)"]],
  ),
  "result_note":
-   "Kết quả rỗng — tất cả price trong Order_Items đều > 0. "
-   "Chạy lại sau mỗi sprint có tính năng liên quan đến giá hoặc khuyến mãi.",
+   "1 cặp phát âm giống nhau. Đây là cùng cặp Câu 31 đã phát hiện qua dấu hiệu khác (ký tự "
+   "số/ngoặc trong tên) — SOUNDEX hữu ích nhất khi lỗi gõ không để lại dấu hiệu ký tự rõ ràng "
+   "như vậy, ví dụ 'Nguyen Van A' bị gõ nhầm thành 'Nguyenn Van A'.",
  "note":
-   "Khác với Products.price có thể NULL, Order_Items.price là NOT NULL trong schema.<br/>"
-   "Nhưng NOT NULL không có nghĩa là > 0 — chỉ nghĩa là không được để trống.<br/>"
-   "Để bảo vệ toàn diện, thêm CHECK constraint:<br/>"
-   "<b>ALTER TABLE Order_Items ADD CONSTRAINT chk_item_price CHECK (price &gt; 0);</b>",
+   "SOUNDEX chỉ là một trong các thuật toán fuzzy matching — hạn chế cần biết trước khi dùng:<br/>"
+   "(1) Độ nhạy thấp với tiếng Việt có dấu — cân nhắc bỏ dấu (UNACCENT/REPLACE thủ công) "
+   "trước khi SOUNDEX để tăng độ chính xác.<br/>"
+   "(2) Dễ cho <b>dương tính giả</b> với tên ngắn — luôn xác nhận thủ công, không tự động xóa.<br/>"
+   "(3) Hệ quản trị khác có hàm tương đương: PostgreSQL có <b>SOUNDEX</b> qua extension "
+   "fuzzystrmatch (kèm LEVENSHTEIN đo khoảng cách chỉnh sửa), SQL Server có <b>DIFFERENCE()</b>.<br/>"
+   "(4) <b>⚠️ CẢNH BÁO HIỆU NĂNG — không chạy nguyên văn câu này trên bảng lớn:</b> đây là "
+   "self-join với điều kiện bọc hàm, không index nào hỗ trợ được — EXPLAIN cho thấy MySQL "
+   "phải quét toàn bảng cho từng dòng (chi phí xấp xỉ N²). Với 10 dòng demo là tức thì; với "
+   "bảng khách hàng thật hàng trăm nghìn dòng, câu này có thể chạy hàng giờ hoặc làm nghẽn "
+   "DB đang phục vụ giao dịch. Chạy an toàn theo một trong các cách:<br/>"
+   "— Lọc trước bằng <b>WHERE</b> để thu hẹp tập so sánh (vd theo khu vực, theo ngày tạo "
+   "gần đây) thay vì so toàn bảng với toàn bảng.<br/>"
+   "— Nếu cần chạy định kỳ, thêm cột tính sẵn <b>soundex_name</b> (cập nhật lúc ghi dữ liệu) "
+   "và đánh index trên cột đó — khi ấy JOIN so sánh giá trị thường, không còn bọc hàm.<br/>"
+   "— Luôn chạy trên <b>replica/read-only</b> (xem chương \"Chạy SQL an toàn trên "
+   "production\"), không chạy trực tiếp trên DB giao dịch chính.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2738,7 +2838,9 @@ ENTRIES = [
     "chính là tuổi của đơn. Dùng ngày cố định để kết quả không trôi theo thời gian."),
    ("WHERE status = 'PENDING'\n  AND DATEDIFF('2026-06-30',\n        order_date) > 3",
     "Lọc đơn còn <b>PENDING</b> và đã treo quá <b>3 ngày</b>. "
-    "Ngưỡng 3 ngày tùy SLA của hệ thống."),
+    "Ngưỡng 3 ngày tùy SLA của hệ thống. Lưu ý: DATEDIFF() bọc quanh order_date khiến "
+    "điều kiện này <b>non-sargable</b> — xem cách viết thay thế tận dụng được index ở "
+    "phần Ghi chú."),
    ("ORDER BY so_ngay_ton_dong DESC",
     "Đơn treo lâu nhất lên đầu — ưu tiên xử lý trước."),
  ],
@@ -2759,7 +2861,13 @@ ENTRIES = [
    "(1) Đổi mốc cố định thành <b>CURDATE()</b> khi chạy giám sát thực tế.<br/>"
    "(2) Điều chỉnh ngưỡng ngày theo SLA: thanh toán có thể là vài giờ, "
    "giao hàng có thể là vài ngày.<br/>"
-   "(3) Áp dụng cho các trạng thái 'mắc kẹt' khác: PROCESSING, AWAITING_PAYMENT.",
+   "(3) Áp dụng cho các trạng thái 'mắc kẹt' khác: PROCESSING, AWAITING_PAYMENT.<br/>"
+   "(4) <b>Hiệu năng trên bảng lớn</b>: khác với Câu 34 (so sánh trực tiếp order_date, tận "
+   "dụng được index nếu có), <b>DATEDIFF(...) &gt; 3</b> bọc hàm quanh cột nên non-sargable "
+   "— dù order_date có được đánh index, MySQL vẫn phải tính DATEDIFF cho từng dòng thay vì "
+   "dùng index range scan. Trên bảng lớn, viết lại dạng sargable cho cùng kết quả:<br/>"
+   "<b>WHERE status = 'PENDING'</b><br/>"
+   "<b>  AND order_date &lt; DATE_SUB('2026-06-30', INTERVAL 3 DAY);</b>",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2796,7 +2904,9 @@ ENTRIES = [
  "clauses": [
    ("(SELECT MAX(o2.order_date)\n   FROM Orders o2\n   WHERE o2.order_date\n         < o.order_date)",
     "<b>Subquery tương quan</b>: với mỗi đơn, tìm ngày đặt lớn nhất "
-    "trong số các đơn <b>trước nó</b> — chính là đơn liền trước."),
+    "trong số các đơn <b>trước nó</b> — chính là đơn liền trước. Đây là correlated "
+    "subquery (EXPLAIN gắn nhãn <b>dependent</b>) — MySQL chạy lại subquery này cho "
+    "TỪNG dòng outer, không phải 1 lần — xem cảnh báo hiệu năng ở phần Ghi chú."),
    ("DATEDIFF(o.order_date, ...)\n  AS ngay_ke_tu_don_truoc",
     "Lấy hiệu số ngày giữa đơn hiện tại và đơn liền trước. "
     "Đơn đầu tiên không có đơn nào trước nên trả về NULL."),
@@ -2827,7 +2937,14 @@ ENTRIES = [
    "Ứng dụng dòng thời gian trong kiểm thử:<br/>"
    "(1) <b>Khoảng lặng dài</b>: hệ thống ngừng nhận đơn — job hoặc API có thể đã chết.<br/>"
    "(2) <b>Cụm 0 ngày dày đặc</b>: nhiều đơn cùng lúc — nghi vấn bot hoặc double-submit.<br/>"
-   "(3) Thêm điều kiện trên khoảng cách để chỉ liệt kê các điểm vượt ngưỡng.",
+   "(3) Thêm điều kiện trên khoảng cách để chỉ liệt kê các điểm vượt ngưỡng.<br/>"
+   "(4) <b>⚠️ CẢNH BÁO HIỆU NĂNG</b>: subquery tương quan ở đây chạy lại có table scan cho "
+   "mỗi dòng outer — chi phí xấp xỉ N² giống hệt mức rủi ro ở Câu 37 (SOUNDEX self-join). "
+   "Với vài nghìn đơn vẫn ổn; với bảng Orders production hàng triệu dòng, cách viết này có "
+   "thể chạy rất lâu hoặc nghẽn DB. Khi cần chạy thật trên dữ liệu lớn, dùng "
+   "<b>LAG(order_date) OVER (ORDER BY order_date)</b> (window function, MySQL 8.0+, xem "
+   "Câu 49) — cùng kết quả nhưng chỉ quét bảng một lần. Cách viết subquery ở Câu 43 này chỉ "
+   "nên dùng để minh hoạ logic hoặc khi chạy trên MySQL cũ chưa có window function.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -3331,7 +3448,10 @@ ENTRIES = [
     "<b>UNION ALL</b> ghép ba khối SELECT thành một bảng. "
     "Điều kiện: cùng số cột, kiểu dữ liệu tương thích. "
     "Dùng UNION ALL thay UNION để không mất dòng trùng — "
-    "các lỗi ở bảng khác nhau không bao giờ trùng."),
+    "các lỗi ở bảng khác nhau không bao giờ trùng. Khối 'Khach hang ma' dùng "
+    "<b>NOT IN</b> — an toàn ở đây vì customer_id là PRIMARY KEY của Customers "
+    "(không thể NULL), nhưng xem lại bẫy NOT IN + NULL đã học ở Câu 9 trước khi tái "
+    "sử dụng pattern này cho cột khác."),
    ("ORDER BY loai_loi",
     "Sắp xếp theo loại lỗi — nhóm các lỗi cùng loại lại gần nhau "
     "để dễ đọc báo cáo."),
@@ -3366,7 +3486,11 @@ ENTRIES = [
    "<b>SELECT 'Gia NULL', product_id, 'Products'</b><br/>"
    "<b>FROM Products WHERE price IS NULL</b><br/>"
    "Để báo cáo có thêm cột 'so_luong' đếm bao nhiêu lỗi mỗi loại, "
-   "bọc toàn bộ UNION ALL vào một CTE rồi GROUP BY loai_loi bên ngoài.",
+   "bọc toàn bộ UNION ALL vào một CTE rồi GROUP BY loai_loi bên ngoài.<br/>"
+   "Khi thêm khối mới dùng <b>NOT IN (subquery)</b> như khối 'Khach hang ma': nếu cột "
+   "trong subquery CÓ thể NULL, đổi sang <b>NOT EXISTS</b> để an toàn tuyệt đối (xem cách "
+   "viết tương đương ở Bài tập 5.2) — đừng dựa vào giả định 'cột này chắc không NULL', vì "
+   "giả định đó có thể đúng hôm nay nhưng sai sau khi schema đổi.",
 },
 
 ]  # end ENTRIES

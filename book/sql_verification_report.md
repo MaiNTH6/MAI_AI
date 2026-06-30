@@ -15,13 +15,13 @@ This report verifies every SQL query defined in `_book_sql_data.py` against the 
 | 9 | Kiểm tra giá trị ngoài danh sách cho phép (ENUM check) | ✅ MATCH | OK |
 | 10 | Tìm bản ghi xóa mềm vẫn tham gia tính toán | ✅ MATCH | OK |
 | 11 | Đối soát tổng tiền đơn hàng với chi tiết items | ✅ MATCH | OK |
-| 12 | Phát hiện tồn kho âm | ✅ MATCH | OK |
-| 13 | Phát hiện tồn kho bị NULL | ✅ MATCH | OK |
+| 12 | Phát hiện tồn kho âm hoặc NULL | ✅ MATCH | OK |
 | 14 | Phát hiện giá sản phẩm NULL hoặc bằng 0 | ✅ MATCH | OK |
 | 15 | Tìm đơn hàng không có dòng chi tiết nào | ✅ MATCH | OK |
 | 16 | Tìm sản phẩm chưa bao giờ được bán | ✅ MATCH | OK |
 | 17 | Tìm khách hàng chưa có đơn hàng nào | ✅ MATCH | OK |
-| 18 | Kiểm tra trạng thái đơn hàng ngoài danh sách cho phép | ✅ MATCH | OK |
+| 13 | Khám phá schema bằng INFORMATION_SCHEMA khi chưa có tài liệu | ✅ MATCH | OK |
+| 18 | Kiểm tra ràng buộc UNIQUE/FOREIGN KEY có thực sự được enforce | ✅ MATCH | OK |
 | 19 | Tổng hợp chi tiêu theo từng khách hàng | ✅ MATCH | OK |
 | 20 | Phát hiện sản phẩm đã bán vượt quá tồn kho | ✅ MATCH | OK |
 | 21 | Tính doanh thu thực theo từng đơn từ Order_Items | ✅ MATCH | OK |
@@ -39,8 +39,8 @@ This report verifies every SQL query defined in `_book_sql_data.py` against the 
 | 33 | Kiểm tra số lượng sản phẩm bất thường trong Order_Items | ✅ MATCH | OK |
 | 34 | Kiểm tra ngày đặt hàng bất thường (tương lai hoặc quá xa quá khứ) | ✅ MATCH | OK |
 | 35 | Tìm tên sản phẩm trùng sau khi chuẩn hóa | ✅ MATCH | OK |
-| 36 | Kiểm tra status của Customers ngoài danh sách cho phép | ✅ MATCH | OK |
-| 37 | Kiểm tra giá bán âm hoặc bằng 0 trong Order_Items | ✅ MATCH | OK |
+| 36 | Phát hiện dữ liệu test/demo còn sót trong dữ liệu thật | ✅ MATCH | OK |
+| 37 | Dò bản ghi gần-trùng bằng SOUNDEX (lỗi gõ chính tả) | ✅ MATCH | OK |
 | 38 | Phát hiện đơn có tổng tiền nhưng không có sản phẩm nào | ✅ MATCH | OK |
 | 39 | Phát hiện tổng items vượt quá 1.5 lần total_amount | ✅ MATCH | OK |
 | 40 | Truy vết item còn sót của đơn đã xóa mềm | ✅ MATCH | OK |
@@ -331,48 +331,28 @@ Rows:
 ```
 **Verification status**: ✅ MATCH
 ---
-### Câu 12: Phát hiện tồn kho âm
+### Câu 12: Phát hiện tồn kho âm hoặc NULL
 #### SQL Query:
 ```sql
 SELECT product_id,
        product_name,
        stock
 FROM   Products
-WHERE  stock < 0;
+WHERE  stock < 0
+    OR stock IS NULL;
 ```
 #### Expected result_table:
 Columns: `['product_id', 'product_name', 'stock']`
 Rows:
 ```python
   ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5]
-```
-#### Actual Database Output:
-Columns: `['product_id', 'product_name', 'stock']`
-Rows:
-```python
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5]
-```
-**Verification status**: ✅ MATCH
----
-### Câu 13: Phát hiện tồn kho bị NULL
-#### SQL Query:
-```sql
-SELECT product_id,
-       product_name,
-       stock
-FROM   Products
-WHERE  stock IS NULL;
-```
-#### Expected result_table:
-Columns: `['product_id', 'product_name', 'stock']`
-Rows:
-```python
   ['PROD_007', 'Chuot gaming Razer', '(NULL)']
 ```
 #### Actual Database Output:
 Columns: `['product_id', 'product_name', 'stock']`
 Rows:
 ```python
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5]
   ['PROD_007', 'Chuot gaming Razer', None]
 ```
 **Verification status**: ✅ MATCH
@@ -495,26 +475,71 @@ Rows:
 ```
 **Verification status**: ✅ MATCH
 ---
-### Câu 18: Kiểm tra trạng thái đơn hàng ngoài danh sách cho phép
+### Câu 13: Khám phá schema bằng INFORMATION_SCHEMA khi chưa có tài liệu
 #### SQL Query:
 ```sql
-SELECT order_id,
-       customer_id,
-       status
-FROM   Orders
-WHERE  status NOT IN
-  ('COMPLETED','PENDING',
-   'CANCELLED','PROCESSING');
+SELECT table_name,
+       COUNT(*) AS so_cot,
+       SUM(CASE WHEN is_nullable='YES'
+                THEN 1 ELSE 0 END) AS so_cot_nullable,
+       SUM(CASE WHEN column_key='PRI'
+                THEN 1 ELSE 0 END) AS so_khoa_chinh
+FROM   information_schema.columns
+WHERE  table_schema = 'ecommerce_test'
+GROUP  BY table_name
+ORDER  BY table_name;
 ```
 #### Expected result_table:
-Columns: `['order_id', 'customer_id', 'status']`
+Columns: `['table_name', 'so_cot', 'so_cot_nullable', 'so_khoa_chinh']`
 Rows:
 ```python
+  ['customers', 5, 3, 1]
+  ['order_items', 5, 2, 1]
+  ['orders', 6, 3, 1]
+  ['products', 5, 3, 1]
 ```
 #### Actual Database Output:
-Columns: `['order_id', 'customer_id', 'status']`
+Columns: `['TABLE_NAME', 'so_cot', 'so_cot_nullable', 'so_khoa_chinh']`
 Rows:
 ```python
+  ['customers', 5, Decimal('3'), Decimal('1')]
+  ['order_items', 5, Decimal('2'), Decimal('1')]
+  ['orders', 6, Decimal('3'), Decimal('1')]
+  ['products', 5, Decimal('3'), Decimal('1')]
+```
+**Verification status**: ✅ MATCH
+---
+### Câu 18: Kiểm tra ràng buộc UNIQUE/FOREIGN KEY có thực sự được enforce
+#### SQL Query:
+```sql
+SELECT tc.table_name,
+       tc.constraint_type,
+       kcu.column_name
+FROM   information_schema.table_constraints tc
+LEFT JOIN information_schema.key_column_usage kcu
+       ON tc.constraint_name = kcu.constraint_name
+      AND tc.table_schema = kcu.table_schema
+      AND tc.table_name = kcu.table_name
+WHERE  tc.table_schema = 'ecommerce_test'
+ORDER  BY tc.table_name, tc.constraint_type;
+```
+#### Expected result_table:
+Columns: `['table_name', 'constraint_type', 'column_name']`
+Rows:
+```python
+  ['customers', 'PRIMARY KEY', 'customer_id']
+  ['order_items', 'PRIMARY KEY', 'item_id']
+  ['orders', 'PRIMARY KEY', 'order_id']
+  ['products', 'PRIMARY KEY', 'product_id']
+```
+#### Actual Database Output:
+Columns: `['TABLE_NAME', 'CONSTRAINT_TYPE', 'COLUMN_NAME']`
+Rows:
+```python
+  ['customers', 'PRIMARY KEY', 'customer_id']
+  ['order_items', 'PRIMARY KEY', 'item_id']
+  ['orders', 'PRIMARY KEY', 'order_id']
+  ['products', 'PRIMARY KEY', 'product_id']
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -997,47 +1022,59 @@ Rows:
 ```
 **Verification status**: ✅ MATCH
 ---
-### Câu 36: Kiểm tra status của Customers ngoài danh sách cho phép
+### Câu 36: Phát hiện dữ liệu test/demo còn sót trong dữ liệu thật
 #### SQL Query:
 ```sql
 SELECT customer_id,
        customer_name,
-       status
+       email
 FROM   Customers
-WHERE  status NOT IN
-  ('ACTIVE','INACTIVE','SUSPENDED');
+WHERE  LOWER(customer_name) LIKE '%test%'
+    OR LOWER(customer_name) LIKE '%demo%'
+    OR LOWER(customer_name) LIKE '%fake%'
+    OR LOWER(customer_name) LIKE '%ao bug%'
+    OR LOWER(IFNULL(email,'')) LIKE '%test%'
+    OR LOWER(IFNULL(email,'')) LIKE '%demo%';
 ```
 #### Expected result_table:
-Columns: `['customer_id', 'customer_name', 'status']`
+Columns: `['customer_id', 'customer_name', 'email']`
 Rows:
 ```python
+  ['C004', 'Khach Hang Ao Bug', 'trung_email@email.com']
+  ['C010', 'Khach Test VIP', 'vip@email.com']
 ```
 #### Actual Database Output:
-Columns: `['customer_id', 'customer_name', 'status']`
+Columns: `['customer_id', 'customer_name', 'email']`
 Rows:
 ```python
+  ['C004', 'Khach Hang Ao Bug', 'trung_email@email.com']
+  ['C010', 'Khach Test VIP', 'vip@email.com']
 ```
 **Verification status**: ✅ MATCH
 ---
-### Câu 37: Kiểm tra giá bán âm hoặc bằng 0 trong Order_Items
+### Câu 37: Dò bản ghi gần-trùng bằng SOUNDEX (lỗi gõ chính tả)
 #### SQL Query:
 ```sql
-SELECT item_id,
-       order_id,
-       product_id,
-       price
-FROM   Order_Items
-WHERE  price <= 0;
+SELECT a.customer_id  AS id_a,
+       a.customer_name AS ten_a,
+       b.customer_id  AS id_b,
+       b.customer_name AS ten_b
+FROM   Customers a
+JOIN   Customers b
+       ON SOUNDEX(a.customer_name) = SOUNDEX(b.customer_name)
+      AND a.customer_id < b.customer_id;
 ```
 #### Expected result_table:
-Columns: `['item_id', 'order_id', 'product_id', 'price']`
+Columns: `['id_a', 'ten_a', 'id_b', 'ten_b']`
 Rows:
 ```python
+  ['C001', 'Nguyen Van A', 'C009', 'Nguyen Van A (2)']
 ```
 #### Actual Database Output:
-Columns: `['item_id', 'order_id', 'product_id', 'price']`
+Columns: `['id_a', 'ten_a', 'id_b', 'ten_b']`
 Rows:
 ```python
+  ['C001', 'Nguyen Van A', 'C009', 'Nguyen Van A (2)']
 ```
 **Verification status**: ✅ MATCH
 ---

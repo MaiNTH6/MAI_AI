@@ -569,7 +569,8 @@ def build():
     for t in ["A · Gặp triệu chứng → dùng câu nào",
               "B · Cheat sheet cú pháp lõi",
               "C · Bản đồ 15 lỗi mẫu → câu phát hiện",
-              "D · Đáp án bài tập tự luyện"]:
+              "D · Đáp án bài tập tự luyện",
+              "E · Tra cứu theo module nghiệp vụ"]:
         story.append(Paragraph(f"&nbsp;&nbsp;&nbsp;{t}", st_toc))
 
     # ---- CHƯƠNG 0: Setup database ----
@@ -1375,13 +1376,15 @@ def build():
     story.append(Spacer(1, 6))
     rows_A = [
         ["Bản ghi nhân đôi (cùng giá trị hoặc cùng khóa)", "Câu 1, 2, 8, 29, 46"],
-        ["Ô bắt buộc bị bỏ trống (NULL hoặc chuỗi rỗng)", "Câu 3, 7, 13, 14"],
+        ["Ô bắt buộc bị bỏ trống (NULL hoặc chuỗi rỗng)", "Câu 3, 7, 12, 14"],
         ["Khóa ngoại trỏ vào bản ghi không tồn tại (orphan)", "Câu 5"],
         ["Chuỗi bẩn: khoảng trắng thừa, ký tự lạ, hoa/thường", "Câu 4, 6, 31, 35"],
         ["Email sai định dạng cơ bản", "Câu 32"],
-        ["Giá trị ngoài danh sách cho phép (ENUM)", "Câu 9, 18, 36"],
-        ["Tồn kho âm hoặc bán vượt tồn kho", "Câu 12, 13, 20, 28"],
-        ["Giá hoặc tiền âm / bằng 0", "Câu 14, 37"],
+        ["Giá trị ngoài danh sách cho phép (ENUM)", "Câu 9"],
+        ["Tồn kho âm hoặc bán vượt tồn kho", "Câu 12, 20, 28"],
+        ["Giá hoặc tiền âm / bằng 0", "Câu 14"],
+        ["Ràng buộc DB chưa được enforce (thiếu UNIQUE/FK)", "Câu 18"],
+        ["Schema lạ, chưa có tài liệu", "Câu 13"],
         ["Lệch giữa tổng header và tổng chi tiết", "Câu 11, 21, 38, 39"],
         ["Đơn hàng rỗng (không có dòng chi tiết)", "Câu 15, 38"],
         ["Số lượng hoặc ngày tháng bất thường", "Câu 30, 33, 34"],
@@ -1405,7 +1408,7 @@ def build():
         ["Tìm bản ghi trùng", ("mono", "GROUP BY cot<br/>HAVING COUNT(*) &gt; 1"), "1, 2, 8, 29"],
         ["Tìm mồ côi — an toàn với NULL", ("mono", "WHERE NOT EXISTS (<br/>&nbsp;&nbsp;SELECT 1 FROM b<br/>&nbsp;&nbsp;WHERE b.fk = a.id)"), "BT 5.1, 5.2"],
         ["Tìm mồ côi — viết ngắn", ("mono", "LEFT JOIN b ON ...<br/>WHERE b.id IS NULL"), "5, 16, 17"],
-        ["Bẫy cần tránh", ("mono", "NOT IN (subquery<br/>có NULL) → luôn rỗng"), "9, 18"],
+        ["Bẫy cần tránh", ("mono", "NOT IN (subquery<br/>có NULL) → luôn rỗng"), "9"],
         ["Xử lý NULL khi tính toán", ("mono", "COALESCE(x, 0)"), "28"],
         ["Chuẩn hóa chuỗi trước khi so", ("mono", "TRIM(x), LOWER(x)"), "4, 6, 35"],
         ["Kiểm tra định dạng chuỗi", ("mono", "x REGEXP 'mau'"), "31, 32"],
@@ -1430,16 +1433,16 @@ def build():
         ["Bug-A", "ORD_001: total 32M nhưng items cộng 62M (item trùng)", "2, 11, 39, 46"],
         ["Bug-B", "ORD_002: total 20M nhưng items cộng 31M", "11, 19, 39"],
         ["Bug-C", "PROD_003: stock = -5 (tồn kho âm)", "12, 20, 28"],
-        ["Bug-D", "C004/C005: trùng email trung_email@email.com", "1, 50"],
-        ["Bug-E", "C001/C009: trùng email khác hoa/thường", "6, 50"],
+        ["Bug-D", "C004/C005: trùng email trung_email@email.com", "1, 36, 50"],
+        ["Bug-E", "C001/C009: trùng email khác hoa/thường", "6, 37, 50"],
         ["Bug-F", "C006: email NULL; C007: email rỗng", "3, 7, 32"],
         ["Bug-G", "C008: khoảng trắng thừa trong tên", "4"],
-        ["Bug-H", "C010: membership_tier = VIP (ngoài danh sách)", "9"],
+        ["Bug-H", "C010: membership_tier = VIP (ngoài danh sách)", "9, 36"],
         ["Bug-I", "ORD_004: customer_id C999 (orphan) + đơn rỗng", "5, 15, 38, 42, 50"],
         ["Bug-J", "ORD_001/PROD_001: trùng (item 1 và 7)", "2, 46"],
         ["Bug-K", "item_id = 3 bị thiếu (gap chuỗi ID)", "44"],
         ["Bug-L", "PROD_005: trùng tên + giá với PROD_002", "8, 35"],
-        ["Bug-M", "PROD_006 price NULL; PROD_007 stock NULL", "7, 13, 14"],
+        ["Bug-M", "PROD_006 price NULL; PROD_007 stock NULL", "7, 12, 14"],
         ["Bug-N", "ORD_005: xóa mềm nhưng item 8,9 chưa dọn, đơn vẫn bị tính", "10, 40"],
         ["Bug-O", "ORD_003: đã CANCELLED nhưng chưa xóa mềm (deleted_at NULL)", "41"],
     ]
@@ -1474,6 +1477,43 @@ def build():
             Spacer(1, 9),
         ]
         story.append(KeepTogether(block))
+
+    # E · Tra cứu theo module nghiệp vụ
+    story.append(PageBreak())
+    story.append(apx_h2("E · Tra cứu theo module nghiệp vụ"))
+    story.append(HRule(CONTENT_W, BLUE, 1.2))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        "Phụ lục A tra theo <b>triệu chứng</b>; phụ lục này tra theo <b>module bạn đang test</b> "
+        "— sát với cách một QA thực tế làm việc hằng ngày hơn cách đọc tuần tự 6 phần. "
+        "Đang test tính năng nào, tra đúng hàng tương ứng để biết ngay nên tham khảo câu nào.",
+        st_body))
+    story.append(Spacer(1, 6))
+    rows_E = [
+        ["Customers (hồ sơ khách hàng)", "1, 3, 4, 6, 9, 31, 32, 36, 37"],
+        ["Products (danh mục sản phẩm)", "7, 8, 12, 14, 23, 35"],
+        ["Orders (đơn hàng)", "10, 26, 29, 30, 34, 41, 42, 43, 49"],
+        ["Order_Items (chi tiết đơn hàng)", "2, 21, 33, 44, 46"],
+        ["Customers + Orders (khách hàng & lịch sử mua)", "5, 17, 19, 25, 45, 48"],
+        ["Orders + Order_Items (đơn hàng & chi tiết)", "11, 15, 38, 39, 40"],
+        ["Products + Order_Items (sản phẩm & doanh số bán)", "16, 20, 22, 24, 27, 28, 47"],
+        ["Đa bảng / báo cáo tổng hợp (3 bảng trở lên)", "50"],
+        ["Schema hệ thống (information_schema)", "13, 18"],
+    ]
+    story.append(ref_table(
+        ["Module / bảng dữ liệu chính", "Câu nên tham khảo"],
+        rows_E, [CONTENT_W*0.62, CONTENT_W*0.38]))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        "Cách đọc bảng: mỗi hàng liệt kê đúng bảng (hoặc tổ hợp bảng) mà câu lệnh thực sự "
+        "JOIN/FROM — lấy trực tiếp từ chính SQL trong sách, không suy đoán theo chủ đề. "
+        "Một số câu xuất hiện ở nhiều hàng nếu vừa truy vấn 1 bảng riêng vừa có biến thể "
+        "JOIN sang bảng khác.<br/>"
+        "Trên dự án thật, schema thường có hàng chục–hàng trăm bảng — bảng tra này chỉ là "
+        "ví dụ thu nhỏ. Cách áp dụng: khi vào một module mới, dùng Câu 13 (INFORMATION_SCHEMA) "
+        "để tự liệt kê bảng/cột, sau đó map mỗi bảng nghiệp vụ với khuôn mẫu SQL gần nhất "
+        "trong 50 câu — đó chính là Bước 3-4 của phương pháp 5 bước áp dụng cho module cụ thể.",
+        st_small))
 
     # ---- Closing ----
     story.append(PageBreak())
