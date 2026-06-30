@@ -92,7 +92,7 @@ def compare_results(expected_cols, expected_rows, actual_cols, actual_rows):
     return True, "MATCH"
 
 # Generate Markdown Report
-report_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sql_verification_report.md')
+report_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'sql_verification_report.md')
 report_lines = [
     "# SQL Verification Audit Report",
     "",

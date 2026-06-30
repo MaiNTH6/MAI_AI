@@ -271,7 +271,7 @@ def schema_diagram():
     ])
     o_card = card("Orders", [
         ("order_id","PK"), ("customer_id","FK"), ("total_amount",""),
-        ("status",""), ("order_date",""),
+        ("status",""), ("order_date",""), ("deleted_at",""),
     ])
     oi_card = card("Order_Items", [
         ("item_id","PK"), ("order_id","FK"), ("product_id","FK"),
@@ -427,7 +427,7 @@ def cover_page(canv, doc):
     badges = [
         ("50",    "Câu lệnh SQL"),
         ("6",     "Nhóm chủ đề"),
-        ("13",    "Bug cài sẵn"),
+        ("15",    "Bug cài sẵn"),
         ("MySQL", "Dialect"),
     ]
     BDG_W = (CONTENT_W - 5 * mm - 3 * 4 * mm) / 4
@@ -457,7 +457,7 @@ def cover_page(canv, doc):
 
     bullets = [
         "Mỗi câu lệnh: tình huống bug điển hình — SQL — phân tích mệnh đề — kết quả — góc soi lỗi",
-        "Phần chuẩn bị: script tạo DB, sơ đồ ER, dữ liệu mẫu với 13 bug cố ý cài cắm để thực hành",
+        "Phần chuẩn bị: script tạo DB, sơ đồ ER, dữ liệu mẫu với 15 bug cố ý cài cắm để thực hành",
     ]
     dy = PAGE_H - 221 * mm
     for b in bullets:
@@ -568,7 +568,7 @@ def build():
     story.append(Paragraph("PHỤ LỤC · Tra cứu nhanh", st_toc_b))
     for t in ["A · Gặp triệu chứng → dùng câu nào",
               "B · Cheat sheet cú pháp lõi",
-              "C · Bản đồ 13 lỗi mẫu → câu phát hiện",
+              "C · Bản đồ 15 lỗi mẫu → câu phát hiện",
               "D · Đáp án bài tập tự luyện"]:
         story.append(Paragraph(f"&nbsp;&nbsp;&nbsp;{t}", st_toc))
 
@@ -580,7 +580,7 @@ def build():
     story.append(Paragraph(
         "Tất cả 50 câu lệnh trong sách đều chạy được ngay trên cơ sở dữ liệu "
         "<b>ecommerce_test</b> dưới đây. Hệ thống mô phỏng một sàn thương mại điện "
-        "tử nhỏ gồm 4 bảng, với <b>13 bug được cố ý cài cắm</b> để bạn thực hành phát hiện.",
+        "tử nhỏ gồm 4 bảng, với <b>15 bug được cố ý cài cắm</b> để bạn thực hành phát hiện.",
         st_lead))
     story.append(Spacer(1, 8))
 
@@ -699,7 +699,7 @@ def build():
             S("h2", parent=st_label, textColor=NAVY, fontSize=10.5, spaceBefore=4)),
         Spacer(1, 4),
         Paragraph(
-            "Data mẫu chứa <b>13 lỗi cố ý</b> (đánh mã Bug-A → Bug-M) cài sẵn để bạn bắt bằng SQL, gom theo năm nhóm dưới đây. "
+            "Data mẫu chứa <b>15 lỗi cố ý</b> (đánh mã Bug-A → Bug-O) cài sẵn để bạn bắt bằng SQL, gom theo sáu nhóm dưới đây. "
             "Nhiều câu lệnh khác trong sách lại là <b>kiểm tra sạch</b> — kết quả rỗng nghĩa là dữ liệu "
             "đạt, không phải thất bại. Bản đồ đầy đủ từng lỗi ↔ câu phát hiện nằm ở <b>Phụ lục C</b> (cuối sách).",
             st_body)))
@@ -721,6 +721,9 @@ def build():
          "item_id bỏ trống số 3 — gap trong chuỗi ID liên tục. PROD_003: stock = -5 (tồn kho âm). "
          "ORD_001: total_amount = 32.000.000 nhưng Order_Items cộng = 62.000.000 (do item trùng). "
          "ORD_002: total_amount = 20.000.000 nhưng Order_Items cộng = 31.000.000 (lệch 11.000.000)."),
+        ("Audit, xóa mềm & dấu vết",
+         "ORD_005: đã xóa mềm (deleted_at có giá trị) nhưng item 8, 9 chưa được dọn và đơn vẫn lọt "
+         "vào tính toán. ORD_003: đã CANCELLED nhưng deleted_at vẫn trống — hai cột dấu vết lệch nhau."),
     ]
     for grp_title, grp_desc in bug_groups:
         story.append(color_box(grp_title, grp_desc, LAMBER, AMBER, colors.HexColor("#b45309")))
@@ -771,21 +774,22 @@ def build():
     story.append(Spacer(1, 8))
 
     story.append(Paragraph(
-        "Bảng Orders (4 dòng — dòng đỏ: total_amount sai, orphan customer)",
+        "Bảng Orders (5 dòng — dòng đỏ: total_amount sai, orphan customer, ORD_005 đã xóa mềm)",
         st_label))
-    # col widths: order_id=65 | customer_id=65 | total_amount=110 | status=100 | order_date=153 = 493
+    # col widths: order_id=50 | customer_id=58 | total_amount=88 | status=80 | order_date=75 | deleted_at=142 = 493
     story.append(before_tbl(
-        ["order_id","customer_id","total_amount","status","order_date"],
-        [["ORD_001","C001","32.000.000","COMPLETED","2026-06-20"],
-         ["ORD_002","C002","20.000.000","COMPLETED","2026-06-22"],
-         ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
-         ["ORD_004","C999","5.000.000","PENDING","2026-06-24"]],
-        bugs=[1,3],
-        col_widths=[65, 65, 110, 100, 153]))
+        ["order_id","customer_id","total_amount","status","order_date","deleted_at"],
+        [["ORD_001","C001","32.000.000","COMPLETED","2026-06-20","(NULL)"],
+         ["ORD_002","C002","20.000.000","COMPLETED","2026-06-22","(NULL)"],
+         ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23","(NULL)"],
+         ["ORD_004","C999","5.000.000","PENDING","2026-06-24","(NULL)"],
+         ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25","2026-06-25 10:30:00"]],
+        bugs=[1,3,4],
+        col_widths=[50, 58, 88, 80, 75, 142]))
     story.append(Spacer(1, 8))
 
     story.append(Paragraph(
-        "Bảng Order_Items (6 dòng — dòng đỏ: composite key trùng; item_id=3 bị bỏ qua)",
+        "Bảng Order_Items (8 dòng — dòng đỏ: composite key trùng; item_id=3 bị bỏ qua)",
         st_label))
     # col widths: item_id=52 | order_id=80 | product_id=95 | quantity=66 | price=200 = 493
     story.append(before_tbl(
@@ -795,13 +799,16 @@ def build():
          [4,"ORD_002","PROD_001",1,"30.000.000"],
          [5,"ORD_002","PROD_004",1, "1.000.000"],
          [6,"ORD_003","PROD_003",1, "8.000.000"],
-         [7,"ORD_001","PROD_001",1,"30.000.000"]],
+         [7,"ORD_001","PROD_001",1,"30.000.000"],
+         [8,"ORD_005","PROD_004",1, "1.000.000"],
+         [9,"ORD_005","PROD_002",1, "2.000.000"]],
         bugs=[5],
         col_widths=[52, 80, 95, 66, 200]))
     story.append(Spacer(1, 4))
     story.append(Paragraph(
         "item_id nhảy từ 2 lên 4 (thiếu 3). Item 7 trùng (order_id, product_id) với item 1. "
-        "ORD_002: tổng items = 31.000.000 nhưng total_amount = 20.000.000 (lệch 11.000.000).",
+        "ORD_002: tổng items = 31.000.000 nhưng total_amount = 20.000.000 (lệch 11.000.000). "
+        "Item 8 và 9 thuộc ORD_005 — đơn đã bị xóa mềm nhưng dòng chi tiết vẫn còn.",
         S("fn", parent=st_small, textColor=RED)))
 
     # ---- Chương phương pháp: Dịch yêu cầu → SQL ----
@@ -998,9 +1005,9 @@ def build():
         "vi nghi ngờ cho tới khi chạm nguyên nhân gốc.", st_lead))
     story.append(Spacer(1, 6))
     cs_steps = [
-        ("Nhịp 1 · Chụp toàn cảnh (Câu 40)",
-         "Đếm dòng bốn bảng: Order_Items chỉ có 6 dòng cho 3 đơn có hàng — đủ nhỏ để soi tận dòng. "
-         "Con số ít bất thường khiến QA nghi có item bị nhân đôi."),
+        ("Nhịp 1 · Chụp toàn cảnh (Câu 21)",
+         "Đếm số dòng items theo từng đơn: ORD_001 hiện 3 dòng cho một đơn lẽ ra chỉ 2 sản phẩm. "
+         "Con số bất thường này khiến QA nghi có item bị nhân đôi."),
         ("Nhịp 2 · Định vị nghi phạm (Câu 22)",
          "Xếp hạng doanh số: PROD_001 = 90.000.000đ = đúng 3 × 30 triệu. Nhưng nghiệp vụ chỉ ghi nhận "
          "2 lần bán — vậy có một lần bán 'ảo' đã lọt vào dữ liệu."),
@@ -1369,7 +1376,7 @@ def build():
     rows_A = [
         ["Bản ghi nhân đôi (cùng giá trị hoặc cùng khóa)", "Câu 1, 2, 8, 29, 46"],
         ["Ô bắt buộc bị bỏ trống (NULL hoặc chuỗi rỗng)", "Câu 3, 7, 13, 14"],
-        ["Khóa ngoại trỏ vào bản ghi không tồn tại (orphan)", "Câu 5, 41"],
+        ["Khóa ngoại trỏ vào bản ghi không tồn tại (orphan)", "Câu 5"],
         ["Chuỗi bẩn: khoảng trắng thừa, ký tự lạ, hoa/thường", "Câu 4, 6, 31, 35"],
         ["Email sai định dạng cơ bản", "Câu 32"],
         ["Giá trị ngoài danh sách cho phép (ENUM)", "Câu 9, 18, 36"],
@@ -1379,11 +1386,12 @@ def build():
         ["Đơn hàng rỗng (không có dòng chi tiết)", "Câu 15, 38"],
         ["Số lượng hoặc ngày tháng bất thường", "Câu 30, 33, 34"],
         ["Giá bán lịch sử khác giá niêm yết hiện tại", "Câu 24"],
-        ["Sản phẩm / khách hàng chưa phát sinh giao dịch", "Câu 16, 17, 42, 43"],
-        ["Bản ghi bị xóa để lại dấu vết (gap trong ID)", "Câu 10, 44"],
+        ["Sản phẩm / khách hàng chưa phát sinh giao dịch", "Câu 16, 17"],
+        ["Bản ghi bị xóa để lại dấu vết (gap ID, xóa mềm)", "Câu 10, 40, 41, 44"],
         ["Định giá tồn kho / báo cáo tổng hợp / phân bố", "Câu 19, 23, 25, 26, 27, 45"],
         ["Xếp hạng hoặc đánh số bản ghi theo nhóm", "Câu 22, 46, 47, 48, 49"],
-        ["Health check nhanh nhiều loại lỗi cùng lúc", "Câu 40, 50"],
+        ["Đơn tồn đọng lâu hoặc dòng thời gian bất thường", "Câu 42, 43"],
+        ["Health check nhanh nhiều loại lỗi cùng lúc", "Câu 50"],
     ]
     story.append(ref_table(
         ["Triệu chứng / nghi vấn khi kiểm thử", "Câu nên dùng"],
@@ -1395,9 +1403,9 @@ def build():
     story.append(Spacer(1, 6))
     rows_B = [
         ["Tìm bản ghi trùng", ("mono", "GROUP BY cot<br/>HAVING COUNT(*) &gt; 1"), "1, 2, 8, 29"],
-        ["Tìm mồ côi — an toàn với NULL", ("mono", "WHERE NOT EXISTS (<br/>&nbsp;&nbsp;SELECT 1 FROM b<br/>&nbsp;&nbsp;WHERE b.fk = a.id)"), "42, 43"],
-        ["Tìm mồ côi — viết ngắn", ("mono", "LEFT JOIN b ON ...<br/>WHERE b.id IS NULL"), "5, 16, 17, 41"],
-        ["Bẫy cần tránh", ("mono", "NOT IN (subquery<br/>có NULL) → luôn rỗng"), "18, 41"],
+        ["Tìm mồ côi — an toàn với NULL", ("mono", "WHERE NOT EXISTS (<br/>&nbsp;&nbsp;SELECT 1 FROM b<br/>&nbsp;&nbsp;WHERE b.fk = a.id)"), "BT 5.1, 5.2"],
+        ["Tìm mồ côi — viết ngắn", ("mono", "LEFT JOIN b ON ...<br/>WHERE b.id IS NULL"), "5, 16, 17"],
+        ["Bẫy cần tránh", ("mono", "NOT IN (subquery<br/>có NULL) → luôn rỗng"), "9, 18"],
         ["Xử lý NULL khi tính toán", ("mono", "COALESCE(x, 0)"), "28"],
         ["Chuẩn hóa chuỗi trước khi so", ("mono", "TRIM(x), LOWER(x)"), "4, 6, 35"],
         ["Kiểm tra định dạng chuỗi", ("mono", "x REGEXP 'mau'"), "31, 32"],
@@ -1415,7 +1423,7 @@ def build():
         rows_B, [CONTENT_W*0.32, CONTENT_W*0.48, CONTENT_W*0.20]))
 
     # C · Bản đồ bug → câu phát hiện
-    story.append(apx_h2("C · Bản đồ 13 lỗi mẫu → câu phát hiện"))
+    story.append(apx_h2("C · Bản đồ 15 lỗi mẫu → câu phát hiện"))
     story.append(HRule(CONTENT_W, BLUE, 1.2))
     story.append(Spacer(1, 6))
     rows_C = [
@@ -1427,11 +1435,13 @@ def build():
         ["Bug-F", "C006: email NULL; C007: email rỗng", "3, 7, 32"],
         ["Bug-G", "C008: khoảng trắng thừa trong tên", "4"],
         ["Bug-H", "C010: membership_tier = VIP (ngoài danh sách)", "9"],
-        ["Bug-I", "ORD_004: customer_id C999 (orphan) + đơn rỗng", "5, 15, 38, 50"],
+        ["Bug-I", "ORD_004: customer_id C999 (orphan) + đơn rỗng", "5, 15, 38, 42, 50"],
         ["Bug-J", "ORD_001/PROD_001: trùng (item 1 và 7)", "2, 46"],
-        ["Bug-K", "item_id = 3 bị thiếu (gap chuỗi ID)", "10, 44"],
+        ["Bug-K", "item_id = 3 bị thiếu (gap chuỗi ID)", "44"],
         ["Bug-L", "PROD_005: trùng tên + giá với PROD_002", "8, 35"],
         ["Bug-M", "PROD_006 price NULL; PROD_007 stock NULL", "7, 13, 14"],
+        ["Bug-N", "ORD_005: xóa mềm nhưng item 8,9 chưa dọn, đơn vẫn bị tính", "10, 40"],
+        ["Bug-O", "ORD_003: đã CANCELLED nhưng chưa xóa mềm (deleted_at NULL)", "41"],
     ]
     story.append(ref_table(
         ["Mã", "Lỗi cài sẵn trong dữ liệu mẫu", "Câu phát hiện"],

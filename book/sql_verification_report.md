@@ -43,6 +43,10 @@ This report verifies every SQL query defined in `_book_sql_data.py` against the 
 | 37 | Kiểm tra giá bán âm hoặc bằng 0 trong Order_Items | ✅ MATCH | OK |
 | 38 | Phát hiện đơn có tổng tiền nhưng không có sản phẩm nào | ✅ MATCH | OK |
 | 39 | Phát hiện tổng items vượt quá 1.5 lần total_amount | ✅ MATCH | OK |
+| 40 | Truy vết item còn sót của đơn đã xóa mềm | ✅ MATCH | OK |
+| 41 | Đối chiếu trạng thái hủy với cờ xóa mềm | ✅ MATCH | OK |
+| 42 | Phát hiện đơn treo (PENDING) tồn đọng quá lâu | ✅ MATCH | OK |
+| 43 | Dựng dòng thời gian đơn hàng — khoảng cách giữa các đơn | ✅ MATCH | OK |
 | 44 | Phát hiện item_id bị nhảy — dấu vết của bản ghi bị xóa | ✅ MATCH | OK |
 | 45 | Phân tích đơn hàng bị hủy — khách nào hay hủy nhất | ✅ MATCH | OK |
 | 46 | Dùng ROW_NUMBER() phát hiện item trùng trong cùng một đơn | ✅ MATCH | OK |
@@ -1090,6 +1094,133 @@ Rows:
 ```python
   ['ORD_001', Decimal('32000000.00'), Decimal('62000000.00')]
   ['ORD_002', Decimal('20000000.00'), Decimal('31000000.00')]
+```
+**Verification status**: ✅ MATCH
+---
+### Câu 40: Truy vết item còn sót của đơn đã xóa mềm
+#### SQL Query:
+```sql
+SELECT oi.item_id,
+       oi.order_id,
+       oi.product_id,
+       oi.quantity,
+       oi.price
+FROM   Order_Items oi
+JOIN   Orders o
+       ON oi.order_id = o.order_id
+WHERE  o.deleted_at IS NOT NULL
+ORDER  BY oi.item_id;
+```
+#### Expected result_table:
+Columns: `['item_id', 'order_id', 'product_id', 'quantity', 'price']`
+Rows:
+```python
+  [8, 'ORD_005', 'PROD_004', 1, '1.000.000']
+  [9, 'ORD_005', 'PROD_002', 1, '2.000.000']
+```
+#### Actual Database Output:
+Columns: `['item_id', 'order_id', 'product_id', 'quantity', 'price']`
+Rows:
+```python
+  [8, 'ORD_005', 'PROD_004', 1, Decimal('1000000.00')]
+  [9, 'ORD_005', 'PROD_002', 1, Decimal('2000000.00')]
+```
+**Verification status**: ✅ MATCH
+---
+### Câu 41: Đối chiếu trạng thái hủy với cờ xóa mềm
+#### SQL Query:
+```sql
+SELECT order_id,
+       status,
+       deleted_at,
+       CASE
+         WHEN status = 'CANCELLED'
+          AND deleted_at IS NULL
+         THEN 'Hủy nhưng chưa xóa mềm'
+         WHEN status <> 'CANCELLED'
+          AND deleted_at IS NOT NULL
+         THEN 'Xóa mềm nhưng status chưa CANCELLED'
+       END AS van_de
+FROM   Orders
+WHERE  (status = 'CANCELLED' AND deleted_at IS NULL)
+   OR  (status <> 'CANCELLED' AND deleted_at IS NOT NULL)
+ORDER  BY order_id;
+```
+#### Expected result_table:
+Columns: `['order_id', 'status', 'deleted_at', 'van_de']`
+Rows:
+```python
+  ['ORD_003', 'CANCELLED', '(NULL)', 'Hủy nhưng chưa xóa mềm']
+```
+#### Actual Database Output:
+Columns: `['order_id', 'status', 'deleted_at', 'van_de']`
+Rows:
+```python
+  ['ORD_003', 'CANCELLED', None, 'Hủy nhưng chưa xóa mềm']
+```
+**Verification status**: ✅ MATCH
+---
+### Câu 42: Phát hiện đơn treo (PENDING) tồn đọng quá lâu
+#### SQL Query:
+```sql
+SELECT order_id,
+       customer_id,
+       status,
+       order_date,
+       DATEDIFF('2026-06-30', order_date)
+         AS so_ngay_ton_dong
+FROM   Orders
+WHERE  status = 'PENDING'
+  AND  DATEDIFF('2026-06-30', order_date) > 3
+ORDER  BY so_ngay_ton_dong DESC;
+```
+#### Expected result_table:
+Columns: `['order_id', 'customer_id', 'status', 'order_date', 'so_ngay_ton_dong']`
+Rows:
+```python
+  ['ORD_004', 'C999', 'PENDING', '2026-06-24', 6]
+```
+#### Actual Database Output:
+Columns: `['order_id', 'customer_id', 'status', 'order_date', 'so_ngay_ton_dong']`
+Rows:
+```python
+  ['ORD_004', 'C999', 'PENDING', datetime.date(2026, 6, 24), 6]
+```
+**Verification status**: ✅ MATCH
+---
+### Câu 43: Dựng dòng thời gian đơn hàng — khoảng cách giữa các đơn
+#### SQL Query:
+```sql
+SELECT o.order_id,
+       o.order_date,
+       DATEDIFF(
+         o.order_date,
+         (SELECT MAX(o2.order_date)
+          FROM   Orders o2
+          WHERE  o2.order_date < o.order_date)
+       ) AS ngay_ke_tu_don_truoc
+FROM   Orders o
+ORDER  BY o.order_date;
+```
+#### Expected result_table:
+Columns: `['order_id', 'order_date', 'ngay_ke_tu_don_truoc']`
+Rows:
+```python
+  ['ORD_001', '2026-06-20', '(NULL)']
+  ['ORD_002', '2026-06-22', 2]
+  ['ORD_003', '2026-06-23', 1]
+  ['ORD_004', '2026-06-24', 1]
+  ['ORD_005', '2026-06-25', 1]
+```
+#### Actual Database Output:
+Columns: `['order_id', 'order_date', 'ngay_ke_tu_don_truoc']`
+Rows:
+```python
+  ['ORD_001', datetime.date(2026, 6, 20), None]
+  ['ORD_002', datetime.date(2026, 6, 22), 2]
+  ['ORD_003', datetime.date(2026, 6, 23), 1]
+  ['ORD_004', datetime.date(2026, 6, 24), 1]
+  ['ORD_005', datetime.date(2026, 6, 25), 1]
 ```
 **Verification status**: ✅ MATCH
 ---

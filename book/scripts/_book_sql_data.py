@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Dữ liệu 50 câu lệnh SQL + bài tập — schema ecommerce_test (13 bug cài sẵn).
-Bộ dữ liệu đầy đủ ở scripts/ecommerce_test_setup.sql (file companion tải kèm sách)."""
+"""Dữ liệu 50 câu lệnh SQL + bài tập — schema ecommerce_test (15 bug cài sẵn).
+Bộ dữ liệu đầy đủ ở book/sql/ecommerce_test_setup.sql (file companion tải kèm sách)."""
 
 # ===========================================================================
 # PARTS — 6 chương
@@ -146,7 +146,7 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 6 dòng trong ví dụ."),
+    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 8 dòng trong ví dụ."),
    ("GROUP BY order_id, product_id",
     "<b>Gom nhóm</b> theo tổ hợp hai cột. Mỗi nhóm đại diện "
     "cho một cặp (đơn hàng, sản phẩm) duy nhất."),
@@ -349,7 +349,8 @@ ENTRIES = [
  "note":
    "Câu lệnh này kiểm tra chiều <b>Orders → Customers</b> (đơn hàng không có khách hàng).<br/>"
    "Cần kiểm tra thêm các chiều khác:<br/>"
-   "(1) <b>Order_Items → Products</b>: item có product_id không tồn tại (xem Câu 41).<br/>"
+   "(1) <b>Order_Items → Products</b>: item có product_id không tồn tại — cùng kỹ thuật "
+   "LEFT JOIN ... IS NULL, chỉ đổi cặp bảng (xem thêm Bài tập 5.1).<br/>"
    "(2) <b>Order_Items → Orders</b>: item thuộc order_id không tồn tại.<br/>"
    "Cả hai đều là orphan nhưng ở tầng bảng khác nhau.",
 },
@@ -1332,6 +1333,8 @@ ENTRIES = [
    [5,"ORD_002","PROD_004",1, "1.000.000"],
    [6,"ORD_003","PROD_003",1, "8.000.000"],
    [7,"ORD_001","PROD_001",1,"30.000.000"],
+   [8,"ORD_005","PROD_004",1, "1.000.000"],
+   [9,"ORD_005","PROD_002",1, "2.000.000"],
  ],
  "before_bugs": [5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -1346,7 +1349,7 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 6 dòng trong dữ liệu mẫu."),
+    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 8 dòng trong dữ liệu mẫu."),
    ("GROUP BY order_id",
     "Gom tất cả dòng có cùng order_id thành một nhóm. "
     "Mỗi nhóm đại diện cho một đơn hàng."),
@@ -1775,7 +1778,7 @@ ENTRIES = [
  ),
  "result_note":
    "'Dien thoai' dẫn đầu 90M — bị thổi phồng do item 7 trùng. Thực tế là 60M. "
-   "'Phu kien' 11M từ 3 đơn khác nhau (PROD_002, 004, 003).",
+   "'Phu kien' 14M từ 4 đơn (3 sản phẩm PROD_002, 004, 003).",
  "note":
    "Kết quả chỉ có 2 danh mục vì INNER JOIN loại sản phẩm chưa bán.<br/>"
    "Nếu muốn xem đầy đủ tất cả danh mục (kể cả chưa có doanh số):<br/>"
@@ -1961,7 +1964,7 @@ ENTRIES = [
  "explain":
    "Dùng <b>subquery trong WHERE</b> để so sánh từng dòng với một ngưỡng động "
    "tính từ chính bảng đó — không cần biết trước ngưỡng là bao nhiêu.<br/>"
-   "AVG trong data mẫu = 16.250.000 → ngưỡng 1.5× = 24.000.000.<br/>"
+   "AVG trong data mẫu = 16.000.000 → ngưỡng 1.5× = 24.000.000.<br/>"
    "ORD_001 (32M) vượt ngưỡng và được flag. Điều này không có nghĩa là lỗi — "
    "đây là điểm khởi đầu để QA điều tra thêm bằng Câu 11.",
  "result_table": (
@@ -2562,6 +2565,272 @@ ENTRIES = [
 },
 # ─────────────────────────────────────────────────────────
 {
+ "part": 4, "id": 40,
+ "title": "Truy vết item còn sót của đơn đã xóa mềm",
+ "situation":
+   "Câu 10 đã phát hiện đơn ORD_005 bị <b>xóa mềm</b> (cột deleted_at có giá trị) "
+   "nhưng vẫn nằm trong bảng Orders. Vấn đề chưa dừng ở đó: các dòng chi tiết của "
+   "đơn này trong Order_Items (item 8, 9) <b>không hề bị dọn</b>. Khi báo cáo "
+   "doanh thu hoặc tồn kho quên lọc đơn đã xóa mềm, những item này vẫn bị cộng vào.",
+ "before_label": "Bảng Order_Items — dòng đỏ: item 8, 9 thuộc ORD_005 (đơn đã xóa mềm):",
+ "before_cols": ["item_id","order_id","product_id","quantity","price"],
+ "before_rows": [
+   [1,"ORD_001","PROD_001",1,"30.000.000"],
+   [2,"ORD_001","PROD_002",1, "2.000.000"],
+   [4,"ORD_002","PROD_001",1,"30.000.000"],
+   [5,"ORD_002","PROD_004",1, "1.000.000"],
+   [6,"ORD_003","PROD_003",1, "8.000.000"],
+   [7,"ORD_001","PROD_001",1,"30.000.000"],
+   [8,"ORD_005","PROD_004",1, "1.000.000"],
+   [9,"ORD_005","PROD_002",1, "2.000.000"],
+ ],
+ "before_bugs": [6, 7],
+ "before_col_widths": [50, 75, 90, 65, 213],
+ "sql": (
+   "SELECT oi.item_id,\n"
+   "       oi.order_id,\n"
+   "       oi.product_id,\n"
+   "       oi.quantity,\n"
+   "       oi.price\n"
+   "FROM   Order_Items oi\n"
+   "JOIN   Orders o\n"
+   "       ON oi.order_id = o.order_id\n"
+   "WHERE  o.deleted_at IS NOT NULL\n"
+   "ORDER  BY oi.item_id;"
+ ),
+ "clauses": [
+   ("FROM Order_Items oi\n  JOIN Orders o\n    ON oi.order_id = o.order_id",
+    "<b>INNER JOIN</b> ghép mỗi dòng item với đơn cha của nó "
+    "để đọc được trạng thái xóa mềm từ bảng Orders."),
+   ("WHERE o.deleted_at IS NOT NULL",
+    "Chỉ giữ item thuộc đơn đã bị <b>xóa mềm</b> — "
+    "deleted_at có giá trị nghĩa là đơn lẽ ra không còn hiệu lực."),
+   ("ORDER BY oi.item_id",
+    "Sắp xếp theo item_id để dễ đối chiếu với bảng gốc."),
+ ],
+ "explain":
+   "Câu 10 soi <b>bảng cha</b> (Orders) để tìm đơn xóa mềm; câu này đi tiếp xuống "
+   "<b>bảng con</b> (Order_Items) để tìm những dòng bị bỏ lại.<br/>"
+   "Đây là mẫu kiểm tra <b>tính nhất quán khi xóa mềm</b>: xóa cha thì con phải được "
+   "đánh dấu hoặc loại khỏi mọi phép tính.<br/>"
+   "item 8 và 9 thuộc ORD_005 — vẫn tồn tại dù đơn đã bị hủy và xóa mềm.",
+ "result_table": (
+   ["item_id","order_id","product_id","quantity","price"],
+   [
+     [8,"ORD_005","PROD_004",1,"1.000.000"],
+     [9,"ORD_005","PROD_002",1,"2.000.000"],
+   ]
+ ),
+ "result_note":
+   "2 item thuộc đơn đã xóa mềm vẫn nằm trong Order_Items. Mọi báo cáo tính từ "
+   "Order_Items phải thêm điều kiện loại đơn có deleted_at, nếu không doanh thu và "
+   "lượng bán sẽ bị thổi phồng.",
+ "note":
+   "Cách phòng và soát loại lỗi này:<br/>"
+   "(1) <b>Lọc nhất quán</b>: mọi truy vấn báo cáo nên JOIN sang Orders và thêm "
+   "<b>WHERE deleted_at IS NULL</b>.<br/>"
+   "(2) <b>Dọn theo tầng</b>: khi xóa mềm đơn, cân nhắc đánh dấu cả item con.<br/>"
+   "(3) <b>Đối soát định kỳ</b>: chạy câu này theo lịch để phát hiện sớm "
+   "item mồ côi sau mỗi đợt xóa.",
+},
+# ─────────────────────────────────────────────────────────
+{
+ "part": 4, "id": 41,
+ "title": "Đối chiếu trạng thái hủy với cờ xóa mềm",
+ "situation":
+   "Hệ thống dùng hai dấu vết để đánh dấu một đơn không còn hiệu lực: cột "
+   "<b>status = 'CANCELLED'</b> và cột <b>deleted_at</b> (thời điểm xóa mềm). "
+   "Theo quy ước, hai cột này phải đi cùng nhau. Khi chúng lệch nhau — hủy nhưng "
+   "chưa xóa mềm, hoặc xóa mềm nhưng status chưa đổi — quy trình đã bỏ sót một bước.",
+ "before_label": "Bảng Orders — dòng đỏ: ORD_003 hủy nhưng deleted_at vẫn trống:",
+ "before_cols": ["order_id","status","deleted_at"],
+ "before_rows": [
+   ["ORD_001","COMPLETED","(NULL)"],
+   ["ORD_002","COMPLETED","(NULL)"],
+   ["ORD_003","CANCELLED","(NULL)"],
+   ["ORD_004","PENDING",  "(NULL)"],
+   ["ORD_005","CANCELLED","2026-06-25 10:30:00"],
+ ],
+ "before_bugs": [2],
+ "before_col_widths": [95, 130, 268],
+ "sql": (
+   "SELECT order_id,\n"
+   "       status,\n"
+   "       deleted_at,\n"
+   "       CASE\n"
+   "         WHEN status = 'CANCELLED'\n"
+   "          AND deleted_at IS NULL\n"
+   "         THEN 'Hủy nhưng chưa xóa mềm'\n"
+   "         WHEN status <> 'CANCELLED'\n"
+   "          AND deleted_at IS NOT NULL\n"
+   "         THEN 'Xóa mềm nhưng status chưa CANCELLED'\n"
+   "       END AS van_de\n"
+   "FROM   Orders\n"
+   "WHERE  (status = 'CANCELLED' AND deleted_at IS NULL)\n"
+   "   OR  (status <> 'CANCELLED' AND deleted_at IS NOT NULL)\n"
+   "ORDER  BY order_id;"
+ ),
+ "clauses": [
+   ("CASE WHEN ... THEN ...\n  END AS van_de",
+    "<b>CASE</b> gán nhãn mô tả loại lệch cho từng dòng — "
+    "giúp QA đọc kết quả là biết ngay vi phạm kiểu nào."),
+   ("WHERE (status = 'CANCELLED'\n    AND deleted_at IS NULL)\n  OR (status <> 'CANCELLED'\n    AND deleted_at IS NOT NULL)",
+    "Hai vế OR bắt hai chiều lệch: hủy mà chưa xóa mềm, "
+    "và xóa mềm mà status chưa chuyển CANCELLED."),
+   ("ORDER BY order_id",
+    "Sắp xếp theo mã đơn cho dễ tra."),
+ ],
+ "explain":
+   "Khi một sự kiện nghiệp vụ được ghi ở <b>nhiều cột dấu vết</b>, các cột đó phải "
+   "luôn đồng bộ. Câu này kiểm tra sự đồng bộ giữa status và deleted_at.<br/>"
+   "ORD_003 đã CANCELLED nhưng deleted_at vẫn trống — bước xóa mềm bị bỏ quên.<br/>"
+   "ORD_005 thì chuẩn: vừa CANCELLED vừa có deleted_at, nên không bị bắt.",
+ "result_table": (
+   ["order_id","status","deleted_at","van_de"],
+   [["ORD_003","CANCELLED","(NULL)","Hủy nhưng chưa xóa mềm"]],
+ ),
+ "result_note":
+   "ORD_003 hủy nhưng chưa được xóa mềm — nếu báo cáo lọc theo deleted_at, đơn này "
+   "vẫn lọt vào như đơn còn hiệu lực. Cần đồng bộ lại hai cột.",
+ "note":
+   "Mở rộng kiểm tra đồng bộ trạng thái:<br/>"
+   "(1) Thêm cặp cột khác: <b>paid_at</b> với status = 'PAID', "
+   "<b>shipped_at</b> với status = 'SHIPPED'.<br/>"
+   "(2) Đưa câu này vào bộ kiểm tra định kỳ sau mỗi lần đổi luồng trạng thái.<br/>"
+   "(3) Gốc rễ thường nằm ở code: nên cập nhật status và deleted_at "
+   "trong cùng một transaction.",
+},
+# ─────────────────────────────────────────────────────────
+{
+ "part": 4, "id": 42,
+ "title": "Phát hiện đơn treo (PENDING) tồn đọng quá lâu",
+ "situation":
+   "Một đơn ở trạng thái <b>PENDING</b> vài giờ là bình thường. Nhưng nếu nó treo "
+   "nhiều ngày, rất có thể luồng thanh toán bị kẹt, job xử lý đã chết, hoặc đơn bị "
+   "bỏ quên. Câu này đo số ngày tồn đọng tính đến một <b>mốc chốt sổ cố định</b> "
+   "(2026-06-30) để kết quả ổn định, không đổi theo ngày chạy.",
+ "before_label": "Bảng Orders — dòng đỏ: ORD_004 vẫn PENDING từ 2026-06-24:",
+ "before_cols": ["order_id","customer_id","status","order_date"],
+ "before_rows": [
+   ["ORD_001","C001","COMPLETED","2026-06-20"],
+   ["ORD_002","C002","COMPLETED","2026-06-22"],
+   ["ORD_003","C003","CANCELLED","2026-06-23"],
+   ["ORD_004","C999","PENDING",  "2026-06-24"],
+   ["ORD_005","C001","CANCELLED","2026-06-25"],
+ ],
+ "before_bugs": [3],
+ "before_col_widths": [90, 100, 120, 183],
+ "sql": (
+   "SELECT order_id,\n"
+   "       customer_id,\n"
+   "       status,\n"
+   "       order_date,\n"
+   "       DATEDIFF('2026-06-30', order_date)\n"
+   "         AS so_ngay_ton_dong\n"
+   "FROM   Orders\n"
+   "WHERE  status = 'PENDING'\n"
+   "  AND  DATEDIFF('2026-06-30', order_date) > 3\n"
+   "ORDER  BY so_ngay_ton_dong DESC;"
+ ),
+ "clauses": [
+   ("DATEDIFF('2026-06-30', order_date)\n  AS so_ngay_ton_dong",
+    "<b>DATEDIFF</b> tính số ngày giữa mốc chốt sổ và ngày đặt đơn — "
+    "chính là tuổi của đơn. Dùng ngày cố định để kết quả không trôi theo thời gian."),
+   ("WHERE status = 'PENDING'\n  AND DATEDIFF('2026-06-30',\n        order_date) > 3",
+    "Lọc đơn còn <b>PENDING</b> và đã treo quá <b>3 ngày</b>. "
+    "Ngưỡng 3 ngày tùy SLA của hệ thống."),
+   ("ORDER BY so_ngay_ton_dong DESC",
+    "Đơn treo lâu nhất lên đầu — ưu tiên xử lý trước."),
+ ],
+ "explain":
+   "Câu 34 bắt ngày <b>vô lý</b> (tương lai hoặc quá xa quá khứ); câu này bắt đơn "
+   "<b>tồn đọng</b> — ngày hợp lệ nhưng trạng thái mắc kẹt quá lâu.<br/>"
+   "ORD_004 đặt 2026-06-24, tính đến mốc 2026-06-30 là 6 ngày vẫn PENDING.<br/>"
+   "Trên production thường thay 2026-06-30 bằng <b>CURDATE()</b> để đo theo thời gian thực.",
+ "result_table": (
+   ["order_id","customer_id","status","order_date","so_ngay_ton_dong"],
+   [["ORD_004","C999","PENDING","2026-06-24",6]],
+ ),
+ "result_note":
+   "ORD_004 treo 6 ngày chưa xử lý — lại đúng đơn có customer_id C999 không tồn tại "
+   "(Câu 5). Đơn treo lâu là nơi nên soi kỹ vì thường đi kèm lỗi khác.",
+ "note":
+   "Tinh chỉnh câu này theo nghiệp vụ:<br/>"
+   "(1) Đổi mốc cố định thành <b>CURDATE()</b> khi chạy giám sát thực tế.<br/>"
+   "(2) Điều chỉnh ngưỡng ngày theo SLA: thanh toán có thể là vài giờ, "
+   "giao hàng có thể là vài ngày.<br/>"
+   "(3) Áp dụng cho các trạng thái 'mắc kẹt' khác: PROCESSING, AWAITING_PAYMENT.",
+},
+# ─────────────────────────────────────────────────────────
+{
+ "part": 4, "id": 43,
+ "title": "Dựng dòng thời gian đơn hàng — khoảng cách giữa các đơn",
+ "situation":
+   "Một chuỗi đơn hàng đều đặn là dấu hiệu hệ thống chạy bình thường. Khi xuất hiện "
+   "<b>khoảng lặng dài</b> (nhiều ngày không có đơn) hoặc <b>cụm dày đặc</b> (nhiều đơn "
+   "trong tích tắc), đó là dấu vết đáng soi: job tạo đơn chết, hoặc bot đặt hàng hàng "
+   "loạt. Câu này đo số ngày giữa mỗi đơn và đơn liền trước nó.",
+ "before_label": "Bảng Orders — dòng thời gian 5 đơn theo order_date:",
+ "before_cols": ["order_id","order_date"],
+ "before_rows": [
+   ["ORD_001","2026-06-20"],
+   ["ORD_002","2026-06-22"],
+   ["ORD_003","2026-06-23"],
+   ["ORD_004","2026-06-24"],
+   ["ORD_005","2026-06-25"],
+ ],
+ "before_bugs": [],
+ "before_col_widths": [140, 353],
+ "sql": (
+   "SELECT o.order_id,\n"
+   "       o.order_date,\n"
+   "       DATEDIFF(\n"
+   "         o.order_date,\n"
+   "         (SELECT MAX(o2.order_date)\n"
+   "          FROM   Orders o2\n"
+   "          WHERE  o2.order_date < o.order_date)\n"
+   "       ) AS ngay_ke_tu_don_truoc\n"
+   "FROM   Orders o\n"
+   "ORDER  BY o.order_date;"
+ ),
+ "clauses": [
+   ("(SELECT MAX(o2.order_date)\n   FROM Orders o2\n   WHERE o2.order_date\n         < o.order_date)",
+    "<b>Subquery tương quan</b>: với mỗi đơn, tìm ngày đặt lớn nhất "
+    "trong số các đơn <b>trước nó</b> — chính là đơn liền trước."),
+   ("DATEDIFF(o.order_date, ...)\n  AS ngay_ke_tu_don_truoc",
+    "Lấy hiệu số ngày giữa đơn hiện tại và đơn liền trước. "
+    "Đơn đầu tiên không có đơn nào trước nên trả về NULL."),
+   ("ORDER BY o.order_date",
+    "Sắp theo thời gian để đọc như một dòng sự kiện."),
+ ],
+ "explain":
+   "Đây là cách dựng dòng thời gian <b>không dùng window function</b> — phù hợp cả MySQL "
+   "phiên bản cũ. Subquery tương quan đóng vai trò như LAG() nhưng viết bằng subquery.<br/>"
+   "Câu 49 ở PHẦN 6 sẽ làm việc tương tự gọn hơn bằng window function.<br/>"
+   "Khoảng cách đều 1–2 ngày ở data mẫu là bình thường; trên thực tế, một con số đột biến "
+   "mới là dấu hiệu cần điều tra.",
+ "result_table": (
+   ["order_id","order_date","ngay_ke_tu_don_truoc"],
+   [
+     ["ORD_001","2026-06-20","(NULL)"],
+     ["ORD_002","2026-06-22",2],
+     ["ORD_003","2026-06-23",1],
+     ["ORD_004","2026-06-24",1],
+     ["ORD_005","2026-06-25",1],
+   ]
+ ),
+ "result_note":
+   "Dòng thời gian liền mạch: cách nhau 1–2 ngày. Đơn đầu tiên ORD_001 có khoảng cách "
+   "NULL vì không có đơn nào trước. Nếu thấy khoảng cách bất thường (vd 30 ngày, hay nhiều "
+   "đơn cách 0 ngày), đó mới là điểm cần soi.",
+ "note":
+   "Ứng dụng dòng thời gian trong kiểm thử:<br/>"
+   "(1) <b>Khoảng lặng dài</b>: hệ thống ngừng nhận đơn — job hoặc API có thể đã chết.<br/>"
+   "(2) <b>Cụm 0 ngày dày đặc</b>: nhiều đơn cùng lúc — nghi vấn bot hoặc double-submit.<br/>"
+   "(3) Thêm điều kiện trên khoảng cách để chỉ liệt kê các điểm vượt ngưỡng.",
+},
+# ─────────────────────────────────────────────────────────
+{
  "part": 4, "id": 44,
  "title": "Phát hiện item_id bị nhảy — dấu vết của bản ghi bị xóa",
  "situation":
@@ -2719,6 +2988,8 @@ ENTRIES = [
    [5,"ORD_002","PROD_004",1, "1.000.000"],
    [6,"ORD_003","PROD_003",1, "8.000.000"],
    [7,"ORD_001","PROD_001",1,"30.000.000"],
+   [8,"ORD_005","PROD_004",1, "1.000.000"],
+   [9,"ORD_005","PROD_002",1, "2.000.000"],
  ],
  "before_bugs": [0, 5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -3267,7 +3538,7 @@ EXERCISES = [
             "         SELECT 1 FROM Order_Items oi\n"
             "         WHERE oi.product_id = p.product_id);",
      "answer": "PROD_005, PROD_006, PROD_007. Kết quả giống Câu 16 (LEFT JOIN + IS NULL) nhưng "
-               "NOT EXISTS an toàn hơn khi khóa có thể NULL (Câu 42)."},
+               "NOT EXISTS an toàn hơn khi khóa có thể NULL (xem bẫy NOT IN ở Câu 9)."},
     {"part": 4, "code": "5.2",
      "prompt": "Dùng NOT EXISTS tìm đơn hàng trỏ tới khách hàng không tồn tại trong Customers.",
      "hint": "Orders mà NOT EXISTS một khách có customer_id tương ứng.",
