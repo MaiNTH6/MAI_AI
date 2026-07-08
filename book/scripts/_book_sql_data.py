@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Dữ liệu 50 câu lệnh SQL + bài tập — schema ecommerce_test (15 bug cài sẵn).
+"""Dữ liệu 50 câu lệnh SQL + bài tập — schema ecommerce_test (19 bug cài sẵn).
 Bộ dữ liệu đầy đủ ở book/sql/ecommerce_test_setup.sql (file companion tải kèm sách)."""
 
 # ===========================================================================
@@ -7,31 +7,52 @@ Bộ dữ liệu đầy đủ ở book/sql/ecommerce_test_setup.sql (file compan
 # ===========================================================================
 PARTS = [
     ("PHẦN 1", "Toàn vẹn và trùng lặp dữ liệu",
-     "Lỗi dữ liệu kinh điển nhất mà QA bắt gặp: bản ghi nhân đôi, ô bắt buộc bị "
-     "bỏ trống, khóa ngoại trỏ vào nơi không tồn tại. Nhóm câu lệnh này giúp bạn "
-     "soi nhanh sức khỏe của một bảng trước khi đi sâu kiểm thử nghiệp vụ."),
+     "Trước khi kiểm thử bất kỳ điều gì, QA cần biết hệ thống mình đang đối mặt. "
+     "Hai câu mở đầu là bước thám sát schema: đọc cấu trúc bảng và kiểm tra xem "
+     "các ràng buộc UNIQUE/FOREIGN KEY đã thực sự tồn tại chưa. "
+     "Tiếp theo là nhóm lỗi kinh điển: bản ghi nhân đôi, ô bắt buộc bị bỏ trống, "
+     "khóa ngoại trỏ vào nơi không tồn tại — những lỗi dữ liệu mà QA bắt gặp ngay tuần đầu tiên.",
+     "Câu hỏi cốt lõi: <b>DB có đúng cấu trúc không?</b> — "
+     "Dữ liệu có định danh được duy nhất, liên kết hợp lệ giữa các bảng, "
+     "và các ô bắt buộc không bị để trống?"),
     ("PHẦN 2", "Ràng buộc nghiệp vụ",
-     "Mỗi hệ thống đều có những quy tắc bất thành văn: tổng tiền không thể âm, "
-     "tồn kho không thể dưới không, trạng thái phải nằm trong danh sách cho phép. "
-     "Khi tầng ứng dụng quên kiểm tra, dữ liệu sai sẽ lặng lẽ trôi vào database. "
-     "Nhóm này cũng trang bị hai công cụ nền tảng: đọc schema một hệ thống lạ khi "
-     "chưa có tài liệu, và xác minh ràng buộc đã khai báo có thực sự tồn tại không."),
+     "Mỗi hệ thống đều có những quy tắc bất thành văn: tổng tiền ghi trên đơn "
+     "phải khớp tổng từng dòng chi tiết, tồn kho không thể âm, đơn nào cũng phải "
+     "có sản phẩm và thuộc về khách hàng thật. "
+     "Khi tầng ứng dụng quên kiểm tra, dữ liệu sai sẽ lặng lẽ trôi vào database — "
+     "và không có gì ở tầng DB ngăn lại.",
+     "Câu hỏi cốt lõi: <b>Dữ liệu có tuân theo luật chơi của hệ thống này không?</b> — "
+     "Vi phạm ở phần này thường không gây lỗi ngay, nhưng âm thầm làm sai báo cáo "
+     "tài chính, gây lỗi xử lý đơn hàng, hoặc bỏ sót khách hàng thật."),
     ("PHẦN 3", "Đối soát và tính toán",
-     "Phần lớn bug tài chính không nằm ở một bản ghi đơn lẻ mà ở chỗ hai con số "
-     "đáng lẽ bằng nhau lại lệch nhau. Nhóm này tập trung vào kỹ thuật đối soát: "
-     "tổng header so với tổng detail, tồn kho so với lượng đã bán."),
+     "Phần này chuyển từ kiểm tra từng bản ghi sang tổng hợp và thống kê: "
+     "tính doanh thu thực từ chi tiết đơn, đối soát tồn kho với lượng đã bán, "
+     "xếp hạng sản phẩm, đo tỷ lệ trạng thái và phát hiện giá trị bất thường "
+     "so với mặt bằng chung.",
+     "Câu hỏi cốt lõi: <b>Các con số tổng hợp có phản ánh đúng dữ liệu chi tiết không?</b> — "
+     "Doanh thu, xếp hạng, tỷ lệ phần trăm đều được cộng dồn từ nhiều bản ghi; "
+     "chỉ một nhóm bản ghi bẩn cũng đủ làm cả báo cáo sai."),
     ("PHẦN 4", "Biên và dữ liệu bất thường",
      "Người dùng thật luôn nhập những thứ ngoài dự đoán: chuỗi quá dài, ký tự lạ, "
-     "số âm, ngày tháng vô lý. Đây là nhóm câu lệnh để tìm những outlier mà "
-     "form nhập liệu lẽ ra phải chặn từ đầu."),
+     "số âm, ngày tháng vô lý. Đây là nhóm câu lệnh để tìm những giá trị outlier "
+     "(nằm ngoài vùng bình thường) đã lọt vào database.",
+     "Câu hỏi cốt lõi: <b>Dữ liệu có nằm trong giới hạn nghiệp vụ cho phép không?</b> — "
+     "Số âm, ngày tương lai, chuỗi rỗng, giá trị ngoài enum — "
+     "những thứ form nhập liệu lẽ ra phải chặn từ đầu nhưng đã lọt qua."),
     ("PHẦN 5", "Audit, log và dấu vết",
      "Cột thời gian và mối quan hệ giữa các bảng là nơi kể lại lịch sử dữ liệu. "
-     "Khi chúng mâu thuẫn — sản phẩm bị xóa vẫn còn trong đơn, khách hàng không "
-     "tồn tại vẫn có giao dịch — đó là dấu hiệu của bug logic hoặc lỗ hổng dữ liệu."),
+     "Khi chúng mâu thuẫn — đơn đã xóa mềm vẫn để lại item, đơn hủy mà cờ xóa chưa bật, "
+     "dãy ID đứt quãng không rõ nguyên nhân — đó là dấu hiệu của bug logic hoặc lỗ hổng dữ liệu.",
+     "Câu hỏi cốt lõi: <b>Lịch sử dữ liệu có kể đúng câu chuyện không?</b> — "
+     "Khi nhãn thời gian và trạng thái mâu thuẫn nhau, đó là dấu vết của bug logic "
+     "hoặc luồng xử lý bị gián đoạn giữa chừng."),
     ("PHẦN 6", "Truy vấn nâng cao cho QA",
      "Năm câu lệnh cuối dùng tới window function, CTE và UNION. Chúng giải quyết "
      "những bài toán kiểm thử khó: lấy bản ghi mới nhất mỗi nhóm, phân hạng "
-     "khách hàng, tổng hợp nhiều loại lỗi trong một báo cáo duy nhất."),
+     "khách hàng, tổng hợp nhiều loại lỗi trong một báo cáo duy nhất.",
+     "Câu hỏi cốt lõi: <b>Cần kỹ thuật nào khi câu trả lời đòi hỏi nhiều bước tính toán?</b> — "
+     "Window function, CTE và UNION giải những bài toán mà WHERE và GROUP BY đơn thuần "
+     "không đủ: xếp hạng theo nhóm, chuỗi thời gian, tổng hợp nhiều loại lỗi cùng lúc."),
 ]
 
 # ===========================================================================
@@ -42,8 +63,165 @@ ENTRIES = [
 # ============================================================
 # PHẦN 1 — Toàn vẹn và trùng lặp dữ liệu
 # ============================================================
+# ─────────────────────────────────────────────────────────
 {
  "part": 0, "id": 1,
+ "title": "Khám phá schema bằng INFORMATION_SCHEMA khi chưa có tài liệu",
+ "situation":
+   "QA mới nhận một hệ thống không có tài liệu database — chỉ có quyền SELECT, "
+   "không biết có bao nhiêu bảng, cột nào kiểu gì, cột nào bắt buộc. Trước khi viết "
+   "được bất kỳ câu lệnh soi lỗi nào, cần một cách tra cứu schema ngay trong chính SQL, "
+   "không phụ thuộc tài liệu hay sơ đồ ER có thể đã lỗi thời.",
+ "before_label": "Những gì QA nhìn thấy qua SELECT * — không biết cấu trúc đứng sau:",
+ "before_cols": ["customer_id","customer_name","email","membership_tier","status"],
+ "before_rows": [
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "Silver",   "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "Standard", "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "Gold",     "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "Standard", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "Standard", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "Standard", "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "Standard", "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "Gold",     "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "Silver",   "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "VIP",      "ACTIVE"],
+ ],
+ "before_bugs": [],
+ "before_col_widths": [78, 118, 152, 85, 60],
+ "sql": (
+   "SELECT table_name,\n"
+   "       COUNT(*) AS so_cot,\n"
+   "       SUM(CASE WHEN is_nullable='YES'\n"
+   "                THEN 1 ELSE 0 END) AS so_cot_nullable,\n"
+   "       SUM(CASE WHEN column_key='PRI'\n"
+   "                THEN 1 ELSE 0 END) AS so_khoa_chinh\n"
+   "FROM   information_schema.columns\n"
+   "WHERE  table_schema = 'ecommerce_test'\n"
+   "GROUP  BY table_name\n"
+   "ORDER  BY table_name;"
+ ),
+ "clauses": [
+   ("FROM information_schema.columns",
+    "<b>information_schema</b> là schema hệ thống có sẵn trong mọi DB MySQL — chứa metadata "
+    "mô tả chính các bảng/cột trong DB, không cần quyền đặc biệt ngoài SELECT."),
+   ("WHERE table_schema\n  = 'ecommerce_test'",
+    "Lọc đúng database đang khảo sát — information_schema chứa metadata của TẤT CẢ database "
+    "trên server, không lọc sẽ trả về lẫn lộn."),
+   ("SUM(CASE WHEN ...\n  THEN 1 ELSE 0 END)",
+    "Đếm có điều kiện: đếm số cột cho phép NULL và số cột là khóa chính, "
+    "cho cái nhìn nhanh về độ \"chặt\" của từng bảng."),
+   ("GROUP BY table_name",
+    "Gom theo từng bảng để có một dòng tổng quan mỗi bảng."),
+ ],
+ "explain":
+   "<b>information_schema.columns</b> là bản đồ schema luôn cập nhật — không như tài liệu "
+   "viết tay có thể đã lỗi thời từ lâu.<br/>"
+   "DB ecommerce_test có 4 bảng (Customers, Order_Items, Orders, Products), mỗi bảng có 1 khóa chính. "
+   "Orders nhiều cột nullable nhất (3/6) — gợi ý nhiều trường tùy chọn, đáng kiểm tra kỹ.<br/>"
+   "Lưu ý: <b>table_name có thể trả về chữ thường</b> dù tên gốc viết hoa (tùy hệ điều hành "
+   "server MySQL chạy) — luôn kiểm tra case thật trước khi lọc WHERE table_name = '...'.<br/>"
+   "Chưa cần hiểu hết cú pháp SUM(CASE WHEN...) ở đây — kỹ thuật đếm có điều kiện sẽ được "
+   "giải thích kỹ ở Câu 9.",
+ "result_table": (
+   ["table_name","so_cot","so_cot_nullable","so_khoa_chinh"],
+   [
+     ["customers",   5, 3, 1],
+     ["order_items", 5, 2, 1],
+     ["orders",      6, 3, 1],
+     ["products",    5, 3, 1],
+   ]
+ ),
+ "result_note":
+   "4 bảng, mỗi bảng 1 khóa chính. Orders có 6 cột (nhiều nhất, vì có thêm order_date và "
+   "deleted_at) với 3 cột nullable — nên soi kỹ khi tìm dữ liệu thiếu.",
+ "note":
+   "Khi thấy một bảng có quá nhiều cột nullable, hỏi dev: những cột đó có rule 'bắt buộc' "
+   "nào ở tầng application không? Nếu có, kiểm tra tầng DB có enforce bằng NOT NULL không — "
+   "nếu không, tầng application bỏ sót một lần là dữ liệu sai ghi vào ngay. "
+   "Câu 5 sẽ kiểm tra cụ thể hơn từng cột.",
+},
+
+# ─────────────────────────────────────────────────────────
+{
+ "part": 0, "id": 2,
+ "title": "Kiểm tra ràng buộc UNIQUE/FOREIGN KEY có thực sự được enforce",
+ "situation":
+   "QA nhận bàn giao một hệ thống: tài liệu ghi \"email là duy nhất\", dev bảo \"đã có FOREIGN KEY "
+   "cho customer_id\". Nhưng dữ liệu thực tế lại có email trùng và đơn hàng trỏ tới khách không "
+   "tồn tại. Vậy những ràng buộc đó <b>thực sự đã được khai báo hay chưa</b>? "
+   "Đừng dựa vào tài liệu hay lời nói miệng — tra trực tiếp metadata của DB để có câu trả lời "
+   "chắc chắn.",
+ "before_label": "Bảng Customers — dòng đỏ: 2 email trùng (C004/C005) lẽ ra phải bị UNIQUE chặn:",
+ "before_cols": ["customer_id","customer_name","email","status"],
+ "before_rows": [
+   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "ACTIVE"],
+   ["C002","Tran Van B",        "b.tran@email.com",      "ACTIVE"],
+   ["C003","Le Thi C",          "c.le@email.com",        "ACTIVE"],
+   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "ACTIVE"],
+   ["C005","Khach Hang Trung",  "trung_email@email.com", "ACTIVE"],
+   ["C006","Pham Van X",        "(NULL)",                "ACTIVE"],
+   ["C007","Nguyen Thi Y",      "",                       "ACTIVE"],
+   ["C008","  Pham Van D  ",    "d.pham@email.com",      "ACTIVE"],
+   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "ACTIVE"],
+   ["C010","Khach Test VIP",    "vip@email.com",         "ACTIVE"],
+ ],
+ "before_bugs": [3, 4],
+ "before_col_widths": [55, 145, 225, 68],
+ "sql": (
+   "SELECT tc.table_name,\n"
+   "       tc.constraint_type,\n"
+   "       kcu.column_name\n"
+   "FROM   information_schema.table_constraints tc\n"
+   "LEFT JOIN information_schema.key_column_usage kcu\n"
+   "       ON tc.constraint_name = kcu.constraint_name\n"
+   "      AND tc.table_schema = kcu.table_schema\n"
+   "      AND tc.table_name = kcu.table_name\n"
+   "WHERE  tc.table_schema = 'ecommerce_test'\n"
+   "ORDER  BY tc.table_name, tc.constraint_type;"
+ ),
+ "clauses": [
+   ("FROM information_schema\n  .table_constraints tc",
+    "Bảng hệ thống liệt kê MỌI ràng buộc đã khai báo: PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK."),
+   ("LEFT JOIN information_schema\n  .key_column_usage kcu",
+    "Nối thêm để biết ràng buộc đó áp dụng trên <b>cột nào</b>. Bắt buộc dùng <b>LEFT JOIN</b> "
+    "thay vì JOIN thường: ràng buộc <b>CHECK không có dòng tương ứng</b> trong "
+    "key_column_usage (CHECK không gắn với một cột theo kiểu khóa), nên INNER JOIN sẽ ÂM "
+    "THẦM loại CHECK constraint khỏi kết quả — đúng loại lỗi khó nhận ra vì không báo gì cả."),
+   ("WHERE tc.table_schema\n  = 'ecommerce_test'",
+    "Giới hạn đúng database đang kiểm tra."),
+ ],
+ "explain":
+   "Kết quả chỉ trả về <b>4 PRIMARY KEY</b> — đúng 1 cho mỗi bảng — và <b>không có UNIQUE "
+   "hay FOREIGN KEY nào</b>.<br/>"
+   "Không có UNIQUE trên cột email có nghĩa là DB không chặn hai tài khoản dùng chung email — "
+   "dữ liệu trùng (C004/C005) lọt qua được chính vì lý do này.<br/>"
+   "Không có FOREIGN KEY trên Orders.customer_id có nghĩa là DB chấp nhận bất kỳ giá trị nào "
+   "cho trường đó — kể cả C999 không tồn tại trong bảng Customers.",
+ "result_table": (
+   ["table_name","constraint_type","column_name"],
+   [
+     ["customers",   "PRIMARY KEY", "customer_id"],
+     ["order_items", "PRIMARY KEY", "item_id"],
+     ["orders",      "PRIMARY KEY", "order_id"],
+     ["products",    "PRIMARY KEY", "product_id"],
+   ]
+ ),
+ "result_note":
+   "Chỉ có khóa chính. Tính duy nhất (email không trùng) và tính tham chiếu (đơn hàng phải "
+   "có khách hàng thật) chưa được bảo vệ ở tầng DB — nếu tầng ứng dụng bỏ sót một lần kiểm "
+   "tra, dữ liệu sai ghi thẳng vào mà không có gì ngăn lại.",
+ "note":
+   "Khi phát hiện thiếu UNIQUE hay FOREIGN KEY, đừng chỉ nói 'nên thêm' — kèm theo kết quả "
+   "câu này như bằng chứng để team không tranh cãi 'chắc đã có rồi'. "
+   "Lưu ý: thêm UNIQUE sẽ thất bại nếu dữ liệu trùng chưa được dọn — cần xử lý dữ liệu "
+   "trước, rồi mới ALTER TABLE. "
+   "MySQL chỉ enforce CHECK constraint từ phiên bản 8.0.16 — hệ thống cũ khai báo nhưng DB "
+   "im lặng bỏ qua.",
+},
+
+
+{
+ "part": 0, "id": 3,
  "title": "Tìm email bị trùng",
  "situation":
    "Hệ thống đăng ký yêu cầu mỗi email chỉ thuộc về một tài khoản. Tuy nhiên "
@@ -103,22 +281,27 @@ ENTRIES = [
  ),
  "result_note":
    "2 cặp trùng: <b>trung_email@email.com</b> (C004 + C005 — Bug-D) và "
-   "<b>a.nguyen@email.com</b> (C001 + C009 — trùng case-insensitive). "
-   "Cần xử lý cả hai và thêm ràng buộc UNIQUE trước khi đưa lên production.",
+   "<b>a.nguyen@email.com</b> (C001 + C009). "
+   "Lưu ý: cặp C001/C009 chỉ xuất hiện trên MySQL 8.0 với collation mặc định "
+   "(case-insensitive); trên DB phân biệt hoa/thường, cặp này sẽ không xuất hiện — "
+   "chỉ còn 1 cặp. Cần xử lý cả hai trường hợp và thêm ràng buộc UNIQUE trước khi đưa lên production.",
  "note":
-   "Kết quả của câu này phụ thuộc vào <b>collation</b> của cột email:<br/>"
-   "(1) <b>Trùng khác hoa/thường</b>: trên DB mẫu (collation <b>utf8mb4_0900_ai_ci</b> — không phân "
-   "biệt hoa/thường), câu này đã gộp luôn 'A.NGUYEN@EMAIL.COM' với 'a.nguyen@email.com'. Nhưng nếu "
-   "cột dùng collation phân biệt hoa/thường (vd <b>utf8mb4_bin</b>), câu này sẽ BỎ SÓT cặp đó "
-   "→ khi ấy cần Câu 6.<br/>"
-   "(2) <b>Trùng do khoảng trắng thừa</b> — '  test@mail.com' khác 'test@mail.com' "
-   "→ dùng Câu 4 để phát hiện.",
+   "Kết quả của câu này có thể thay đổi tùy cách database <b>so sánh chuỗi ký tự</b> "
+   "(database gọi cài đặt này là <i>collation</i>). "
+   "Kiểm tra nhanh: <font face='Mono' size='8.5'>SHOW CREATE TABLE Customers;</font><br/><br/>"
+   "(1) <b>Vấn đề hoa/thường</b>: Database thường chạy theo một trong hai chế độ:<br/>"
+   "• <b>Không phân biệt hoa/thường</b> (mặc định MySQL 8.0, tên kỹ thuật <i>utf8mb4_0900_ai_ci</i>) "
+   "→ 'A.NGUYEN@EMAIL.COM' và 'a.nguyen@email.com' được coi là <b>một</b>, câu này phát hiện được ngay.<br/>"
+   "• <b>Phân biệt hoa/thường</b> (tên kỹ thuật <i>utf8mb4_bin</i>) "
+   "→ hai email trên bị coi là <b>khác nhau</b>, câu này sẽ BỎ SÓT cặp C001/C009 → cần dùng Câu 8.<br/><br/>"
+   "(2) <b>Vấn đề khoảng trắng thừa</b>: '  test@mail.com' (có dấu cách ở đầu) và 'test@mail.com' "
+   "bị coi là hai email khác nhau dù trông giống nhau → câu này bỏ sót → dùng Câu 6 để phát hiện.",
 },
 
 
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 2,
+ "part": 0, "id": 4,
  "title": "Tìm trùng theo nhiều cột (composite key)",
  "situation":
    "Quy tắc nghiệp vụ: mỗi đơn hàng không được chứa cùng một sản phẩm "
@@ -128,14 +311,17 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — dòng đỏ: cặp (order_id, product_id) xuất hiện lần 2:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
  "before_bugs": [5],
  "sql": (
@@ -148,7 +334,7 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 8 dòng trong ví dụ."),
+    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 11 dòng trong dữ liệu mẫu."),
    ("GROUP BY order_id, product_id",
     "<b>Gom nhóm</b> theo tổ hợp hai cột. Mỗi nhóm đại diện "
     "cho một cặp (đơn hàng, sản phẩm) duy nhất."),
@@ -172,19 +358,20 @@ ENTRIES = [
    "Cần xóa dòng trùng và thêm UNIQUE(order_id, product_id) vào bảng.",
  "note":
    "Trước khi xóa dòng trùng, hãy kiểm tra:<br/>"
-   "(1) Hai dòng có item_id khác nhau không?<br/>"
-   "(2) Dòng nào được tạo sau — đó mới là dòng lỗi cần xóa.<br/>"
+   "(1) Hai dòng có item_id khác nhau không? Nếu có, xóa theo item_id cụ thể — không xóa theo điều kiện mờ.<br/>"
+   "(2) Số lượng và đơn giá của hai dòng có giống nhau không? Nếu khác nhau, cần xác nhận nghiệp vụ "
+   "dòng nào đúng trước khi xóa — không thể tự suy.<br/>"
    "Đừng xóa dựa trên giả định — sai item_id sẽ phá vỡ các bảng liên kết.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 3,
+ "part": 0, "id": 5,
  "title": "Tìm NULL ở cột bắt buộc",
  "situation":
    "Cột email được quy định là bắt buộc trên giao diện đăng ký, nhưng "
    "luồng import dữ liệu cũ hoặc API nội bộ lại không kiểm tra. Kết quả: "
-   "một số tài khoản không có email — không thể gửi thông báo, không "
-   "thể reset mật khẩu, chiến dịch CRM bị lỗi.",
+   "một số tài khoản không có email — không thể gửi thông báo đặt hàng, "
+   "không thể reset mật khẩu, email marketing gửi hàng loạt bị thiếu người nhận.",
  "before_label": "Bảng Customers — dòng đỏ: email NULL hoặc chuỗi rỗng:",
  "before_cols": ["customer_id","customer_name","email","status"],
  "before_rows": [
@@ -220,11 +407,15 @@ ENTRIES = [
     "Chiếu ra các cột để QA xác minh và báo cáo số lượng bị ảnh hưởng."),
  ],
  "explain":
-   "Có <b>hai kiểu rỗng</b> hoàn toàn khác nhau trong SQL:<br/>"
-   "(1) <b>NULL</b> — chưa có giá trị, hệ thống không biết email là gì.<br/>"
-   "(2) <b>Chuỗi rỗng ''</b> — có giá trị nhưng là rỗng, biết email nhưng không có nội dung.<br/>"
-   "Điều kiện <b>email != ''</b> sẽ KHÔNG lọc được NULL vì mọi phép so sánh "
-   "với NULL đều trả về UNKNOWN.",
+   "Có <b>hai kiểu rỗng hoàn toàn khác nhau</b> trong SQL — dễ nhầm nhưng hành xử rất khác:<br/><br/>"
+   "(1) <b>NULL</b> — ô chưa được điền, hệ thống <i>không biết</i> email là gì. "
+   "Giống như tờ form bỏ trống hoàn toàn.<br/>"
+   "(2) <b>Chuỗi rỗng ''</b> — ô đã được điền nhưng người dùng không gõ gì, chỉ bấm Submit. "
+   "Hệ thống <i>biết</i> có email, nhưng nội dung là trống.<br/><br/>"
+   "<b>Tại sao không thể dùng email != '' để bắt cả hai?</b><br/>"
+   "Dùng <b>email != ''</b> sẽ bỏ sót mọi dòng có email là NULL — "
+   "vì SQL không dùng <b>!=</b> để so sánh với NULL, bắt buộc phải dùng <b>IS NULL</b>. "
+   "Đây là lý do câu lệnh cần hai điều kiện riêng kết hợp bằng OR.",
  "result_table": (
    ["customer_id","customer_name","email"],
    [["C006","Pham Van X","(NULL)"],
@@ -237,18 +428,20 @@ ENTRIES = [
    "Đừng chỉ kiểm tra <b>IS NULL</b> — đó chỉ là một nửa bức tranh.<br/>"
    "(1) <b>Chuỗi rỗng</b>: hệ thống cũ thường lưu '' thay cho NULL "
    "→ cần thêm điều kiện <b>TRIM(email) = ''</b>.<br/>"
-   "(2) <b>Khoảng trắng thừa</b>: '  test@email.com' vẫn được lưu nhưng "
-   "sau TRIM mới lộ ra là chuỗi rỗng → kết hợp cả hai điều kiện vào một câu lệnh.",
+   "(2) <b>Ô toàn khoảng trắng</b>: giá trị như '   ' (chỉ có dấu cách) trông giống "
+   "có dữ liệu nhưng thực chất rỗng — <b>TRIM(email) = ''</b> cũng bắt được cả trường hợp này. "
+   "Kết hợp cả hai điều kiện vào một câu lệnh để không bỏ sót kiểu nào.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 4,
+ "part": 0, "id": 6,
  "title": "Phát hiện khoảng trắng thừa và ký tự ẩn",
  "situation":
    "Người dùng copy-paste tên từ Excel hoặc nhập trên điện thoại dễ "
-   "kéo theo dấu cách thừa ở đầu/cuối. Kết quả: 'Tran Van B' và "
-   "'  Tran Van B  ' bị coi là hai người khác nhau — trùng lặp logic "
-   "nhưng không bị bắt bởi kiểm tra UNIQUE thông thường.",
+   "kéo theo dấu cách thừa ở đầu/cuối. Trong dữ liệu mẫu, C008 được lưu là "
+   "'  Pham Van D  ' (có hai dấu cách ở đầu và cuối) — nhìn bề ngoài trông bình thường "
+   "nhưng hệ thống coi đây là tên khác với 'Pham Van D', "
+   "khiến kiểm tra UNIQUE thông thường không phát hiện được trùng lặp.",
  "before_label": "Bảng Customers — dòng đỏ: tên có khoảng trắng thừa:",
  "before_cols": ["customer_id","customer_name","status"],
  "before_rows": [
@@ -284,30 +477,36 @@ ENTRIES = [
  ],
  "explain":
    "<b>TRIM</b> chỉ cắt khoảng trắng ở hai đầu, không xóa khoảng trắng ở giữa tên.<br/>"
-   "So sánh CHAR_LENGTH trước và sau TRIM để đo chính xác có bao nhiêu ký tự thừa.<br/>"
-   "Nếu cần bắt cả tab (\\t) hay xuống dòng (\\n), dùng thêm REPLACE hoặc REGEXP.",
+   "So sánh CHAR_LENGTH trước và sau TRIM để đo chính xác có bao nhiêu ký tự thừa.",
  "result_table": (
    ["customer_id","customer_name","do_dai_goc","do_dai_sau_trim"],
    [["C008","  Pham Van D  ","14","10"]],
  ),
  "result_note":
-   "Mỗi dòng trả về cần được chuẩn hóa bằng UPDATE ... SET customer_name = TRIM(customer_name).",
+   "Mỗi dòng trả về là một tên cần được chuẩn hóa — đề xuất dev chạy "
+   "UPDATE ... SET customer_name = TRIM(customer_name) trên các dòng này.",
  "note":
-   "<b>TRIM</b> trong MySQL chỉ cắt dấu cách thường (ASCII 32).<br/>"
-   "Nếu dữ liệu nhập từ Excel, có thể tồn tại ký tự "
-   "<b>non-breaking space</b> (\\u00a0) — TRIM sẽ không bắt được.<br/>"
-   "Xử lý bổ sung bằng: <b>REPLACE(customer_name, CHAR(160), '')</b> "
-   "trước khi so sánh hoặc chuẩn hóa.",
+   "<b>TRIM chỉ bắt được dấu cách thông thường</b> — loại dấu cách bàn phím tạo ra khi nhấn Space.<br/><br/>"
+   "<b>Bẫy từ Excel/Word</b>: khi copy-paste từ các phần mềm văn phòng, đôi khi xuất hiện "
+   "<b>dấu cách ẩn</b> (trông y hệt dấu cách bình thường nhưng là một ký tự khác, "
+   "tên kỹ thuật là <i>non-breaking space</i>). TRIM không nhận ra loại này và bỏ sót hoàn toàn.<br/><br/>"
+   "<b>Cách nhận biết</b>: chạy TRIM xong mà <b>CHAR_LENGTH</b> vẫn dài hơn số ký tự nhìn thấy "
+   "→ có khả năng cao đang chứa dấu cách ẩn.<br/>"
+   "<b>Cách xử lý</b>: thay thế dấu cách ẩn trước, rồi mới TRIM:<br/>"
+   "<font face='Mono' size='8'>TRIM(REPLACE(customer_name, CHAR(160), ''))</font><br/>"
+   "Trong đó <font face='Mono' size='8'>CHAR(160)</font> là mã số của dấu cách ẩn đó.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 5,
+ "part": 0, "id": 7,
  "title": "Kiểm tra bản ghi mồ côi (foreign key orphan)",
  "situation":
-   "Bảng Orders có cột customer_id liên kết sang Customers. Nếu "
-   "FK constraint bị tắt hoặc dữ liệu được import thủ công, có thể "
-   "xuất hiện đơn hàng với customer_id không tồn tại — orphan record. "
-   "Báo cáo doanh thu sẽ sai vì không join được thông tin khách.",
+   "Bảng Orders có cột customer_id dùng để liên kết sang bảng Customers — "
+   "mỗi đơn hàng phải thuộc về một khách hàng có thật. "
+   "Nếu ràng buộc này bị tắt hoặc dữ liệu được import thủ công bỏ qua kiểm tra, "
+   "có thể xuất hiện đơn hàng trỏ đến customer_id không tồn tại trong Customers. "
+   "Đây gọi là <b>bản ghi mồ côi</b> — bản ghi tham chiếu đến một đối tượng không còn (hoặc chưa từng) tồn tại. "
+   "Báo cáo doanh thu sẽ sai vì không lấy được thông tin khách hàng để ghép vào.",
  "before_label": "Bảng Orders — dòng đỏ: customer_id không có trong Customers:",
  "before_cols": ["order_id","customer_id","total_amount","status"],
  "before_rows": [
@@ -329,7 +528,7 @@ ENTRIES = [
    ("FROM Orders o\n  LEFT JOIN Customers c\n    ON o.customer_id = c.customer_id",
     "<b>LEFT JOIN</b> giữ lại TẤT CẢ dòng trong Orders — kể cả dòng "
     "không khớp với bất kỳ dòng nào trong Customers. "
-    "Với INNER JOIN, dòng orphan sẽ biến mất và không phát hiện được."),
+    "Với INNER JOIN, đơn hàng không có khách hàng tương ứng sẽ bị loại khỏi kết quả và không phát hiện được."),
    ("WHERE c.customer_id IS NULL",
     "Sau LEFT JOIN, những dòng Orders không khớp sẽ có "
     "c.customer_id = NULL. Lọc đúng các dòng đó."),
@@ -337,7 +536,7 @@ ENTRIES = [
     "Chiếu ra order_id và customer_id để xác định đơn hàng nào bị mồ côi."),
  ],
  "explain":
-   "Kỹ thuật <b>LEFT JOIN + WHERE IS NULL</b> là cách chuẩn để tìm orphan record.<br/>"
+   "Kỹ thuật <b>LEFT JOIN + WHERE IS NULL</b> là cách chuẩn để tìm bản ghi mồ côi.<br/>"
    "Nguyên lý: LEFT JOIN giữ nguyên tất cả dòng bên trái. "
    "Những dòng không có cặp bên phải sẽ có giá trị NULL ở mọi cột của bảng phải.<br/>"
    "Ta lọc đúng điều kiện đó để xác định bản ghi mồ côi.",
@@ -349,22 +548,22 @@ ENTRIES = [
    "ORD_004 không có chủ. Cần xác minh: customer C999 có thực tồn tại "
    "nhưng bị xóa nhầm, hay đây là đơn hàng được tạo bởi bug?",
  "note":
-   "Câu lệnh này kiểm tra chiều <b>Orders → Customers</b> (đơn hàng không có khách hàng).<br/>"
-   "Cần kiểm tra thêm các chiều khác:<br/>"
-   "(1) <b>Order_Items → Products</b>: item có product_id không tồn tại — phát hiện bằng "
-   "cùng kỹ thuật LEFT JOIN ... IS NULL (hoặc NOT EXISTS), chỉ đổi cặp bảng.<br/>"
-   "(2) <b>Order_Items → Orders</b>: item thuộc order_id không tồn tại.<br/>"
-   "Cả hai đều là orphan nhưng ở tầng bảng khác nhau.",
+   "Khi tìm thấy đơn mồ côi, hỏi dev hai câu: customer C999 có thực từng tồn tại rồi bị xóa "
+   "nhầm không, hay đơn được tạo do bug? Nếu customer bị xóa cứng (hard delete) mà vẫn còn đơn, "
+   "đó là lỗ hổng toàn vẹn tham chiếu (referential integrity — dữ liệu con trỏ tới bản ghi cha "
+   "không còn tồn tại) — cần xem xét thêm FOREIGN KEY hoặc đổi sang soft-delete. "
+   "Câu lệnh tương tự áp dụng được cho mọi cặp bảng cha-con: đổi cặp bảng và cột khóa là xong.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 6,
+ "part": 0, "id": 8,
  "title": "Tìm trùng không phân biệt hoa/thường",
  "situation":
-   "Database lưu email theo kiểu người dùng nhập — 'Test@Mail.com' và "
-   "'test@mail.com' là cùng một địa chỉ nhưng MySQL mặc định phân biệt "
-   "hoa/thường trong một số collation. Kiểm tra UNIQUE trên cột gốc "
-   "sẽ bỏ qua dạng trùng này.",
+   "Database lưu email theo đúng kiểu người dùng nhập. Trong dữ liệu mẫu, "
+   "C001 đăng ký 'a.nguyen@email.com' nhưng C009 lại nhập 'A.NGUYEN@EMAIL.COM' — "
+   "cùng một địa chỉ, chỉ khác hoa/thường. "
+   "Trên server dùng collation phân biệt hoa/thường, kiểm tra UNIQUE trên cột gốc "
+   "sẽ bỏ qua dạng trùng này vì coi hai chuỗi trên là khác nhau.",
  "before_label": "Bảng Customers — dòng đỏ: email trùng khi so sánh không phân biệt hoa/thường:",
  "before_cols": ["customer_id","customer_name","email","status"],
  "before_rows": [
@@ -414,19 +613,16 @@ ENTRIES = [
  ),
  "result_note":
    "2 cặp trùng sau khi chuẩn hóa hoa/thường: <b>a.nguyen@email.com</b> (C001 + C009) "
-   "và <b>trung_email@email.com</b> (C004 + C005). "
-   "Trên DB mẫu (collation không phân biệt hoa/thường) Câu 1 cũng ra đúng hai cặp này; "
-   "LOWER() ở đây đảm bảo phát hiện ĐÚNG bất kể collation — quan trọng khi bạn không chắc "
-   "cột đang dùng collation nào.",
+   "và <b>trung_email@email.com</b> (C004 + C005).",
  "note":
-   "Câu lệnh này chỉ cần thiết khi collation của cột là <b>case-sensitive</b> (vd: utf8mb4_bin).<br/>"
-   "Nếu bảng dùng <b>utf8mb4_unicode_ci</b> (case-insensitive), MySQL tự động "
-   "so sánh không phân biệt hoa/thường — Câu 1 đã đủ, câu này thừa.<br/>"
-   "Kiểm tra collation trước khi quyết định dùng: <b>SHOW FULL COLUMNS FROM Customers;</b>",
+   "Câu 3 và Câu 8 cho cùng kết quả trên MySQL 8.0 mặc định (collation không phân biệt hoa/thường). "
+   "Điểm khác biệt: Câu 8 dùng <b>LOWER()</b> nên chạy đúng trên mọi loại collation — "
+   "kể cả khi DB được cài chế độ phân biệt hoa/thường. "
+   "Khi không chắc DB đang dùng collation nào, dùng Câu 8 là an toàn hơn.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 7,
+ "part": 0, "id": 9,
  "title": "Đếm giá trị NULL theo từng cột",
  "situation":
    "Thay vì kiểm tra NULL từng cột riêng lẻ, câu lệnh này cho ra một "
@@ -464,7 +660,8 @@ ENTRIES = [
     "dạng báo cáo nhanh cho QA."),
  ],
  "explain":
-   "Kỹ thuật <b>CASE WHEN + SUM</b> là cách pivot đơn giản: chuyển điều kiện thành số rồi tổng hợp.<br/>"
+   "Kỹ thuật <b>CASE WHEN + SUM</b> (đã thoáng gặp ở Câu 1, nay phân tích kỹ) là cách "
+   "đếm có điều kiện: chuyển mỗi điều kiện thành số 1/0 rồi cộng lại.<br/>"
    "Không cần GROUP BY vì toàn bộ bảng là một nhóm duy nhất — kết quả trả về chỉ 1 dòng.<br/>"
    "Mở rộng bằng cách thêm cột vào SELECT để kiểm tra nhiều trường trong một lần chạy.",
  "result_table": (
@@ -472,17 +669,17 @@ ENTRIES = [
    [["0","1","1"]],
  ),
  "result_note":
-   "Cột price và stock đều có 1 NULL — cần điều tra nguồn dữ liệu "
-   "và quyết định giá trị mặc định.",
+   "Cột price và stock đều có 1 NULL — cần làm rõ với dev/PO: "
+   "NULL ở đây có nghĩa là gì? Chưa nhập? Miễn phí? Hết hàng? "
+   "NULL và 0 là hai trạng thái khác nhau — xác định đúng nghĩa trước khi viết test case.",
  "note":
-   "Mở rộng câu lệnh sang bảng <b>Customers</b> để tạo báo cáo chất lượng dữ liệu tổng thể:<br/>"
-   "(1) Đếm NULL theo từng cột: <b>null_email</b>, <b>null_tier</b>, <b>null_status</b>.<br/>"
-   "(2) Chạy ngay đầu sprint — phát hiện sớm giúp team thống nhất giá trị mặc định "
-   "trước khi viết test case.",
+   "Câu này chỉ đếm NULL, bỏ sót chuỗi rỗng — dữ liệu thiếu ở hệ thống cũ thường lưu "
+   "dưới dạng chuỗi rỗng thay vì NULL, nên kết quả = 0 chưa có nghĩa là sạch.<br/>"
+   "Kết quả là tổng hợp toàn bảng (1 dòng duy nhất) — dùng Câu 5 để xem cụ thể bản ghi nào bị thiếu.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 8,
+ "part": 0, "id": 10,
  "title": "Tìm bản ghi trùng hoàn toàn (full duplicate)",
  "situation":
    "Khác với trùng ID, full duplicate là hai dòng có toàn bộ giá "
@@ -530,18 +727,23 @@ ENTRIES = [
    [["Ban phim co Logitech","2.000.000",2]],
  ),
  "result_note":
-   "Cần xác định PROD_002 hay PROD_005 là bản gốc trước khi xóa. "
-   "Kiểm tra xem bản nào có Order_Items liên kết.",
+   "PROD_002 và PROD_005 trùng tên + giá nhưng có product_id khác nhau — "
+   "hệ thống đang có hai bản ghi cho cùng một sản phẩm. "
+   "Cần xác định bản nào có đơn hàng liên kết để tránh xóa nhầm khi dọn dẹp.",
  "note":
-   "Trước khi xóa, hãy xem đầy đủ cả hai dòng để quyết định đúng:<br/>"
-   "<b>SELECT * FROM Products</b><br/>"
-   "<b>WHERE product_name = 'Ban phim co Logitech' AND price = 2000000;</b><br/>"
-   "Kiểm tra thêm: dòng nào đang có <b>Order_Items</b> liên kết — "
-   "đó là bản gốc, dòng còn lại mới là bản trùng cần xóa.",
+   "<b>Bẫy 1 — trùng theo 2 cột chưa đủ bằng chứng:</b> "
+   "câu lệnh chỉ so sánh product_name và price. Hai sản phẩm cùng tên cùng giá "
+   "nhưng khác nhà cung cấp hoặc khác phiên bản vẫn có thể là sản phẩm hợp lệ, "
+   "không phải trùng thật — cần xác nhận thêm với PO trước khi báo bug.<br/><br/>"
+   "<b>Bẫy 2 — kết quả không nói bản nào là gốc:</b> "
+   "câu trả về số lần trùng, không biết PROD_002 hay PROD_005 mới là bản được tạo đúng. "
+   "Có đơn hàng liên kết không đồng nghĩa là bản gốc — có thể người dùng đặt nhầm vào bản trùng.<br/><br/>"
+   "<b>Báo cáo bug đúng cách:</b> ghi rõ cả hai product_id, số đơn hàng liên kết từng bản, "
+   "và đề nghị dev/PO xác nhận bản nào giữ lại — không tự ý kết luận.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 9,
+ "part": 0, "id": 11,
  "title": "Kiểm tra giá trị ngoài danh sách cho phép (ENUM check)",
  "situation":
    "Cột membership_tier chỉ được nhận một trong bốn giá trị: Standard, "
@@ -582,16 +784,10 @@ ENTRIES = [
     "Chiếu đủ thông tin để QA xác minh và cập nhật về giá trị đúng."),
  ],
  "explain":
-   "<b>NOT IN + danh sách tường minh</b> là cách nhanh nhất để kiểm tra ENUM không được enforce ở tầng DB.<br/>"
-   "Pattern này áp dụng cho MỌI cột có danh sách giá trị cố định trong hệ thống — chỉ đổi tên "
-   "cột/bảng và danh sách hợp lệ, cấu trúc câu lệnh giữ nguyên:<br/>"
-   "(1) <b>Orders.status</b>: <b>NOT IN ('COMPLETED','PENDING','CANCELLED','PROCESSING')</b> "
-   "— chạy trên data mẫu cho kết quả rỗng (4 trạng thái đều hợp lệ, xác nhận sạch).<br/>"
-   "(2) <b>Customers.status</b>: <b>NOT IN ('ACTIVE','INACTIVE','SUSPENDED')</b> "
-   "— cũng cho kết quả rỗng, nhưng lưu ý data mẫu toàn ACTIVE nên chưa kiểm thử được "
-   "luồng deactivate/suspend tài khoản — khi viết test case cần bổ sung data có đủ trạng thái.<br/>"
-   "Kết quả rỗng không phải thất bại — đó là confirmation hệ thống đang đúng, và câu lệnh "
-   "nên chạy định kỳ hoặc sau mỗi lần migrate dữ liệu để phát hiện sớm giá trị lạ.",
+   "Kỹ thuật <b>NOT IN + danh sách tường minh</b>: lọc ra mọi giá trị không nằm trong "
+   "tập hợp lệ đã định nghĩa. Áp dụng được cho mọi cột dạng ENUM — chỉ đổi tên cột và danh sách.<br/>"
+   "Kết quả rỗng không phải thất bại — đó là xác nhận dữ liệu đang đúng. "
+   "Nên chạy định kỳ hoặc sau mỗi lần migrate để phát hiện sớm giá trị lạ.",
  "result_table": (
    ["customer_id","customer_name","membership_tier"],
    [["C010","Khach Test VIP","VIP"]],
@@ -600,16 +796,16 @@ ENTRIES = [
    "1 bản ghi có tier không hợp lệ. Cần cập nhật về giá trị đúng "
    "và bổ sung CHECK constraint hoặc ENUM type trong DB.",
  "note":
-   "Cạm bẫy với <b>NOT IN</b>: nếu danh sách chứa NULL, toàn bộ điều kiện trả về UNKNOWN.<br/>"
-   "Ví dụ: <b>WHERE tier NOT IN ('Standard', NULL)</b> — không trả về dòng nào, "
-   "kể cả dòng có tier = 'VIP'.<br/>"
-   "Quy tắc: <b>luôn đảm bảo danh sách NOT IN không chứa NULL</b> — "
-   "hoặc dùng NOT EXISTS thay thế để an toàn hơn. Bẫy này áp dụng cho mọi cột ENUM, "
-   "không riêng membership_tier.",
+   "<b>Cạm bẫy:</b> không để NULL lọt vào danh sách NOT IN — "
+   "nếu có, toàn bộ điều kiện trả về UNKNOWN và bỏ sót mọi dòng. "
+   "Bẫy này áp cho cả danh sách viết tay lẫn <b>NOT IN (subquery)</b> khi cột trong subquery "
+   "có thể NULL — khi đó dùng NOT EXISTS an toàn hơn.<br/>"
+   "Nếu cần bắt thêm cả dòng chưa điền tier, thêm riêng: "
+   "<font face='Mono' size='8'>OR membership_tier IS NULL</font>",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 0, "id": 10,
+ "part": 0, "id": 12,
  "title": "Tìm bản ghi xóa mềm vẫn tham gia tính toán",
  "situation":
    "Hệ thống dùng cơ chế <b>soft-delete</b> — khi hủy đơn hàng, cột "
@@ -649,7 +845,7 @@ ENTRIES = [
     "báo cáo có đang cộng nhầm những đơn này không."),
  ],
  "explain":
-   "Cơ chế <b>soft-delete</b> giữ lại bản ghi để phục vụ audit trail, "
+   "Cơ chế <b>soft-delete</b> giữ lại bản ghi để phục vụ <b>audit trail</b> (nhật ký truy vết — lưu lại lịch sử mọi thao tác để tra cứu khi cần), "
    "nhưng yêu cầu <b>mọi query nghiệp vụ</b> đều phải thêm điều kiện "
    "<code>WHERE deleted_at IS NULL</code>.<br/>"
    "Bug xảy ra khi developer viết query mới mà quên điều kiện này — "
@@ -665,18 +861,18 @@ ENTRIES = [
    "Nếu query báo cáo không lọc deleted_at, tổng doanh thu "
    "sẽ bị thổi phồng thêm 15 triệu.",
  "note":
-   "<b>Soft-delete là pattern phổ biến</b> — hầu hết hệ thống e-commerce, "
-   "CRM, ERP đều dùng cơ chế này thay vì xóa cứng (hard delete).<br/>"
-   "Khi test, QA cần kiểm tra <b>mọi màn hình báo cáo</b> và đảm bảo chúng "
-   "có điều kiện lọc bản ghi đã xóa.<br/>"
-   "Mẹo: tìm trong code tất cả câu SELECT trên bảng có cột deleted_at — "
-   "câu nào thiếu <code>WHERE deleted_at IS NULL</code> là nghi vấn bug.",
+   "Soft-delete là pattern phổ biến trong hầu hết hệ thống e-commerce, CRM, ERP. "
+   "Khi test, QA cần kiểm tra mọi màn hình báo cáo: chạy lại query báo cáo không có điều kiện "
+   "WHERE deleted_at IS NULL rồi so sánh kết quả — nếu tổng tiền hoặc số lượng thay đổi, "
+   "đó là bug cần báo cáo ngay. "
+   "Bước sau khi tìm thấy: đối chiếu với log để xác nhận đơn được xóa mềm có đúng thời điểm "
+   "và đúng lý do không.",
 },
 
 
 # ─────────────────────────────────────────────────────────
 {
- "part": 1, "id": 11,
+ "part": 1, "id": 13,
  "title": "Đối soát tổng tiền đơn hàng với chi tiết items",
  "situation":
    "Hệ thống lưu <b>total_amount</b> trong Orders nhưng không tự đối soát với "
@@ -707,23 +903,26 @@ ENTRIES = [
  "clauses": [
    ("FROM Orders o\n  JOIN Order_Items i\n    ON o.order_id = i.order_id",
     "<b>INNER JOIN</b> ghép mỗi đơn hàng với tất cả items của nó. "
-    "Đơn không có item sẽ bị bỏ qua — dùng LEFT JOIN + Câu 15 để bắt thêm."),
+    "Đơn không có item sẽ bị bỏ qua khỏi kết quả — đây là ý muốn: đơn rỗng không có gì để đối soát. "
+    "Nếu cần phát hiện riêng đơn 0 items, viết thêm truy vấn dùng LEFT JOIN lọc WHERE i.item_id IS NULL."),
    ("GROUP BY o.order_id, o.total_amount",
     "Gom toàn bộ items của cùng một đơn thành một nhóm. "
     "total_amount cần có trong GROUP BY vì được dùng trong HAVING."),
    ("HAVING SUM(i.quantity * i.price)\n  != o.total_amount",
     "<b>HAVING</b> lọc sau khi đã tính aggregate — chỉ giữ đơn "
     "có tổng items khác với total_amount đã ghi."),
-   ("SELECT ..., chenh_lech",
-    "Hiển thị cả ba con số: ghi bao nhiêu, tính ra bao nhiêu, chênh lệch bao nhiêu — "
-    "đủ thông tin để QA viết defect report."),
+   ("SELECT o.order_id,\n  o.total_amount AS ghi_trong_don,\n  SUM(i.quantity * i.price) AS tinh_tu_items,\n  o.total_amount - SUM(...) AS chenh_lech",
+    "Hiển thị cả ba con số: <b>ghi_trong_don</b> (ghi trong đơn), "
+    "<b>tinh_tu_items</b> (tính từ từng dòng sản phẩm), "
+    "<b>chenh_lech</b> (hiệu giữa hai cột) — đủ thông tin để QA viết defect report mà không cần tra thêm."),
  ],
  "explain":
    "Kỹ thuật <b>JOIN + GROUP BY + HAVING</b> để đối soát header-detail: "
    "total_amount trong Orders phải bằng SUM(quantity × price) từ Order_Items.<br/>"
-   "Kết quả phát hiện <b>hai nguyên nhân khác nhau</b>:<br/>"
+   "Kết quả phát hiện <b>ba nguyên nhân khác nhau</b>:<br/>"
    "(1) ORD_001 lệch vì item bị nhân đôi (item 1 và item 7 cùng order + product).<br/>"
    "(2) ORD_002 lệch vì total_amount bị ghi sai thủ công (Bug-B).<br/>"
+   "(3) ORD_005 lệch vì là đơn đã xóa mềm nhưng item chưa dọn, vẫn lọt vào đối soát (Câu 12).<br/>"
    "Cùng triệu chứng nhưng cách xử lý khác nhau — cần tra log để phân biệt.",
  "result_table": (
    ["order_id","ghi_trong_don","tinh_tu_items","chenh_lech"],
@@ -736,21 +935,19 @@ ENTRIES = [
  "result_note":
    "3 đơn lệch: ORD_001 do item trùng (62M vs 32M); "
    "ORD_002 do total_amount ghi sai (31M vs 20M); "
-   "ORD_005 đã bị xóa mềm nhưng vẫn tham gia đối soát — minh họa bug Câu 10 (soft-delete leak).",
+   "ORD_005 đã bị xóa mềm nhưng vẫn tham gia đối soát — minh họa bug Câu 12 (soft-delete leak).",
  "note":
-   "INNER JOIN làm ẩn các đơn không có item — những đơn này có thể có total_amount > 0 "
-   "nhưng không bao giờ xuất hiện trong kết quả câu này.<br/>"
-   "Kết hợp với <b>Câu 15</b> để kiểm tra toàn diện:<br/>"
-   "(1) Câu 11: đơn có item nhưng tổng lệch → bug tính toán hoặc dữ liệu nhân đôi.<br/>"
-   "(2) Câu 15: đơn không có item nào → trường hợp nghiêm trọng hơn.<br/>"
-   "<b>Cảnh báo 'fan-out':</b> mẫu JOIN + SUM này chỉ đúng khi đối soát với MỘT bảng con "
-   "(Order_Items). Nếu JOIN thêm bảng con thứ hai (vd Order_Discounts, Shipments), mỗi dòng "
-   "đơn bị nhân bản và SUM sẽ phồng sai toàn bộ. Khi có nhiều bảng con, hãy gộp (aggregate) "
-   "từng bảng trong subquery riêng rồi mới JOIN các kết quả đã gộp.",
+   "Hai bẫy cần biết khi dùng câu này: "
+   "(1) INNER JOIN bỏ qua đơn rỗng — đơn không có item không xuất hiện trong kết quả, "
+   "không phải không có lỗi mà bị lọt. "
+   "(2) Câu này không lọc deleted_at, nên đơn đã xóa mềm vẫn lọt vào kết quả — "
+   "nếu chỉ muốn đối soát đơn còn hiệu lực, thêm WHERE o.deleted_at IS NULL. "
+   "Khi tìm thấy chênh lệch, hỏi dev: nguyên nhân là item bị nhân đôi hay total_amount bị ghi sai "
+   "thủ công? Hai nguyên nhân có cách xử lý hoàn toàn khác nhau.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 1, "id": 12,
+ "part": 1, "id": 14,
  "title": "Phát hiện tồn kho âm hoặc NULL",
  "situation":
    "Cột <b>stock</b> có hai kiểu lỗi cần soi cùng lúc: giá trị <b>âm</b> (bán quá số lượng "
@@ -788,15 +985,10 @@ ENTRIES = [
     "Chiếu đủ thông tin để QA xác định sản phẩm và mức độ lệch."),
  ],
  "explain":
-   "Câu lệnh đơn giản nhưng <b>cực kỳ quan trọng</b> trong kiểm thử e-commerce — gộp hai loại "
-   "lỗi cùng một cột để có báo cáo đầy đủ trong một lần chạy.<br/>"
-   "<b>Tồn kho âm</b> thường xảy ra ở hai tình huống: (1) <b>Thiếu CHECK constraint</b> — DB "
-   "chấp nhận ngay UPDATE stock = stock - 1 dù stock đang = 0, không báo lỗi gì; "
-   "(2) <b>Race condition</b> — hai người cùng đặt hàng lúc còn 1 sản phẩm, cả hai cùng đọc "
-   "stock = 1, cùng kiểm tra 'còn hàng', cùng trừ 1 → kết quả cuối stock = -1.<br/>"
-   "<b>Tồn kho NULL</b> nghĩa là <b>không có thông tin</b> — khác hẳn với stock = 0 (hết hàng "
-   "nhưng đã biết rõ số lượng). Mọi phép so sánh với NULL đều trả về UNKNOWN nên bắt buộc "
-   "dùng IS NULL/IS NOT NULL, không thể dùng = hay !=.",
+   "Một câu gộp hai loại lỗi: <b>tồn kho âm</b> (bán quá số lượng — thường do thiếu CHECK "
+   "constraint hoặc hai người đặt cùng lúc) và <b>tồn kho NULL</b> (chưa có thông tin — "
+   "khác với stock = 0 là hết hàng đã biết rõ).<br/>"
+   "Lưu ý: phải dùng <b>IS NULL</b> để bắt NULL, viết <b>stock = NULL</b> không bao giờ cho kết quả.",
  "result_table": (
    ["product_id","product_name","stock"],
    [
@@ -809,85 +1001,83 @@ ENTRIES = [
    "điều tra race condition hoặc logic trừ kho); PROD_007 tồn kho = NULL (chưa nhập kho — "
    "bổ sung dữ liệu hoặc thêm DEFAULT 0 vào schema).",
  "note":
-   "Thêm <b>CHECK constraint</b> vào DB để ngăn giá trị âm từ đầu:<br/>"
-   "<b>ALTER TABLE Products ADD CONSTRAINT chk_stock CHECK (stock &gt;= 0);</b><br/>"
-   "Constraint này chỉ chặn INSERT/UPDATE mới — dữ liệu âm đã có vẫn giữ nguyên, "
-   "vẫn cần chạy câu lệnh trên để dọn dữ liệu cũ.<br/>"
-   "CHECK không chặn được NULL (NULL luôn vượt qua mọi CHECK trừ khi thêm NOT NULL) — "
-   "muốn bắt buộc phải nhập, thêm riêng <b>NOT NULL</b> cho cột stock.",
-},
-# ─────────────────────────────────────────────────────────
-{
- "part": 1, "id": 14,
- "title": "Phát hiện giá sản phẩm NULL hoặc bằng 0",
- "situation":
-   "Sản phẩm có <b>price = NULL</b> hoặc <b>price = 0</b> là dữ liệu chưa hoàn chỉnh. "
-   "Nếu trang web tính tổng giỏ hàng bằng SUM(price × quantity), NULL sẽ làm "
-   "toàn bộ tổng trả về NULL; price = 0 cho phép mua miễn phí ngoài ý muốn.",
- "before_label": "Bảng Products — dòng đỏ: price = NULL (chưa nhập giá):",
- "before_cols": ["product_id","product_name","category","price","stock"],
- "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000",50],
-   ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000",100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000",-5],
-   ["PROD_004","Sac du phong Anker","Phu kien","1.000.000",20],
-   ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
-   ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
-   ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
- ],
- "before_bugs": [5],
- "before_col_widths": [65, 178, 65, 90, 95],
- "sql": (
-   "SELECT product_id,\n"
-   "       product_name,\n"
-   "       price\n"
-   "FROM   Products\n"
-   "WHERE  price IS NULL\n"
-   "    OR price <= 0;"
- ),
- "clauses": [
-   ("FROM Products",
-    "MySQL tải toàn bộ bảng <b>Products</b>."),
-   ("WHERE price IS NULL\n    OR price <= 0",
-    "<b>IS NULL</b> bắt giá chưa nhập; <b>&lt;= 0</b> bắt giá âm hoặc bằng 0. "
-    "Dùng OR để kiểm tra cả hai trường hợp trong một câu lệnh."),
-   ("SELECT product_id, product_name, price",
-    "Chiếu thông tin để QA xác định sản phẩm cần bổ sung hoặc sửa giá."),
- ],
- "explain":
-   "Giá là trường nghiệp vụ quan trọng nhất trong e-commerce.<br/>"
-   "Câu lệnh bắt hai loại lỗi:<br/>"
-   "(1) <b>NULL</b> — chưa nhập giá, thường xảy ra khi sản phẩm mới được thêm vào nhưng chưa định giá.<br/>"
-   "(2) <b>&lt;= 0</b> — giá không hợp lệ: âm hoặc bằng 0 ngoài ý muốn.<br/>"
-   "Trong data mẫu, PROD_006 chưa có giá — nếu người dùng thêm vào giỏ hàng, "
-   "tổng đơn sẽ trả về NULL.",
- "result_table": (
-   ["product_id","product_name","price"],
-   [["PROD_006","Loa Bluetooth JBL","(NULL)"]],
- ),
- "result_note":
-   "PROD_006 chưa có giá. Cần bổ sung trước khi cho phép bán — "
-   "hoặc ẩn sản phẩm này khỏi giao diện người dùng.",
- "note":
-   "Để ngăn dữ liệu lỗi ngay từ đầu, schema nên có hai ràng buộc:<br/>"
-   "(1) <b>NOT NULL</b> — bắt buộc nhập giá, không cho để trống.<br/>"
-   "(2) <b>CHECK (price &gt; 0)</b> — giá phải lớn hơn 0, không cho nhập âm hoặc bằng 0.<br/>"
-   "Nếu hệ thống có sản phẩm miễn phí hợp lệ, đổi thành <b>CHECK (price &gt;= 0)</b> "
-   "để cho phép price = 0 có chủ đích.<br/>"
-   "Tránh đặt <b>DEFAULT 0</b> cho cột price: khi tạo sản phẩm mới mà quên nhập giá, "
-   "DB sẽ tự điền 0 thay vì báo lỗi — sản phẩm lặng lẽ lên sàn với giá miễn phí.<br/>"
-   "Cùng kỹ thuật này áp dụng được cho <b>Order_Items.price</b> (giá tại thời điểm bán) — "
-   "chỉ đổi <b>WHERE price &lt;= 0</b> (cột này NOT NULL theo schema nên không cần nhánh IS "
-   "NULL). Hai cột price mang ý nghĩa khác nhau: Products.price là <b>giá niêm yết hiện tại</b>, "
-   "Order_Items.price là <b>giá đã chốt lúc khách mua</b> — chúng có thể lệch nhau hợp lệ khi "
-   "giá niêm yết đổi sau khi đơn đã tạo (xem Câu 24). Vì vậy cần kiểm tra độc lập trên cả hai "
-   "bảng, đặc biệt sau khi deploy tính năng coupon, flash sale, hoặc discount. Thêm CHECK "
-   "tương ứng cho Order_Items: <b>ALTER TABLE Order_Items ADD CONSTRAINT chk_item_price "
-   "CHECK (price &gt; 0);</b>",
+   "<b>Khi tìm thấy stock âm</b> — hỏi dev hai câu trước khi viết defect report:<br/>"
+   "(1) Luồng nào trừ kho? (đặt hàng, xác nhận thanh toán, hay xuất kho?) "
+   "→ xác định đúng điểm xảy ra lỗi.<br/>"
+   "(2) DB có ràng buộc ngăn giá trị âm không? "
+   "→ nếu không có, đây là thiếu sót cần ghi vào defect.<br/><br/>"
+   "<b>Khi tìm thấy stock NULL</b> — phân biệt hai tình huống trước khi báo lỗi:<br/>"
+   "(1) Sản phẩm mới tạo chưa nhập kho → nhắc nhở bổ sung dữ liệu, chưa phải bug nghiêm trọng.<br/>"
+   "(2) Sản phẩm đang bán mà stock = NULL → bug thật: hệ thống không biết còn hàng không, "
+   "có thể cho phép đặt hàng tùy tiện.",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 1, "id": 15,
+ "title": "Phát hiện đơn hàng PENDING đang chờ sản phẩm hết hàng",
+ "situation":
+   "Khi hệ thống nhận đơn hàng mà không kiểm tra tồn kho tức thì, đơn PENDING "
+   "vẫn được tạo dù sản phẩm đã hết hoặc tồn kho âm. QA cần phát hiện sớm "
+   "trước khi đội vận hành phải xử lý thủ công — hoặc tệ hơn, khách chờ lâu mà không "
+   "được giao hàng.",
+ "before_label": "Đơn PENDING ghép với tồn kho sản phẩm (tổng hợp Orders + Order_Items + Products) — dòng đỏ: ORD_006 đặt PROD_003 đang hết hàng (stock = −5):",
+ "before_cols": ["order_id","customer_id","product_id","ton_kho","status"],
+ "before_rows": [
+   ["ORD_004","C999","(rỗng — 0 items)","—","PENDING"],
+   ["ORD_006","C003","PROD_003","-5","PENDING"],
+   ["ORD_007","C001","PROD_004","20","PENDING"],
+ ],
+ "before_bugs": [1],
+ "before_col_widths": [62, 60, 80, 68, 65],
+ "sql": (
+   "SELECT o.order_id,\n"
+   "       o.customer_id,\n"
+   "       oi.product_id,\n"
+   "       p.product_name,\n"
+   "       p.stock      AS ton_kho,\n"
+   "       oi.quantity  AS so_luong_dat\n"
+   "FROM   Orders o\n"
+   "JOIN   Order_Items oi ON o.order_id  = oi.order_id\n"
+   "JOIN   Products    p  ON oi.product_id = p.product_id\n"
+   "WHERE  o.status = 'PENDING'\n"
+   "  AND  p.stock  <= 0;"
+ ),
+ "clauses": [
+   ("JOIN Order_Items oi\n  ON o.order_id = oi.order_id",
+    "Nối Orders với chi tiết sản phẩm — bỏ qua đơn rỗng (ORD_004) vì không có "
+    "dòng nào trong Order_Items để nối."),
+   ("JOIN Products p\n  ON oi.product_id = p.product_id",
+    "Nối tiếp sang bảng Products để lấy tồn kho hiện tại của từng sản phẩm "
+    "trong đơn hàng."),
+   ("WHERE o.status = 'PENDING'\n  AND p.stock <= 0",
+    "<b>o.status = 'PENDING'</b>: chỉ xét đơn đang chờ xử lý.<br/>"
+    "<b>p.stock &lt;= 0</b>: lọc ra sản phẩm hết hàng hoặc tồn kho âm — "
+    "kết hợp với điều kiện trên để tìm đơn đang chờ nhưng không thể giao."),
+ ],
+ "explain":
+   "Câu lệnh kết hợp ba bảng để đặt câu hỏi liên bảng: <b>đơn hàng nào đang "
+   "chờ mà sản phẩm trong đó đã hết?</b><br/>"
+   "Điều này khác với Câu 14 (chỉ hỏi 'sản phẩm nào hết hàng?') — ở đây ta hỏi "
+   "thêm 'và nó đang nằm trong đơn PENDING không?' — cần JOIN để trả lời.<br/>"
+   "Đây là lỗi thường gặp khi hệ thống không có bước <i>reserve stock</i> "
+   "(đặt chỗ tồn kho) ngay lúc tạo đơn.",
+ "result_table": (
+   ["order_id","customer_id","product_id","product_name","ton_kho","so_luong_dat"],
+   [["ORD_006","C003","PROD_003","Tai nghe Sony WH-1000XM5","-5","1"]],
+ ),
+ "result_note":
+   "ORD_006 đang PENDING nhưng PROD_003 có stock = −5. "
+   "Đơn này không thể giao cho đến khi nhập thêm hàng.",
+ "note":
+   "Khi tìm thấy đơn PENDING + hết hàng, QA cần xác nhận thêm hai điều:<br/>"
+   "(1) Hệ thống có cảnh báo cho đội vận hành không, hay đơn tồn đọng im lặng?<br/>"
+   "(2) Nếu DB dùng soft-delete, lọc thêm <b>AND o.deleted_at IS NULL</b> để tránh tính nhầm đơn đã hủy.<br/>"
+   "Câu 14 tìm sản phẩm hết hàng; câu này tìm đúng đơn hàng bị ảnh hưởng — "
+   "giúp ưu tiên đúng chỗ khi viết defect report.",
+},
+# ─────────────────────────────────────────────────────────
+{
+ "part": 1, "id": 16,
  "title": "Tìm đơn hàng không có dòng chi tiết nào",
  "situation":
    "Mỗi đơn hàng phải có ít nhất một sản phẩm. Đơn rỗng — tồn tại trong Orders "
@@ -920,12 +1110,12 @@ ENTRIES = [
     "trong Order_Items. Với INNER JOIN, đơn rỗng sẽ biến mất."),
    ("WHERE i.order_id IS NULL",
     "Sau LEFT JOIN, đơn không khớp có toàn bộ cột của Order_Items = NULL. "
-    "Lọc những dòng đó là cách nhận diện đơn rỗng — đây là mẫu anti-join."),
+    "Lọc những dòng đó là cách nhận diện đơn rỗng — đây là kỹ thuật truy vấn loại trừ."),
    ("SELECT o.order_id, o.customer_id,\n       o.total_amount, o.status",
     "Hiển thị đủ thông tin để QA điều tra: ai đặt, số tiền bao nhiêu, trạng thái gì."),
  ],
  "explain":
-   "Kỹ thuật <b>LEFT JOIN + WHERE IS NULL</b> (anti-join) là cách chuẩn để tìm bản ghi không có con.<br/>"
+   "Kỹ thuật <b>LEFT JOIN + WHERE IS NULL</b> là cách chuẩn để tìm bản ghi không có con.<br/>"
    "Nguyên lý: sau LEFT JOIN, mọi cột từ bảng bên phải sẽ là NULL với những dòng không khớp.<br/>"
    "Trong data mẫu, ORD_004 (khách C999 không tồn tại) cũng không có item nào — "
    "đây là đơn có <b>hai lỗi chồng nhau</b>: orphan customer và rỗng items.",
@@ -937,15 +1127,14 @@ ENTRIES = [
    "ORD_004 không có item nào và customer_id C999 không tồn tại. "
    "Hai lỗi chồng nhau — cần điều tra lịch sử tạo đơn.",
  "note":
-   "Anti-join LEFT JOIN + WHERE IS NULL là pattern dùng lại ở nhiều câu:<br/>"
-   "(1) Câu 5: Orders không có Customers — đơn hàng mồ côi.<br/>"
-   "(2) Câu 15: Orders không có Order_Items — đơn rỗng.<br/>"
-   "(3) Câu 16: Products không có Order_Items — sản phẩm chưa bán.<br/>"
-   "Ba câu cùng kỹ thuật nhưng kiểm tra ở ba tầng quan hệ khác nhau.",
+   "Đơn rỗng thường xuất hiện do bug luồng xử lý — đơn được tạo nhưng bước "
+   "thêm sản phẩm bị lỗi hoặc timeout. Khi tìm thấy, hỏi dev: "
+   "luồng tạo đơn có bước rollback không nếu thêm item thất bại? "
+   "Nếu không có, đơn rỗng sẽ tiếp tục xuất hiện sau mỗi lần lỗi mạng hoặc lỗi timeout.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 1, "id": 16,
+ "part": 1, "id": 17,
  "title": "Tìm sản phẩm chưa bao giờ được bán",
  "situation":
    "Sản phẩm có trong danh mục nhưng không xuất hiện trong bất kỳ đơn hàng nào. "
@@ -986,12 +1175,12 @@ ENTRIES = [
     "chưa bán vì lỗi, chưa có giá, hay chưa có hàng?"),
  ],
  "explain":
-   "Cùng kỹ thuật anti-join với Câu 5 và Câu 15, áp dụng cho chiều Products → Order_Items.<br/>"
+   "Cùng kỹ thuật LEFT JOIN + WHERE IS NULL với Câu 7 và Câu 16, áp dụng cho chiều Products → Order_Items.<br/>"
    "Trong data mẫu, 3 sản phẩm chưa bán — mỗi cái có lý do khác nhau:<br/>"
    "(1) PROD_005: trùng tên PROD_002 — sản phẩm bị nhân đôi.<br/>"
    "(2) PROD_006: price = NULL — chưa định giá.<br/>"
    "(3) PROD_007: stock = NULL — chưa nhập kho.<br/>"
-   "Kết hợp với Câu 12 và Câu 14 để phân tích từng trường hợp.",
+   "Kết hợp với Câu 9, Câu 10 và Câu 14 để phân tích từng trường hợp.",
  "result_table": (
    ["product_id","product_name","price","stock"],
    [
@@ -1004,15 +1193,15 @@ ENTRIES = [
    "3 sản phẩm chưa bán: PROD_005 trùng tên PROD_002, "
    "PROD_006 chưa có giá, PROD_007 chưa có tồn kho.",
  "note":
-   "Sản phẩm chưa bán không nhất thiết là lỗi — có thể là hàng mới chưa ra mắt.<br/>"
-   "Để phân biệt, kết hợp thêm điều kiện từ Câu 12 và Câu 14:<br/>"
-   "(1) <b>PROD_005</b>: trùng với PROD_002 → xác nhận bằng Câu 8 rồi xóa bản thừa.<br/>"
-   "(2) <b>PROD_006</b>: price = NULL → cần nhập giá (Câu 14).<br/>"
-   "(3) <b>PROD_007</b>: stock = NULL → cần nhập tồn kho (Câu 12).",
+   "Sản phẩm chưa bán không nhất thiết là lỗi — có thể là hàng mới chưa ra mắt. "
+   "Để phân biệt trước khi báo bug: xem thêm cột price và stock trong kết quả. "
+   "Sản phẩm chưa bán mà price = NULL hoặc stock = NULL là dấu hiệu dữ liệu chưa hoàn chỉnh — "
+   "ưu tiên điều tra trước. "
+   "Sản phẩm chưa bán mà trùng tên sản phẩm đã có thì nghi nhân đôi — xác nhận bằng Câu 10.",
 },
 # ─────────────────────────────────────────────────────────
 {
- "part": 1, "id": 17,
+ "part": 1, "id": 18,
  "title": "Tìm khách hàng chưa có đơn hàng nào",
  "situation":
    "Khách hàng đã đăng ký tài khoản nhưng chưa đặt đơn nào. "
@@ -1056,9 +1245,9 @@ ENTRIES = [
     "tài khoản test, tài khoản lỗi, hay khách thật chưa mua?"),
  ],
  "explain":
-   "Cùng kỹ thuật anti-join, chiều Customers → Orders.<br/>"
-   "Trong data mẫu, 7 trong 10 khách chưa có đơn — đây là tài khoản test "
-   "được thêm để phục vụ các câu lệnh từ Câu 1 đến Câu 10.<br/>"
+   "Cùng kỹ thuật LEFT JOIN + WHERE IS NULL, chiều Customers → Orders.<br/>"
+   "Trong data mẫu, 7 trong 10 khách chưa có đơn — phần lớn mang dấu hiệu tài khoản test "
+   "(tên chứa 'Test', 'Ao Bug', khoảng trắng thừa, đánh số thủ công).<br/>"
    "Khi làm sạch dữ liệu trước sprint, QA nên chạy câu này và đánh dấu "
    "tài khoản nào là test — tránh đưa vào báo cáo làm sai số liệu thật.",
  "result_table": (
@@ -1074,176 +1263,13 @@ ENTRIES = [
    ]
  ),
  "result_note":
-   "7 khách chưa có đơn — phần lớn là tài khoản test tạo cho Phần 1. "
-   "Cần đánh dấu để loại khỏi báo cáo sản xuất.",
+   "7 khách chưa có đơn — phần lớn mang dấu hiệu tài khoản test. "
+   "Cần đánh dấu để loại khỏi báo cáo production.",
  "note":
-   "Câu này hay bị nhầm với Câu 5 (đơn hàng mồ côi). Điểm khác nhau:<br/>"
-   "(1) <b>Câu 5</b>: Orders không có Customers — đơn hàng mồ côi, thiếu chủ.<br/>"
-   "(2) <b>Câu 17</b>: Customers không có Orders — khách hàng chưa mua gì.<br/>"
-   "Hai hướng bổ sung cho nhau: Câu 5 bắt lỗi tầng Orders, Câu 17 bắt lỗi tầng Customers.",
-},
-# ─────────────────────────────────────────────────────────
-{
- "part": 1, "id": 13,
- "title": "Khám phá schema bằng INFORMATION_SCHEMA khi chưa có tài liệu",
- "situation":
-   "QA mới nhận một hệ thống không có tài liệu database — chỉ có quyền SELECT, "
-   "không biết có bao nhiêu bảng, cột nào kiểu gì, cột nào bắt buộc. Trước khi viết "
-   "được bất kỳ câu lệnh soi lỗi nào, cần một cách tra cứu schema ngay trong chính SQL, "
-   "không phụ thuộc tài liệu hay sơ đồ ER có thể đã lỗi thời.",
- "before_label": "Những gì QA nhìn thấy qua SELECT * — không biết cấu trúc đứng sau:",
- "before_cols": ["customer_id","customer_name","email","membership_tier","status"],
- "before_rows": [
-   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "Silver",   "ACTIVE"],
-   ["C002","Tran Van B",        "b.tran@email.com",      "Standard", "ACTIVE"],
-   ["C003","Le Thi C",          "c.le@email.com",        "Gold",     "ACTIVE"],
-   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "Standard", "ACTIVE"],
-   ["C005","Khach Hang Trung",  "trung_email@email.com", "Standard", "ACTIVE"],
-   ["C006","Pham Van X",        "(NULL)",                "Standard", "ACTIVE"],
-   ["C007","Nguyen Thi Y",      "",                       "Standard", "ACTIVE"],
-   ["C008","  Pham Van D  ",    "d.pham@email.com",      "Gold",     "ACTIVE"],
-   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "Silver",   "ACTIVE"],
-   ["C010","Khach Test VIP",    "vip@email.com",         "VIP",      "ACTIVE"],
- ],
- "before_bugs": [],
- "before_col_widths": [55, 145, 225, 68],
- "sql": (
-   "SELECT table_name,\n"
-   "       COUNT(*) AS so_cot,\n"
-   "       SUM(CASE WHEN is_nullable='YES'\n"
-   "                THEN 1 ELSE 0 END) AS so_cot_nullable,\n"
-   "       SUM(CASE WHEN column_key='PRI'\n"
-   "                THEN 1 ELSE 0 END) AS so_khoa_chinh\n"
-   "FROM   information_schema.columns\n"
-   "WHERE  table_schema = 'ecommerce_test'\n"
-   "GROUP  BY table_name\n"
-   "ORDER  BY table_name;"
- ),
- "clauses": [
-   ("FROM information_schema.columns",
-    "<b>information_schema</b> là schema hệ thống có sẵn trong mọi DB MySQL — chứa metadata "
-    "mô tả chính các bảng/cột trong DB, không cần quyền đặc biệt ngoài SELECT."),
-   ("WHERE table_schema\n  = 'ecommerce_test'",
-    "Lọc đúng database đang khảo sát — information_schema chứa metadata của TẤT CẢ database "
-    "trên server, không lọc sẽ trả về lẫn lộn."),
-   ("SUM(CASE WHEN ...\n  THEN 1 ELSE 0 END)",
-    "Đếm có điều kiện: đếm số cột cho phép NULL và số cột là khóa chính, "
-    "cho cái nhìn nhanh về độ \"chặt\" của từng bảng."),
-   ("GROUP BY table_name",
-    "Gom theo từng bảng để có một dòng tổng quan mỗi bảng."),
- ],
- "explain":
-   "<b>information_schema.columns</b> là bản đồ schema luôn cập nhật — không như tài liệu "
-   "viết tay có thể đã lỗi thời từ lâu.<br/>"
-   "Mỗi DB có 4 bảng (Customers, Order_Items, Orders, Products), mỗi bảng có 1 khóa chính. "
-   "Orders nhiều cột nullable nhất (3/6) — gợi ý nhiều trường tùy chọn, đáng kiểm tra kỹ.<br/>"
-   "Lưu ý: <b>table_name có thể trả về chữ thường</b> dù tên gốc viết hoa (tùy hệ điều hành "
-   "server MySQL chạy) — luôn kiểm tra case thật trước khi lọc WHERE table_name = '...'.",
- "result_table": (
-   ["table_name","so_cot","so_cot_nullable","so_khoa_chinh"],
-   [
-     ["customers",   5, 3, 1],
-     ["order_items", 5, 2, 1],
-     ["orders",      6, 3, 1],
-     ["products",    5, 3, 1],
-   ]
- ),
- "result_note":
-   "4 bảng, mỗi bảng 1 khóa chính. Orders có 6 cột (nhiều nhất, vì có thêm order_date và "
-   "deleted_at) với 3 cột nullable — nên soi kỹ khi tìm dữ liệu thiếu.",
- "note":
-   "Khi cần đào sâu một bảng cụ thể (kiểu dữ liệu từng cột, độ dài chuỗi tối đa...), bỏ "
-   "GROUP BY và lọc thêm theo table_name:<br/>"
-   "<b>SELECT column_name, column_type, is_nullable, column_key</b><br/>"
-   "<b>FROM information_schema.columns</b><br/>"
-   "<b>WHERE table_schema='ecommerce_test' AND table_name='Customers'</b><br/>"
-   "<b>ORDER BY ordinal_position;</b><br/>"
-   "Đây là bước đầu tiên nên làm trước khi viết bất kỳ câu lệnh nào trên một hệ thống lạ — "
-   "biến \"đoán mò cấu trúc\" thành \"đọc trực tiếp từ nguồn đáng tin nhất\".",
-},
-# ─────────────────────────────────────────────────────────
-{
- "part": 1, "id": 18,
- "title": "Kiểm tra ràng buộc UNIQUE/FOREIGN KEY có thực sự được enforce",
- "situation":
-   "Sách liên tục khuyên \"thêm UNIQUE cho email\", \"thêm FOREIGN KEY cho customer_id\" — "
-   "nhưng làm sao biết những ràng buộc đó <b>đã tồn tại hay chưa</b> trên một hệ thống cụ thể? "
-   "Đừng tin lời đồn hay tài liệu cũ — tra trực tiếp metadata để biết DB đang thực sự bảo vệ "
-   "những gì.",
- "before_label": "Bảng Customers — dòng đỏ: 2 email trùng (C004/C005) lẽ ra phải bị UNIQUE chặn:",
- "before_cols": ["customer_id","customer_name","email","status"],
- "before_rows": [
-   ["C001","Nguyen Van A",      "a.nguyen@email.com",    "ACTIVE"],
-   ["C002","Tran Van B",        "b.tran@email.com",      "ACTIVE"],
-   ["C003","Le Thi C",          "c.le@email.com",        "ACTIVE"],
-   ["C004","Khach Hang Ao Bug", "trung_email@email.com", "ACTIVE"],
-   ["C005","Khach Hang Trung",  "trung_email@email.com", "ACTIVE"],
-   ["C006","Pham Van X",        "(NULL)",                "ACTIVE"],
-   ["C007","Nguyen Thi Y",      "",                       "ACTIVE"],
-   ["C008","  Pham Van D  ",    "d.pham@email.com",      "ACTIVE"],
-   ["C009","Nguyen Van A (2)",  "A.NGUYEN@EMAIL.COM",    "ACTIVE"],
-   ["C010","Khach Test VIP",    "vip@email.com",         "ACTIVE"],
- ],
- "before_bugs": [3, 4],
- "before_col_widths": [55, 145, 225, 68],
- "sql": (
-   "SELECT tc.table_name,\n"
-   "       tc.constraint_type,\n"
-   "       kcu.column_name\n"
-   "FROM   information_schema.table_constraints tc\n"
-   "LEFT JOIN information_schema.key_column_usage kcu\n"
-   "       ON tc.constraint_name = kcu.constraint_name\n"
-   "      AND tc.table_schema = kcu.table_schema\n"
-   "      AND tc.table_name = kcu.table_name\n"
-   "WHERE  tc.table_schema = 'ecommerce_test'\n"
-   "ORDER  BY tc.table_name, tc.constraint_type;"
- ),
- "clauses": [
-   ("FROM information_schema\n  .table_constraints tc",
-    "Bảng hệ thống liệt kê MỌI ràng buộc đã khai báo: PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK."),
-   ("LEFT JOIN information_schema\n  .key_column_usage kcu",
-    "Nối thêm để biết ràng buộc đó áp dụng trên <b>cột nào</b>. Bắt buộc dùng <b>LEFT JOIN</b> "
-    "thay vì JOIN thường: ràng buộc <b>CHECK không có dòng tương ứng</b> trong "
-    "key_column_usage (CHECK không gắn với một cột theo kiểu khóa), nên INNER JOIN sẽ ÂM "
-    "THẦM loại CHECK constraint khỏi kết quả — đúng loại lỗi khó nhận ra vì không báo gì cả."),
-   ("WHERE tc.table_schema\n  = 'ecommerce_test'",
-    "Giới hạn đúng database đang kiểm tra."),
- ],
- "explain":
-   "Kết quả chỉ trả về <b>4 PRIMARY KEY</b> — đúng 1 cho mỗi bảng — và <b>không có một UNIQUE "
-   "hay FOREIGN KEY nào khác</b>.<br/>"
-   "Đây chính là lời giải thích kỹ thuật cho lý do Câu 1 bắt được email trùng (C004/C005): "
-   "không hề có UNIQUE constraint trên cột email để chặn từ đầu.<br/>"
-   "Tương tự, Câu 5 bắt được ORD_004 trỏ tới customer_id không tồn tại vì <b>không có FOREIGN "
-   "KEY</b> nào ràng buộc Orders.customer_id phải khớp Customers.customer_id — DB chấp nhận "
-   "mọi giá trị, đúng hay sai.",
- "result_table": (
-   ["table_name","constraint_type","column_name"],
-   [
-     ["customers",   "PRIMARY KEY", "customer_id"],
-     ["order_items", "PRIMARY KEY", "item_id"],
-     ["orders",      "PRIMARY KEY", "order_id"],
-     ["products",    "PRIMARY KEY", "product_id"],
-   ]
- ),
- "result_note":
-   "Chỉ có khóa chính. Không một ràng buộc tham chiếu hay duy nhất nào tồn tại — toàn bộ "
-   "việc giữ \"sạch\" dữ liệu trong hệ thống này hiện đang dựa hoàn toàn vào tầng ứng dụng, "
-   "không có lưới an toàn ở tầng DB.",
- "note":
-   "Khi báo cáo phát hiện thiếu ràng buộc, đừng chỉ nói \"nên thêm UNIQUE\" — hãy nói rõ "
-   "<b>ĐANG thiếu</b> kèm bằng chứng truy vấn này, để team không tranh cãi \"chắc đã có rồi\".<br/>"
-   "Thêm ràng buộc thực tế:<br/>"
-   "<b>ALTER TABLE Customers ADD CONSTRAINT uq_email UNIQUE (email);</b><br/>"
-   "<b>ALTER TABLE Orders ADD CONSTRAINT fk_customer</b><br/>"
-   "<b>  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id);</b><br/>"
-   "Lưu ý: thêm UNIQUE sẽ THẤT BẠI nếu dữ liệu trùng (C004/C005) chưa được dọn trước — "
-   "phải chạy Câu 1 xử lý dữ liệu cũ rồi mới ALTER TABLE được.<br/>"
-   "Nếu hệ thống ĐÃ có CHECK constraint, kết quả sẽ hiện dòng <b>constraint_type = CHECK</b> "
-   "với <b>column_name = NULL</b> (do CHECK không gắn cột theo kiểu khóa) — để xem chính xác "
-   "điều kiện CHECK kiểm tra gì, tra thêm bảng riêng:<br/>"
-   "<b>SELECT constraint_name, check_clause FROM information_schema.check_constraints</b><br/>"
-   "<b>WHERE constraint_schema = 'ecommerce_test';</b>",
+   "Câu này hay bị nhầm với Câu 7 (đơn hàng mồ côi). Điểm khác nhau:<br/>"
+   "(1) <b>Câu 7</b>: Orders không có Customers — đơn hàng mồ côi, thiếu chủ.<br/>"
+   "(2) <b>Câu 18</b>: Customers không có Orders — khách hàng chưa mua gì.<br/>"
+   "Hai hướng bổ sung cho nhau: Câu 7 bắt lỗi tầng Orders, Câu 18 bắt lỗi tầng Customers.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1261,6 +1287,8 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING","2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING","2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING","2027-01-01"],
  ],
  "before_bugs": [],
  "before_col_widths": [65, 80, 105, 95, 148],
@@ -1285,7 +1313,9 @@ ENTRIES = [
    ("SELECT ..., COUNT, SUM",
     "<b>COUNT(o.order_id)</b> đếm số đơn; "
     "<b>SUM(o.total_amount)</b> cộng tổng tiền. "
-    "Lưu ý: SUM dùng total_amount từ Orders — chưa chắc khớp với tổng items (xem Câu 11)."),
+    "Lưu ý: SUM dùng total_amount từ Orders là con số đã ghi sẵn trong đơn, "
+    "không tính lại từ từng item — nếu dữ liệu bị chênh lệch giữa tổng đơn và tổng items, "
+    "câu lệnh này sẽ không phát hiện được."),
    ("ORDER BY tong_chi_tieu DESC",
     "Khách chi tiêu nhiều nhất lên đầu — dễ phát hiện outlier bất thường. "
     "Trên production, thêm <b>LIMIT 10–20</b> để chỉ lấy nhóm khách chi tiêu cao nhất."),
@@ -1295,25 +1325,24 @@ ENTRIES = [
    "QA so sánh kết quả với dữ liệu hệ thống loyalty, CRM hoặc báo cáo tài chính — "
    "nếu con số lệch là có vấn đề.<br/>"
    "Lưu ý: vì dùng total_amount từ Orders, kết quả bao gồm Bug-B (ORD_002 ghi sai).<br/>"
-   "Cần chạy Câu 11 trước để phát hiện và sửa dữ liệu lệch, sau đó Câu 19 mới phản ánh đúng thực tế.",
+   "Cần chạy Câu 13 trước để phát hiện và sửa dữ liệu lệch, sau đó Câu 19 mới phản ánh đúng thực tế.",
  "result_table": (
    ["customer_id","customer_name","so_don","tong_chi_tieu"],
    [
-     ["C001","Nguyen Van A", 2,"47.000.000"],
+     ["C001","Nguyen Van A", 3,"67.000.000"],
      ["C002","Tran Van B",   1,"20.000.000"],
-     ["C003","Le Thi C",     1, "8.000.000"],
+     ["C003","Le Thi C",     2,"16.000.000"],
    ]
  ),
  "result_note":
    "Chỉ 3/10 khách có đơn (C001, C002, C003); 7 khách C004–C010 chưa mua nên không xuất hiện. "
-   "C001 dẫn đầu 47M (2 đơn, bao gồm cả đơn ORD_005 đã bị xóa mềm). Con số C002 (20M) là Bug-B — thực tế items cộng lại 31M. "
-   "C003 vẫn được tính dù đơn đã CANCELLED (câu này không lọc status).",
+   "C001 dẫn đầu 67M (3 đơn: ORD_001 + ORD_005 soft-delete + ORD_007 ngày tương lai). "
+   "C003 có 2 đơn (ORD_003 + ORD_006 — cặp double order từ Câu 29). Con số C002 (20M) là Bug-B — thực tế items cộng lại 31M.",
  "note":
-   "Câu này dùng total_amount từ Orders — con số ghi sẵn, chưa chắc đúng.<br/>"
-   "Để tính chính xác từ Order_Items:<br/>"
-   "Thay <b>SUM(o.total_amount)</b> bằng <b>SUM(oi.quantity * oi.price)</b> "
-   "sau khi JOIN thêm bảng Order_Items.<br/>"
-   "Chạy Câu 11 trước để phát hiện và sửa dữ liệu lệch, rồi mới dùng Câu 19 báo cáo.",
+   "Câu này dùng total_amount từ Orders — con số ghi sẵn, chưa chắc đúng. "
+   "Trước khi dùng kết quả này để báo cáo, chạy Câu 13 trước để xác nhận không có đơn nào bị lệch. "
+   "Bộ số tổng hợp ở đây chỉ đáng tin khi dữ liệu nền đã được kiểm tra sạch — "
+   "đừng báo cáo con số C001 = 67M mà chưa kiểm tra đơn nào trong 3 đơn của C001 có lỗi không.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1322,7 +1351,9 @@ ENTRIES = [
  "situation":
    "Tổng số lượng đã bán (từ Order_Items) lớn hơn tồn kho hiện tại (từ Products). "
    "Đây là dấu hiệu của race condition, thiếu kiểm tra stock trước khi trừ, "
-   "hoặc dữ liệu kho bị cập nhật sai sau khi xác nhận đơn.",
+   "hoặc dữ liệu kho bị cập nhật sai sau khi xác nhận đơn. "
+   "Lưu ý: phép so sánh này chỉ có nghĩa khi kho chưa được nhập thêm kể từ đầu kỳ "
+   "(đúng với DB mẫu); hệ thống có nhập hàng định kỳ phải đối soát với bảng nhập–xuất kho.",
  "before_label": "Bảng Products — dòng đỏ: tồn kho có thể bị vượt quá:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
@@ -1349,7 +1380,9 @@ ENTRIES = [
  "clauses": [
    ("FROM Products p\n  JOIN Order_Items oi\n    ON p.product_id = oi.product_id",
     "<b>INNER JOIN</b> ghép mỗi sản phẩm với tất cả dòng trong Order_Items. "
-    "Sản phẩm chưa bán sẽ không xuất hiện — dùng LEFT JOIN + Câu 16 để kiểm tra."),
+    "Sản phẩm chưa có dòng nào trong Order_Items sẽ bị loại khỏi kết quả — "
+    "đây là ý muốn: không bán được thì không có gì để so sánh với tồn kho. "
+    "Nếu cần liệt kê sản phẩm chưa bán, dùng LEFT JOIN và lọc WHERE oi.item_id IS NULL."),
    ("GROUP BY p.product_id, p.product_name, p.stock",
     "Gom tất cả dòng Order_Items của cùng một sản phẩm để tính tổng số đã bán."),
    ("HAVING SUM(oi.quantity) > p.stock",
@@ -1359,25 +1392,29 @@ ENTRIES = [
     "Hiển thị cả stock hiện tại và tổng đã bán để QA thấy ngay mức độ vượt quá."),
  ],
  "explain":
-   "Câu lệnh phát hiện vi phạm ràng buộc: <b>tổng bán ra không được vượt tồn kho</b>.<br/>"
-   "PROD_003 bị phát hiện vì stock = -5 và tong_da_ban = 1 (1 &gt; -5).<br/>"
-   "Điều này nghĩa là hệ thống đã bán sản phẩm khi tồn kho đã âm — "
-   "không có check trước khi giảm kho.<br/>"
-   "Với hệ thống thực, câu này giúp phát hiện overselling trước khi "
+   "Câu lệnh phát hiện vi phạm ràng buộc: <b>tổng bán ra không được vượt tồn kho</b> "
+   "(với giả định kho chưa nhập thêm — xem lưu ý ở phần Tình huống).<br/>"
+   "PROD_003 bị phát hiện vì stock = -5 và tong_da_ban = 2 (2 &gt; -5).<br/>"
+   "PROD_004 cũng bị phát hiện: stock = 20 nhưng tong_da_ban = 22 (22 &gt; 20) — "
+   "hệ thống đã bán quá số lượng tồn kho hiện có.<br/>"
+   "Với hệ thống thực, câu này giúp phát hiện overselling (bán vượt tồn kho) trước khi "
    "khách hàng phàn nàn vì không nhận được hàng.",
  "result_table": (
    ["product_id","product_name","stock","tong_da_ban"],
-   [["PROD_003","Tai nghe Sony WH-1000XM5",-5,1]],
+   [
+     ["PROD_004","Sac du phong Anker",        20,22],
+     ["PROD_003","Tai nghe Sony WH-1000XM5", -5, 2],
+   ]
  ),
  "result_note":
-   "PROD_003: tồn kho = -5 nhưng tổng đã bán = 1. "
-   "Hệ thống đã cho phép bán khi kho đã âm — thiếu validation trước khi trừ kho.",
+   "PROD_003: tồn kho = -5 nhưng tổng đã bán = 2 — kho âm vẫn bị bán thêm. "
+   "PROD_004: tồn kho = 20 nhưng tổng đã bán = 22 — vượt 2 đơn vị so với tồn kho hiện tại.",
  "note":
-   "INNER JOIN làm câu này bỏ qua sản phẩm chưa có đơn nào.<br/>"
-   "Ba câu cùng nhau tạo bức tranh đầy đủ về tình trạng kho:<br/>"
-   "(1) <b>Câu 12</b>: stock âm — phát hiện trực tiếp không cần tính tổng bán.<br/>"
-   "(2) <b>Câu 16</b>: sản phẩm chưa bán — góc nhìn ngược lại.<br/>"
-   "(3) <b>Câu 20</b>: tổng bán > tồn kho — phát hiện overselling.",
+   "INNER JOIN làm câu này bỏ qua sản phẩm chưa có đơn nào — sản phẩm chưa bán không xuất hiện "
+   "dù tồn kho đang âm. "
+   "Khi tìm thấy overselling (bán vượt tồn kho), hỏi dev: hệ thống có bước reserve stock (đặt chỗ tồn kho) ngay khi "
+   "tạo đơn không? Nếu không, race condition xảy ra khi hai người đặt cùng lúc — "
+   "đây là lỗi đồng thời (concurrency bug), không chỉ là lỗi dữ liệu đơn thuần.",
 },
 
 
@@ -1395,14 +1432,17 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — dòng đỏ: item_id=7 nhân đôi PROD_001 trong ORD_001:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1, "1.000.000"],
-   [9,"ORD_005","PROD_002",1, "2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
  "before_bugs": [5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -1417,7 +1457,7 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 8 dòng trong dữ liệu mẫu."),
+    "MySQL tải toàn bộ bảng <b>Order_Items</b> — 11 dòng trong dữ liệu mẫu."),
    ("GROUP BY order_id",
     "Gom tất cả dòng có cùng order_id thành một nhóm. "
     "Mỗi nhóm đại diện cho một đơn hàng."),
@@ -1439,19 +1479,22 @@ ENTRIES = [
    [
      ["ORD_001", 3, 3, "62.000.000"],
      ["ORD_002", 2, 2, "31.000.000"],
-     ["ORD_003", 1, 1,  "8.000.000"],
+     ["ORD_003", 2, 1,  "8.000.000"],
      ["ORD_005", 2, 2,  "3.000.000"],
+     ["ORD_006", 1, 1,  "8.000.000"],
+     ["ORD_007", 1,20, "20.000.000"],
    ]
  ),
  "result_note":
    "ORD_001: 3 dòng items → COUNT bất thường, doanh thu = 62M (lẽ ra 32M). "
    "ORD_002: tổng = 31M, khác total_amount 20M (Bug-B). "
+   "ORD_003: 2 dòng — item 12 có quantity=0 nên tong_so_luong vẫn = 1 và doanh thu = 8M. "
+   "ORD_006 (double order) và ORD_007 (ngày tương lai) xuất hiện thêm. "
    "ORD_004 vắng mặt vì không có item nào.",
  "note":
-   "Kết hợp câu này với Câu 11 để phân tích sâu hơn:<br/>"
-   "(1) <b>Câu 21</b>: tính doanh thu thực từ items theo từng đơn — con số tuyệt đối.<br/>"
-   "(2) <b>Câu 11</b>: chỉ lọc ra đơn có doanh_thu_thuc ≠ total_amount — xác định đúng đơn lỗi.<br/>"
-   "Câu 21 cho bức tranh tổng thể; Câu 11 chỉ đích danh đơn cần điều tra.",
+   "Khi thấy COUNT(*) của một đơn cao bất thường, không cần tính doanh thu ngay — tra trực tiếp "
+   "các item của đơn đó ORDER BY item_id để xem dòng nào bị nhân đôi, rồi đối chiếu item_id cụ thể "
+   "trước khi báo bug.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1464,14 +1507,17 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — dòng đỏ: item_id=7 làm PROD_001 bị tính 3 lần:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
  "before_bugs": [5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -1503,22 +1549,23 @@ ENTRIES = [
    "Kết quả hiện tại bị méo vì dữ liệu đầu vào có lỗi: "
    "PROD_001 xuất hiện 3 lần trong items (item 1, 4, 7) thay vì 2.<br/>"
    "Doanh số thực của PROD_001 chỉ là 60M — con số 90M là ảo do item trùng.<br/>"
-   "Bảng xếp hạng chính xác phải bắt đầu bằng việc xác nhận dữ liệu sạch (Câu 2).",
+   "Bảng xếp hạng chính xác phải bắt đầu bằng việc xác nhận dữ liệu sạch (Câu 4).",
  "result_table": (
    ["product_id","product_name","tong_so_luong","tong_doanh_so"],
    [
-     ["PROD_001","iPhone 15 Pro Max",       3, "90.000.000"],
-     ["PROD_003","Tai nghe Sony WH-1000XM5",1,  "8.000.000"],
-     ["PROD_002","Ban phim co Logitech",    2,  "4.000.000"],
-     ["PROD_004","Sac du phong Anker",      2,  "2.000.000"],
+     ["PROD_001","iPhone 15 Pro Max",        3, "90.000.000"],
+     ["PROD_004","Sac du phong Anker",       22,"22.000.000"],
+     ["PROD_003","Tai nghe Sony WH-1000XM5", 2, "16.000.000"],
+     ["PROD_002","Ban phim co Logitech",     2,  "4.000.000"],
    ]
  ),
  "result_note":
    "PROD_001 dẫn đầu với 90M — thực ra chỉ 60M nếu không có item 7 trùng. "
-   "Chạy Câu 2 để xác nhận trùng, sửa dữ liệu rồi mới tin vào kết quả xếp hạng này.",
+   "PROD_004 vọt lên hạng 2 (22 đơn vị, 22M) do item 14 có quantity=20 — đây là dấu hiệu đáng ngờ. "
+   "Chạy Câu 4 để xác nhận trùng, sửa dữ liệu rồi mới tin vào kết quả xếp hạng này.",
  "note":
    "Trước khi dùng kết quả xếp hạng để ra quyết định kinh doanh, QA cần kiểm tra:<br/>"
-   "(1) <b>Câu 2</b>: có item nào bị trùng (order_id + product_id) không?<br/>"
+   "(1) <b>Câu 4</b>: có item nào bị trùng (order_id + product_id) không?<br/>"
    "(2) <b>Câu 21</b>: COUNT(*) theo order có dòng nào bất thường không?<br/>"
    "Dữ liệu bẩn ở Order_Items lan trực tiếp lên báo cáo cấp quản lý — "
    "đây là loại bug dễ bị bỏ qua nhất vì không gây lỗi hệ thống.",
@@ -1564,7 +1611,7 @@ ENTRIES = [
     "Cách hiển thị này đưa dòng lỗi lên đầu bảng kết quả."),
  ],
  "explain":
-   "Phép nhân đơn giản nhưng phản ánh ngay <b>hai loại lỗi dữ liệu</b> từ Câu 12 và Câu 14:<br/>"
+   "Phép nhân đơn giản nhưng phản ánh ngay <b>hai loại lỗi dữ liệu</b> đã gặp ở Câu 9 và Câu 14:<br/>"
    "(1) <b>stock âm</b>: PROD_003 cho gia_tri_kho = -40.000.000 — không thể có kho giá trị âm.<br/>"
    "(2) <b>NULL</b>: PROD_006 (price NULL) và PROD_007 (stock NULL) cho gia_tri_kho = NULL "
    "— không thể tính được giá trị kho, ảnh hưởng trực tiếp đến báo cáo tổng tài sản.",
@@ -1584,11 +1631,9 @@ ENTRIES = [
    "3 dòng bất thường ở đầu: 2 NULL (không tính được) và 1 âm -40M (tồn kho âm do Bug-C). "
    "ORDER BY gia_tri_kho tự động đưa các dòng lỗi lên đầu — không cần WHERE để lọc riêng.",
  "note":
-   "Để chỉ lấy dòng lỗi, thêm điều kiện lọc vào câu lệnh:<br/>"
-   "(1) Kho giá trị âm: <b>WHERE price * stock &lt; 0</b><br/>"
-   "(2) Kho không tính được: <b>WHERE price IS NULL OR stock IS NULL</b><br/>"
-   "Câu 23 (kho âm) kết hợp với Câu 12 (stock âm) và Câu 14 (price NULL) "
-   "tạo thành bộ 3 kiểm tra tồn kho đầy đủ.",
+   "Khi thấy giá trị kho âm (-40M), không phải chỉ báo bug 'giá trị âm' — cần hỏi dev: "
+   "logic trừ kho xảy ra ở đâu trong luồng (đặt đơn, xác nhận, xuất kho) và có ràng buộc "
+   "ngăn stock < 0 không? Câu trả lời quyết định severity của bug.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1602,16 +1647,19 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — so sánh oi.price (lúc mua) với Products.price (hiện tại):",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
- "before_bugs": [],
+ "before_bugs": [8],
  "before_col_widths": [50, 75, 90, 65, 213],
  "sql": (
    "SELECT oi.order_id,\n"
@@ -1638,20 +1686,24 @@ ENTRIES = [
  "explain":
    "Order_Items.price là <b>giá snapshot</b> — lưu lại giá đúng lúc khách mua, "
    "không đổi kể cả khi Products.price thay đổi sau đó.<br/>"
-   "Kết quả rỗng trong data mẫu là bình thường — giá chưa thay đổi.<br/>"
-   "Thực tế, câu này quan trọng khi team sửa giá sản phẩm: "
+   "Item 12 (ORD_003/PROD_002): ghi giá 1.500.000 nhưng giá hiện tại của PROD_002 là 2.000.000 "
+   "→ chênh lệch -500.000. Đây là dấu hiệu giá snapshot bị ghi sai lúc tạo đơn, "
+   "không phải thay đổi giá hợp lệ sau đó.<br/>"
+   "Câu này quan trọng khi team sửa giá sản phẩm: "
    "cần xác nhận đơn cũ đã dùng đúng giá cũ, không phải giá mới bị gán ngược.",
  "result_table": (
    ["order_id","product_id","gia_luc_ban","gia_hien_tai","chenh_lech"],
-   [],
+   [["ORD_003","PROD_002","1.500.000","2.000.000","-500.000"]],
  ),
  "result_note":
-   "Kết quả rỗng — tất cả items được ghi đúng giá so với Products hiện tại. "
-   "Câu này nên chạy lại sau mỗi lần cập nhật bảng giá sản phẩm.",
+   "Item 12 (ORD_003/PROD_002) ghi giá 1.500.000 nhưng giá niêm yết PROD_002 là 2.000.000 — "
+   "chênh -500.000. Cần xác nhận: giá PROD_002 từng là 1.500.000 trước đây (hợp lý), "
+   "hay item này bị ghi sai giá ngay từ đầu (bug). Câu này nên chạy lại sau mỗi lần cập nhật bảng giá.",
  "note":
-   "Kết quả rỗng ở đây là tốt, nhưng cần phân biệt hai tình huống:<br/>"
+   "Không phải mọi chênh lệch giá đều là bug — khi có dòng trả về (như item 12 ở đây), "
+   "cần phân biệt hai tình huống:<br/>"
    "(1) <b>Chênh lệch hợp lý</b>: giá sản phẩm tăng/giảm sau khi đơn đã đặt — "
-   "oi.price đúng, p.price là giá mới. Không phải bug.<br/>"
+   "oi.price đúng (giá tại thời điểm mua), p.price là giá mới. Không phải bug.<br/>"
    "(2) <b>Chênh lệch bất thường</b>: item vừa tạo đã khác giá niêm yết — "
    "có thể bug khi tạo đơn hoặc có discount không được ghi nhận đúng cách.",
 },
@@ -1695,14 +1747,14 @@ ENTRIES = [
     "ORD_003 (CANCELLED) và ORD_004 (PENDING) không được tính vào doanh thu."),
    ("ORDER BY o.total_amount DESC",
     "Đơn có giá trị lớn nhất lên đầu — "
-    "dễ phát hiện đơn bất thường hoặc Bug-B khi đối chiếu với Câu 11."),
+    "dễ phát hiện đơn bất thường hoặc Bug-B khi đối chiếu với Câu 13."),
  ],
  "explain":
    "Thêm <b>WHERE status = 'COMPLETED'</b> là điều kiện bắt buộc trong mọi câu báo cáo doanh thu.<br/>"
    "Trong data mẫu, tổng total_amount hai đơn COMPLETED = 32M + 20M = 52M.<br/>"
    "Nhưng ORD_002 ghi total_amount = 20M trong khi tổng items thực = 31M (Bug-B) — "
    "tức 52M này đã thấp hơn thực tế. Đừng vội chốt một con số 'doanh thu thực' ở đây: "
-   "cần làm sạch dữ liệu lệch (Câu 11) trước khi đưa vào báo cáo.",
+   "cần làm sạch dữ liệu lệch (Câu 13) trước khi đưa vào báo cáo.",
  "result_table": (
    ["customer_name","order_id","total_amount","order_date"],
    [
@@ -1711,14 +1763,13 @@ ENTRIES = [
    ]
  ),
  "result_note":
-   "2 đơn COMPLETED, tổng 52M. Con số của ORD_002 (20M) bị sai do Bug-B — "
-   "chạy Câu 11 để xác nhận trước khi chốt báo cáo.",
+   "2 đơn COMPLETED, tổng 52M — nhưng ORD_002 ghi 20M trong khi tổng items thực là 31M (Bug-B), "
+   "nên con số 52M chưa đáng tin.",
  "note":
-   "Câu này chỉ lọc theo status — không kiểm tra total_amount có đúng không.<br/>"
-   "Để có doanh thu chính xác nhất, dùng tổ hợp ba câu:<br/>"
-   "(1) <b>Câu 11</b>: phát hiện đơn có total_amount lệch với tổng items.<br/>"
-   "(2) <b>Câu 25</b>: lọc chỉ đơn COMPLETED.<br/>"
-   "(3) <b>Câu 21</b>: tính lại doanh thu từ items cho những đơn đã xác nhận sạch.",
+   "Ngoài chuyện total_amount có thể sai, cần thống nhất với spec định nghĩa 'doanh thu':<br/>"
+   "(1) Chỉ tính COMPLETED, hay gồm cả đơn đã giao nhưng status chưa kịp cập nhật?<br/>"
+   "(2) Đơn COMPLETED nhưng sau đó bị hoàn trả (refund) có bị trừ khỏi doanh thu không?<br/>"
+   "Trả lời sai một trong hai câu này thì báo cáo lệch dù câu SQL viết đúng.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1736,6 +1787,8 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING",  "2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING",  "2027-01-01"],
  ],
  "before_bugs": [],
  "before_col_widths": [65, 80, 105, 95, 148],
@@ -1765,24 +1818,26 @@ ENTRIES = [
  "explain":
    "Subquery <b>(SELECT COUNT(*) FROM Orders)</b> trong SELECT là scalar subquery — "
    "trả về một giá trị dùng làm mẫu số cho tất cả các dòng.<br/>"
-   "Nhân với <b>100.0</b> (không phải 100) để ép MySQL dùng phép chia số thực — "
-   "nếu dùng 100 (số nguyên), kết quả sẽ bị làm tròn xuống 0.<br/>"
-   "Với data mẫu: COMPLETED = 40%, CANCELLED = 40%, PENDING = 20%.",
+   "Trên MySQL, toán tử <b>/</b> luôn cho số thập phân nên viết 100 hay 100.0 đều ra đúng. "
+   "Dùng <b>100.0</b> là thói quen an toàn khi mang câu lệnh sang SQL Server hoặc PostgreSQL — "
+   "nơi chia hai số nguyên bị cắt mất phần thập phân (kết quả thành 0).<br/>"
+   "Với data mẫu (7 đơn): PENDING = 42.9%, COMPLETED = 28.6%, CANCELLED = 28.6%.",
  "result_table": (
    ["status","so_don","phan_tram"],
    [
-     ["COMPLETED", 2, "40.0"],
-     ["CANCELLED", 2, "40.0"],
-     ["PENDING",   1, "20.0"],
+     ["PENDING",   3, "42.9"],
+     ["COMPLETED", 2, "28.6"],
+     ["CANCELLED", 2, "28.6"],
    ]
  ),
  "result_note":
-   "40% đơn hoàn tất, 40% bị hủy, 20% chờ xử lý. Với dữ liệu test ít, tỷ lệ này không phản ánh thực tế. "
-   "Câu này có giá trị thật khi chạy trên dữ liệu production đủ lớn.",
+   "PENDING chiếm tỷ lệ cao nhất (3/7 đơn, 42.9%) — đáng lo nếu trên production. "
+   "Bao gồm ORD_004 (C999-orphan), ORD_006 (double order), ORD_007 (ngày tương lai). "
+   "Câu này có giá trị thật khi chạy trên dữ liệu production đủ lớn để phát hiện xu hướng bất thường.",
  "note":
    "Hai lưu ý khi dùng câu này trên production:<br/>"
    "(1) <b>Trạng thái lạ</b>: nếu xuất hiện status không trong danh sách chuẩn, "
-   "đây là dòng bất thường cần điều tra — kết hợp với Câu 9 (kỹ thuật ENUM check).<br/>"
+   "đây là dòng bất thường cần điều tra — kết hợp với Câu 11 (kỹ thuật ENUM check).<br/>"
    "(2) <b>Tỷ lệ thay đổi đột ngột</b>: CANCELLED tăng từ 10% lên 30% sau một sprint "
    "là tín hiệu cần xem lại luồng checkout hoặc thanh toán.",
 },
@@ -1797,14 +1852,17 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — dòng đỏ: item_id=7 làm danh mục Dien thoai bị thổi phồng:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
  "before_bugs": [5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -1840,19 +1898,19 @@ ENTRIES = [
  "result_table": (
    ["category","so_don_co_sp","tong_so_luong","tong_doanh_so"],
    [
-     ["Dien thoai", 2, 3, "90.000.000"],
-     ["Phu kien",   4, 5, "14.000.000"],
+     ["Dien thoai", 2,  3, "90.000.000"],
+     ["Phu kien",   6, 26, "42.000.000"],
    ]
  ),
  "result_note":
    "'Dien thoai' dẫn đầu 90M — bị thổi phồng do item 7 trùng. Thực tế là 60M. "
-   "'Phu kien' 14M từ 4 đơn (3 sản phẩm PROD_002, 004, 003).",
+   "'Phu kien' tăng mạnh lên 42M / 26 đơn vị (6 đơn) do item 14 có quantity=20 của ORD_007. "
+   "Đây là ví dụ điển hình: một dòng dữ liệu bất thường (qty=20) đã kéo lệch toàn bộ báo cáo danh mục.",
  "note":
-   "Kết quả chỉ có 2 danh mục vì INNER JOIN loại sản phẩm chưa bán.<br/>"
-   "Nếu muốn xem đầy đủ tất cả danh mục (kể cả chưa có doanh số):<br/>"
-   "Đổi sang <b>RIGHT JOIN</b> Products rồi LEFT JOIN Order_Items — "
-   "danh mục chưa bán sẽ hiện với tong_doanh_so = NULL.<br/>"
-   "Cũng cần chạy Câu 2 để làm sạch item trùng trước khi dùng câu này báo cáo.",
+   "Kết quả chỉ có 2 danh mục vì INNER JOIN loại sản phẩm chưa bán — nếu báo cáo không đề cập "
+   "đến điều này, người đọc có thể tưởng 'Dien thoai' và 'Phu kien' là toàn bộ danh mục. "
+   "Trước khi tin vào doanh số 90M của 'Dien thoai', kiểm tra item trùng bằng Câu 4 — "
+   "item 7 đang thổi phồng con số này lên 30M.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -1906,24 +1964,26 @@ ENTRIES = [
  ],
  "explain":
    "Kỹ thuật <b>LEFT JOIN + COALESCE + aggregate</b> tạo bảng đối soát kho đầy đủ.<br/>"
-   "PROD_003: uoc_tinh_ban_dau = -5 + 1 = <b>-4</b> — tồn kho ước tính ban đầu âm, "
+   "PROD_003: uoc_tinh_ban_dau = -5 + 2 = <b>-3</b> — tồn kho ước tính ban đầu âm, "
    "vật lý không thể xảy ra → xác nhận dữ liệu tồn kho đã sai ở đâu đó, cần điều tra.<br/>"
+   "PROD_004: 20 + 22 = 42 — ước tính ban đầu 42 đơn vị nhưng chỉ còn 20, cần xem xét.<br/>"
    "PROD_001: 50 + 3 = 53 — lẽ ra phải là 52 nếu chỉ bán 2 unit, "
    "chênh 1 đơn vị chính xác bằng item 7 trùng.",
  "result_table": (
    ["product_id","product_name","ton_kho_hien_tai","tong_da_ban","uoc_tinh_ban_dau"],
    [
-     ["PROD_001","iPhone 15 Pro Max",    50,      3,  53],
-     ["PROD_002","Ban phim co Logitech", 100,     2, 102],
-     ["PROD_003","Tai nghe Sony WH-1000XM5", -5,  1,  -4],
-     ["PROD_004","Sac du phong Anker",    20,     2,  22],
-     ["PROD_005","Ban phim co Logitech",  30,     0,  30],
-     ["PROD_006","Loa Bluetooth JBL",     10,     0,  10],
-     ["PROD_007","Chuot gaming Razer", "(NULL)",  0,"(NULL)"],
+     ["PROD_001","iPhone 15 Pro Max",         50,  3,  53],
+     ["PROD_002","Ban phim co Logitech",      100,  2, 102],
+     ["PROD_003","Tai nghe Sony WH-1000XM5",  -5,  2,  -3],
+     ["PROD_004","Sac du phong Anker",         20, 22,  42],
+     ["PROD_005","Ban phim co Logitech",       30,  0,  30],
+     ["PROD_006","Loa Bluetooth JBL",          10,  0,  10],
+     ["PROD_007","Chuot gaming Razer",    "(NULL)", 0,"(NULL)"],
    ]
  ),
  "result_note":
-   "PROD_003: uoc_tinh_ban_dau = -4 → bất khả thi, xác nhận dữ liệu tồn kho không nhất quán, cần điều tra. "
+   "PROD_003: uoc_tinh_ban_dau = -3 → bất khả thi, xác nhận tồn kho không nhất quán. "
+   "PROD_004: uoc_tinh = 42 (đã bán 22, còn 20) — hợp lý về mặt số học nhưng cần kiểm tra vì tong_da_ban > stock. "
    "PROD_001: 53 thay vì 52 → item trùng thổi phồng thêm 1 đơn vị.",
  "note":
    "<b>COALESCE</b> là hàm quan trọng khi LEFT JOIN: không dùng sẽ cho NULL không tính được.<br/>"
@@ -1949,8 +2009,10 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING",  "2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING",  "2027-01-01"],
  ],
- "before_bugs": [],
+ "before_bugs": [5],
  "before_col_widths": [65, 80, 105, 95, 148],
  "sql": (
    "SELECT customer_id,\n"
@@ -1971,24 +2033,25 @@ ENTRIES = [
     "Chỉ giữ nhóm xuất hiện từ 2 lần trở lên — dấu hiệu của đơn bị tạo trùng."),
  ],
  "explain":
-   "Kỹ thuật <b>GROUP BY nhiều cột + HAVING COUNT</b> — cùng mẫu với Câu 1 và Câu 2, "
+   "Kỹ thuật <b>GROUP BY nhiều cột + HAVING COUNT</b> — cùng mẫu với Câu 3 và Câu 4, "
    "áp dụng cho bảng Orders để phát hiện double submission.<br/>"
-   "Kết quả rỗng trong data mẫu là bình thường — chưa có đơn trùng.<br/>"
-   "Trong thực tế, câu này nên chạy sau mỗi đợt stress test hoặc khi khách phản ánh "
-   "bị trừ tiền hai lần.",
+   "ORD_003 (CANCELLED) và ORD_006 (PENDING) cùng thuộc C003, cùng total_amount 8.000.000, "
+   "cùng order_date 2026-06-23 → nhóm này có COUNT(*) = 2, vượt HAVING COUNT(*) &gt; 1.<br/>"
+   "Câu này nên chạy sau mỗi đợt stress test hoặc khi khách phản ánh bị trừ tiền hai lần.",
  "result_table": (
    ["customer_id","total_amount","order_date","so_lan"],
-   [],
+   [["C003","8.000.000","2026-06-23",2]],
  ),
  "result_note":
-   "Kết quả rỗng — không có đơn hàng bị tạo trùng. "
-   "Chạy lại câu này sau stress test để phát hiện sớm double-charge bug.",
+   "C003 có 2 đơn cùng ngày 2026-06-23, cùng tổng tiền 8M — dấu hiệu double submission điển hình. "
+   "ORD_003 (CANCELLED) và ORD_006 (PENDING) — cần xác minh đây là hai đơn riêng biệt hay cùng một đơn bị tạo hai lần.",
  "note":
-   "Gộp theo <b>order_date</b> (ngày) có thể bỏ sót double order xảy ra trong cùng ngày "
-   "nhưng cách nhau vài phút — vẫn là hai đơn hợp lệ.<br/>"
-   "Nếu DB lưu cả giờ phút, dùng điều kiện chặt hơn:<br/>"
-   "<b>TIMESTAMPDIFF(MINUTE, o1.order_date, o2.order_date) &lt; 5</b> "
-   "— chỉ bắt hai đơn cách nhau dưới 5 phút mới là double order thật sự.",
+   "Khi tìm thấy double order, trước khi xóa bản nào hỏi khách hoặc kiểm tra payment log: "
+   "cả hai đơn có phát sinh transaction thanh toán không? Nếu có, đây là lỗi double-charge "
+   "nghiêm trọng — cần hoàn tiền trước khi xóa bản thừa. "
+   "Nếu chỉ một đơn được thanh toán, giữ đơn đó và hủy đơn còn lại. "
+   "Câu này gộp theo ngày — trên hệ thống lưu cả giờ phút, double order thực tế thường cách "
+   "nhau vài giây đến vài phút.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2006,6 +2069,8 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING",  "2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING",  "2027-01-01"],
  ],
  "before_bugs": [0],
  "before_col_widths": [65, 80, 105, 95, 148],
@@ -2024,7 +2089,7 @@ ENTRIES = [
     "MySQL tải toàn bộ bảng <b>Orders</b>."),
    ("WHERE total_amount >\n  (SELECT AVG(total_amount) * 1.5\n   FROM Orders)",
     "Subquery tính trung bình total_amount rồi nhân 1.5 làm ngưỡng. "
-    "Trong data mẫu: AVG = 16.000.000 → ngưỡng = 24.000.000. "
+    "Trong data mẫu (7 đơn): AVG ≈ 15.430.000 → ngưỡng ≈ 23.140.000. "
     "Chỉ ORD_001 (32M) vượt ngưỡng này."),
    ("ORDER BY total_amount DESC",
     "Đơn có giá trị cao nhất lên đầu để QA xem xét trước."),
@@ -2032,25 +2097,23 @@ ENTRIES = [
  "explain":
    "Dùng <b>subquery trong WHERE</b> để so sánh từng dòng với một ngưỡng động "
    "tính từ chính bảng đó — không cần biết trước ngưỡng là bao nhiêu.<br/>"
-   "AVG trong data mẫu = 16.000.000 → ngưỡng 1.5× = 24.000.000.<br/>"
+   "AVG trong data mẫu (7 đơn) ≈ 15.430.000 → ngưỡng 1,5× ≈ 23.140.000.<br/>"
    "ORD_001 (32M) vượt ngưỡng và được flag. Điều này không có nghĩa là lỗi — "
-   "đây là điểm khởi đầu để QA điều tra thêm bằng Câu 11.",
+   "đây là điểm khởi đầu để QA điều tra thêm bằng Câu 13.",
  "result_table": (
    ["order_id","customer_id","total_amount"],
    [["ORD_001","C001","32.000.000"]],
  ),
  "result_note":
-   "ORD_001 (32M) vượt ngưỡng 1.5× trung bình (24.000.000). "
+   "ORD_001 (32M) vượt ngưỡng 1.5× trung bình (khoảng 23.140.000). "
    "Tổng tiền 32M là hợp lệ (30M + 2M), nhưng doanh thu từ items = 62M do item trùng — "
-   "đây mới là bất thường thật sự, cần Câu 11 để phát hiện.",
+   "đây mới là bất thường thật sự, cần Câu 13 để phát hiện.",
  "note":
-   "Ngưỡng 1.5× trung bình là điểm khởi đầu — điều chỉnh tùy nghiệp vụ:<br/>"
-   "(1) Đơn B2B thường có giá trị lớn hơn B2C nhiều lần — nên tách hai nhóm riêng.<br/>"
-   "(2) Nếu muốn chặt hơn, dùng <b>2×</b> hoặc <b>3×</b> trung bình.<br/>"
-   "(3) Phương pháp thống kê tốt hơn là dùng <b>độ lệch chuẩn</b>: "
-   "flag đơn vượt trung bình + 2×STDDEV. MySQL có sẵn <b>STDDEV()</b> / "
-   "<b>STDDEV_SAMP()</b> / <b>STDDEV_POP()</b> — chỉ là không lồng trực tiếp với AVG "
-   "trong cùng một HAVING được, nên tính ngưỡng (trung bình + 2×độ lệch chuẩn) bằng subquery.",
+   "Ngưỡng 1.5× là điểm khởi đầu điều tra, không phải kết luận bug. "
+   "Khi tìm thấy đơn vượt ngưỡng, hỏi: đơn B2B thường có giá trị lớn hơn B2C nhiều lần — "
+   "cần phân tách hai nhóm trước khi so sánh. "
+   "Bước tiếp theo khi flag được đơn: chạy Câu 13 để kiểm tra total_amount có khớp với tổng "
+   "items không — đó mới là bằng chứng xác định lỗi, không phải chỉ vì giá trị lớn.",
 },
 
 
@@ -2103,28 +2166,28 @@ ENTRIES = [
    "Pattern <b>[0-9()]</b> khớp với CHỮ SỐ hoặc DẤU NGOẶC — hai loại ký tự "
    "không nên xuất hiện trong tên người thật.<br/>"
    "C009 'Nguyen Van A (2)' bị bắt vì có cả '(' ')' và chữ số '2' — "
-   "đây là tên được nhập để đối phó với ràng buộc UNIQUE, không phải tên thật.",
+   "dấu hiệu tài khoản nhân bản hoặc dữ liệu test được đánh số bằng tay, không phải tên thật.",
  "result_table": (
    ["customer_id","customer_name"],
    [["C009","Nguyen Van A (2)"]],
  ),
  "result_note":
    "1 bản ghi: C009 có tên chứa ngoặc và số — dấu hiệu dữ liệu test "
-   "hoặc người dùng cố gắng bypass ràng buộc unique tên.",
+   "hoặc tài khoản nhân bản được đánh số thủ công.",
  "note":
-   "Mở rộng pattern để bắt thêm ký tự đặc biệt khác:<br/>"
-   "(1) <b>[!@#$%^&*]</b>: bắt ký tự đặc biệt thường gặp trong SQL injection.<br/>"
-   "(2) <b>[^a-zA-Z ]</b>: chỉ cho phép chữ cái Latin và dấu cách — "
-   "cẩn thận vì sẽ bắt cả tên tiếng Việt có dấu.<br/>"
-   "Với dữ liệu tiếng Việt, cách an toàn hơn là <b>whitelist</b>: "
-   "kiểm tra từng dòng thủ công thay vì dùng REGEXP.",
+   "C009 'Nguyen Van A (2)' là ví dụ điển hình của tài khoản nhân bản, đánh số bằng tay ở cuối tên "
+   "để tạo bản ghi mới. Khi tìm thấy loại này, hỏi dev: hệ thống có validate định dạng tên "
+   "ở tầng backend không, hay chỉ validate ở frontend? Nếu chỉ ở frontend, người dùng có thể "
+   "gửi thẳng qua API call để lách. "
+   "Pattern REGEXP có thể mở rộng cho ký tự đặc biệt khác, nhưng với tên tiếng Việt nên dùng "
+   "whitelist thủ công hơn là blacklist.",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 3, "id": 32,
  "title": "Tìm email không đúng định dạng cơ bản",
  "situation":
-   "Câu 3 đã bắt email NULL và chuỗi rỗng. Câu này đi thêm một bước: "
+   "Câu 5 đã bắt email NULL và chuỗi rỗng. Câu này đi thêm một bước: "
    "kiểm tra email <b>có nội dung</b> nhưng thiếu ký tự @ hoặc dấu chấm domain — "
    "dấu hiệu nhập sai hoặc bypass validation bằng cách nhập chữ bừa.",
  "before_label": "Bảng Customers — dòng đỏ: email NULL, rỗng hoặc không có @/dấu chấm:",
@@ -2157,7 +2220,7 @@ ENTRIES = [
    ("FROM Customers",
     "MySQL tải toàn bộ bảng <b>Customers</b>."),
    ("WHERE email IS NULL\n    OR TRIM(email) = ''",
-    "Hai điều kiện này trùng với Câu 3 — nhắc lại ở đây để câu lệnh "
+    "Hai điều kiện này trùng với Câu 5 — nhắc lại ở đây để câu lệnh "
     "hoạt động độc lập, không cần chạy thêm câu khác."),
    ("OR email NOT LIKE '%@%'\n    OR email NOT LIKE '%.%'",
     "<b>NOT LIKE '%@%'</b>: email không chứa ký tự @ — không thể hợp lệ. "
@@ -2203,16 +2266,19 @@ ENTRIES = [
  "before_label": "Bảng Order_Items — kiểm tra quantity có trong ngưỡng hợp lệ không:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
- "before_bugs": [],
+ "before_bugs": [8],
  "before_col_widths": [50, 75, 90, 65, 213],
  "sql": (
    "SELECT item_id,\n"
@@ -2236,22 +2302,25 @@ ENTRIES = [
  "explain":
    "Kiểm tra biên dưới (<b>quantity <= 0</b>) và biên trên (<b>quantity > 1000</b>) "
    "là cặp kiểm tra chuẩn cho mọi trường số lượng.<br/>"
-   "Kết quả rỗng trong data mẫu — tất cả items đều có quantity = 1, hoàn toàn hợp lệ.<br/>"
-   "Kết quả rỗng ở đây là confirmation tốt: "
-   "hệ thống chưa có bug quantity trong dữ liệu hiện tại.",
+   "Item 12 (ORD_003/PROD_002) có quantity = 0 — vi phạm biên dưới. "
+   "Đơn không thể tồn tại với 0 sản phẩm; đây là lỗi logic, "
+   "không phải đơn bình thường hay đơn hoàn hàng (hoàn hàng phải dùng bảng riêng).<br/>"
+   "Item 14 (ORD_007/PROD_004) có quantity = 20 — không vi phạm (20 ≤ 1000), hợp lệ về kỹ thuật "
+   "nhưng cần kiểm tra nghiệp vụ (mua 20 sạc dự phòng cùng lúc có bình thường không?).",
  "result_table": (
    ["item_id","order_id","product_id","quantity"],
-   [],
+   [[12,"ORD_003","PROD_002",0]],
  ),
  "result_note":
-   "Kết quả rỗng — tất cả quantity đều hợp lệ (= 1). "
-   "Chạy lại sau mỗi lần import hàng loạt hoặc sau sprint có tính năng 'hoàn hàng'.",
+   "Item 12 (ORD_003/PROD_002) có quantity = 0 — vi phạm ràng buộc biên dưới. "
+   "Một đơn hàng không thể chứa sản phẩm với số lượng bằng 0. "
+   "Cần ADD CHECK CONSTRAINT hoặc validate tại tầng application để ngăn từ đầu.",
  "note":
-   "Ngưỡng > 1000 chỉ là ví dụ — điều chỉnh tùy nghiệp vụ:<br/>"
-   "(1) Bán lẻ (B2C): quantity > 10 đã đáng ngờ.<br/>"
-   "(2) Bán buôn (B2B): quantity > 10.000 mới bất thường.<br/>"
-   "Để thêm CHECK constraint vào DB ngăn từ đầu:<br/>"
-   "<b>ALTER TABLE Order_Items ADD CONSTRAINT chk_qty CHECK (quantity &gt;= 1);</b>",
+   "Ngưỡng > 1000 chỉ là ví dụ — điều chỉnh tùy nghiệp vụ: bán lẻ B2C thì quantity > 10 "
+   "đã đáng ngờ, bán buôn B2B thì có thể > 10.000 mới bất thường. "
+   "Khi tìm thấy quantity = 0 (item 12), hỏi dev: đây là lỗi khi nhập đơn hay có luồng nào "
+   "cố tình set về 0 (hoàn trả, điều chỉnh)? Nếu là hoàn trả, nên ghi vào bảng riêng thay vì "
+   "để trong Order_Items với số lượng 0.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2270,8 +2339,10 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING",  "2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING",  "2027-01-01"],
  ],
- "before_bugs": [],
+ "before_bugs": [6],
  "before_col_widths": [65, 80, 105, 95, 148],
  "sql": (
    "SELECT order_id,\n"
@@ -2295,21 +2366,25 @@ ENTRIES = [
  "explain":
    "Dùng <b>CURDATE()</b> thay vì hardcode ngày giúp câu lệnh luôn đúng "
    "mà không cần sửa theo thời gian.<br/>"
-   "Kết quả rỗng trong data mẫu — tất cả đơn đều có ngày hợp lệ trong tháng 6/2026.<br/>"
-   "Trên production, câu này nên chạy định kỳ — đặc biệt sau khi deploy tính năng "
-   "mới có liên quan đến xử lý thời gian hoặc timezone.",
+   "ORD_007 có order_date = 2027-01-01 — vượt CURDATE() "
+   "→ ngày ở tương lai, là dấu hiệu đồng hồ server sai, nhập tay sai, hoặc bug timezone.<br/>"
+   "Câu này nên chạy định kỳ — đặc biệt sau khi deploy tính năng "
+   "mới có liên quan đến xử lý thời gian hoặc timezone.<br/>"
+   "<i>Lưu ý khi thực hành: kết quả trên đúng khi bạn chạy TRƯỚC ngày 2027-01-01. "
+   "Nếu chạy sau ngày đó, ORD_007 không còn là 'tương lai' nữa và kết quả sẽ rỗng — "
+   "hãy sửa order_date của ORD_007 thành một ngày xa hơn hiện tại để tái hiện.</i>",
  "result_table": (
    ["order_id","customer_id","order_date"],
-   [],
+   [["ORD_007","C001","2027-01-01"]],
  ),
  "result_note":
-   "Kết quả rỗng — tất cả ngày đặt hàng đều hợp lệ. "
-   "Điều chỉnh ngưỡng '2020-01-01' theo ngày go-live thực tế của hệ thống.",
+   "ORD_007 có order_date = 2027-01-01 — hơn nửa năm trong tương lai so với hôm nay. "
+   "Cần xác minh: đây là đặt hàng trước (pre-order) được phép, hay dữ liệu bị nhập sai ngày?",
  "note":
    "Cạm bẫy timezone: CURDATE() trả về ngày theo timezone của MySQL server.<br/>"
-   "Nếu app chạy ở timezone khác (vd UTC+7), "
-   "ngày 2026-06-24 23:30 UTC+7 = 2026-06-24 16:30 UTC — "
-   "cùng ngày nhưng CURDATE() của server UTC trả về 2026-06-24.<br/>"
+   "Nếu app chạy ở timezone khác, ngày có thể lệch nhau quanh nửa đêm: "
+   "đơn đặt lúc 06:30 sáng 25/06 giờ Việt Nam (UTC+7) = 23:30 đêm 24/06 giờ UTC — "
+   "app hiển thị ngày 25 nhưng server UTC ghi ngày 24.<br/>"
    "Khi nghi ngờ timezone gây lỗi, thêm điều kiện: "
    "<b>TIMESTAMPDIFF(HOUR, order_date, NOW()) &lt; -8</b> "
    "để bắt đơn 'tương lai' trong vòng 8 giờ.",
@@ -2319,7 +2394,7 @@ ENTRIES = [
  "part": 3, "id": 35,
  "title": "Tìm tên sản phẩm trùng sau khi chuẩn hóa",
  "situation":
-   "Câu 8 đã bắt trùng chính xác theo tên và giá. Câu này đi sâu hơn: "
+   "Câu 10 đã bắt trùng chính xác theo tên và giá. Câu này đi sâu hơn: "
    "chuẩn hóa tên về chữ thường và cắt khoảng trắng trước khi so sánh. "
    "Bắt được cả các kiểu trùng tinh vi hơn mà UNIQUE constraint "
    "case-insensitive chưa chặn được.",
@@ -2355,10 +2430,10 @@ ENTRIES = [
  ],
  "explain":
    "Kỹ thuật <b>LOWER + TRIM + GROUP BY</b> là cách chuẩn hóa trước khi so sánh — "
-   "đã dùng ở Câu 6 (email), áp dụng tương tự cho product_name.<br/>"
+   "đã dùng ở Câu 8 (email), áp dụng tương tự cho product_name.<br/>"
    "PROD_002 và PROD_005 đều là 'Ban phim co Logitech' → "
    "sau LOWER+TRIM cho 'ban phim co logitech' → COUNT = 2.<br/>"
-   "Câu 8 đã bắt cặp này theo (tên + giá), câu này bắt lại chỉ theo tên "
+   "Câu 10 đã bắt cặp này theo (tên + giá), câu này bắt lại chỉ theo tên "
    "— phát hiện trùng ngay cả khi giá đã bị sửa khác nhau.",
  "result_table": (
    ["ten_chuan","so_ban_ghi"],
@@ -2421,15 +2496,15 @@ ENTRIES = [
     "<b>IFNULL(email,'')</b> thay NULL bằng chuỗi rỗng trước khi LOWER — tránh LOWER(NULL) "
     "trả về NULL khiến LIKE luôn UNKNOWN và bỏ sót dòng có email NULL."),
    ("OR ... OR ...",
-    "Mỗi từ khóa nghi vấn ('test', 'demo', 'fake'...) là một nhánh OR riêng — danh sách "
-    "từ khóa nên được team thống nhất và cập nhật theo quy ước đặt tên test data thực tế."),
+    "Mỗi từ khóa nghi vấn ('test', 'demo', 'fake'...) là một nhánh OR riêng. Riêng "
+    "<b>'ao bug'</b> là từ khóa đặt riêng để bắt đúng dòng mẫu 'Khach Hang Ao Bug' trong DB "
+    "thực hành — hệ thống thật cần thay bằng quy ước đặt tên test data của chính team bạn."),
  ],
  "explain":
    "Kỹ thuật <b>LIKE '%từ_khóa%'</b> trên nhiều cột — khác hẳn các câu trùng lặp/ENUM trước đó "
    "vì đây là tìm kiếm theo <b>ngữ nghĩa từ khóa</b>, không phải so khớp giá trị chính xác.<br/>"
    "Bắt được 2 bản ghi: C004 'Khach Hang Ao Bug' (tên tự đặt là dữ liệu giả) và C010 'Khach "
-   "Test VIP' (có chữ 'Test' rõ ràng) — cả hai đều là tài khoản dựng cho mục đích minh họa "
-   "trong data mẫu của chính cuốn sách này.<br/>"
+   "Test VIP' (có chữ 'Test' rõ ràng) — cả hai đều là tài khoản có dấu hiệu rõ ràng của dữ liệu test.<br/>"
    "Trên hệ thống thật, danh sách từ khóa cần mở rộng theo quy ước nội bộ: 'qa_', 'sample_', "
    "tên miền nội bộ dùng để test (vd '@company-test.com')...",
  "result_table": (
@@ -2456,7 +2531,7 @@ ENTRIES = [
  "part": 3, "id": 37,
  "title": "Dò bản ghi gần-trùng bằng SOUNDEX (lỗi gõ chính tả)",
  "situation":
-   "Câu 6 và Câu 35 bắt trùng nhờ chuẩn hóa hoa/thường và khoảng trắng — nhưng cả hai đều cần "
+   "Câu 8 và Câu 35 bắt trùng nhờ chuẩn hóa hoa/thường và khoảng trắng — nhưng cả hai đều cần "
    "chuỗi gốc <b>giống hệt nhau</b> sau khi chuẩn hóa. Lỗi gõ chính tả thật ('Nguyen Van A' "
    "gõ thành 'Nguyen Van Ah' hay đọc sai dấu) tạo ra chuỗi khác hẳn về mặt ký tự dù phát âm "
    "gần như nhau — LOWER/TRIM không bắt được loại trùng này.",
@@ -2499,8 +2574,8 @@ ENTRIES = [
     "B-A) và mỗi dòng còn tự khớp với chính nó."),
  ],
  "explain":
-   "SOUNDEX là kỹ thuật <b>fuzzy matching</b> — khác hẳn so khớp chính xác (Câu 1, 8) hay "
-   "chuẩn hóa hoa/thường-khoảng trắng (Câu 6, 35): nó so khớp theo <b>âm đọc</b>, không theo "
+   "SOUNDEX là kỹ thuật <b>fuzzy matching</b> — khác hẳn so khớp chính xác (Câu 3) hay "
+   "chuẩn hóa hoa/thường-khoảng trắng (Câu 8, 35): nó so khớp theo <b>âm đọc</b>, không theo "
    "ký tự.<br/>"
    "C001 'Nguyen Van A' và C009 'Nguyen Van A (2)' cho cùng mã SOUNDEX vì SOUNDEX bỏ qua "
    "khoảng trắng và ký tự không phải chữ cái khi mã hóa — cùng một cặp trùng mà Câu 31 (regex "
@@ -2539,7 +2614,7 @@ ENTRIES = [
  "part": 3, "id": 38,
  "title": "Phát hiện đơn có tổng tiền nhưng không có sản phẩm nào",
  "situation":
-   "Câu 15 đã tìm đơn rỗng (không có items). Câu này thêm điều kiện: "
+   "Câu 16 đã tìm đơn rỗng (không có items). Câu này thêm điều kiện: "
    "đơn có <b>total_amount > 0</b> nhưng lại không có item nào — "
    "nghĩa là hệ thống đã thu tiền (hoặc ghi nhận số tiền) cho một đơn "
    "không có sản phẩm cụ thể. Đây là mâu thuẫn dữ liệu nghiêm trọng.",
@@ -2577,10 +2652,10 @@ ENTRIES = [
     "Chiếu đủ thông tin để QA điều tra: bao nhiêu tiền, trạng thái gì."),
  ],
  "explain":
-   "Câu 15 bắt <b>mọi đơn rỗng</b> (kể cả total_amount = 0). "
+   "Câu 16 bắt <b>mọi đơn rỗng</b> (kể cả total_amount = 0). "
    "Câu 38 chỉ bắt đơn rỗng <b>nhưng có tiền</b> — trường hợp nghiêm trọng hơn.<br/>"
    "ORD_004 bị phát hiện: total_amount = 5M nhưng không có item nào trong Order_Items.<br/>"
-   "ORD_004 còn có thêm bug customer_id = C999 không tồn tại (Câu 5) — "
+   "ORD_004 còn có thêm bug customer_id = C999 không tồn tại (Câu 7) — "
    "một đơn tích lũy nhiều lỗi chồng nhau.",
  "result_table": (
    ["order_id","customer_id","total_amount","status"],
@@ -2591,8 +2666,8 @@ ENTRIES = [
    "Đây là đơn hàng 'ma' — cần điều tra log xem được tạo như thế nào.",
  "note":
    "ORD_004 là ví dụ điển hình của <b>bug chồng bug</b>:<br/>"
-   "(1) Câu 5: customer_id = C999 không có trong Customers.<br/>"
-   "(2) Câu 15: không có item nào trong Order_Items.<br/>"
+   "(1) Câu 7: customer_id = C999 không có trong Customers.<br/>"
+   "(2) Câu 16: không có item nào trong Order_Items.<br/>"
    "(3) Câu 38: có total_amount = 5M nhưng không có gì để tính.<br/>"
    "Khi tìm thấy loại đơn này, ưu tiên kiểm tra access log và payment log "
    "để xác định có transaction thật không.",
@@ -2602,7 +2677,7 @@ ENTRIES = [
  "part": 3, "id": 39,
  "title": "Phát hiện tổng items vượt quá 1.5 lần total_amount",
  "situation":
-   "Câu 11 bắt mọi đơn có tổng items khác total_amount dù chỉ 1 đồng. "
+   "Câu 13 bắt mọi đơn có tổng items khác total_amount dù chỉ 1 đồng. "
    "Câu này dùng ngưỡng 1.5× để bắt những trường hợp <b>lệch bất thường lớn</b>: "
    "tổng items cao hơn total_amount gấp rưỡi là dấu hiệu dữ liệu sai "
    "ở mức độ không thể do làm tròn hay phí vận chuyển.",
@@ -2631,8 +2706,8 @@ ENTRIES = [
  "clauses": [
    ("FROM Orders o\n  JOIN Order_Items oi\n    ON o.order_id = oi.order_id",
     "<b>INNER JOIN</b> ghép đơn hàng với items. "
-    "Đơn không có item (ORD_004) bị loại — "
-    "dùng Câu 38 để phát hiện riêng trường hợp đó."),
+    "Đơn không có item (ORD_004) bị loại — không có items thì không có tổng để so sánh. "
+    "Nếu cần phát hiện cả đơn rỗng, dùng LEFT JOIN và lọc WHERE oi.item_id IS NULL."),
    ("GROUP BY o.order_id, o.total_amount",
     "Gom tất cả items của cùng một đơn để tính tổng."),
    ("HAVING SUM(oi.quantity * oi.price)\n         > o.total_amount * 1.5",
@@ -2641,9 +2716,10 @@ ENTRIES = [
     "Ngưỡng 1.5× để bỏ qua chênh lệch nhỏ do phí vận chuyển, discount."),
  ],
  "explain":
-    "Câu 11 (= ANY difference) vs Câu 39 (&gt; 1.5×): hai mức độ kiểm tra khác nhau.<br/>"
-    "ORD_001: tinh_tu_items = 62M, total_amount = 32M &gt; 48M → bị bắt.<br/>"
-    "ORD_002: tinh_tu_items = 31M, total_amount = 20M &gt; 30M → bị bắt.<br/>"
+    "Hai mức độ kiểm tra khác nhau: Câu 13 bắt <b>mọi</b> chênh lệch dù nhỏ, "
+    "câu này chỉ bắt khi tổng items vượt <b>1.5 lần</b> total_amount.<br/>"
+    "ORD_001: items 62M &gt; 48M (= 32M × 1.5) → bị bắt.<br/>"
+    "ORD_002: items 31M &gt; 30M (= 20M × 1.5) → bị bắt.<br/>"
     "Cả hai đều bị bắt: ORD_001 do item trùng, ORD_002 do Bug-B (total_amount bị ghi thấp).",
   "result_table": (
     ["order_id","total_amount","tinh_tu_items"],
@@ -2658,7 +2734,7 @@ ENTRIES = [
   "note":
     "Điều chỉnh ngưỡng tùy ngữ cảnh nghiệp vụ:<br/>"
     "(1) <b>&gt; 1.5×</b>: bắt lệch lớn, bỏ qua discount/phí nhỏ (câu này).<br/>"
-    "(2) <b>!= (bất kỳ lệch)</b>: bắt tất cả sai lệch dù nhỏ (Câu 11).<br/>"
+    "(2) <b>!= (bất kỳ lệch)</b>: bắt tất cả sai lệch dù nhỏ (Câu 13).<br/>"
     "(3) <b>&gt; 2×</b>: chỉ bắt lệch nghiêm trọng nhất.<br/>"
     "Với hệ thống có discount, nên kết hợp thêm điều kiện "
     "loại trừ đơn có coupon trước khi áp ngưỡng.",
@@ -2668,7 +2744,7 @@ ENTRIES = [
  "part": 4, "id": 40,
  "title": "Truy vết item còn sót của đơn đã xóa mềm",
  "situation":
-   "Câu 10 đã phát hiện đơn ORD_005 bị <b>xóa mềm</b> (cột deleted_at có giá trị) "
+   "Câu 12 đã phát hiện đơn ORD_005 bị <b>xóa mềm</b> (cột deleted_at có giá trị) "
    "nhưng vẫn nằm trong bảng Orders. Vấn đề chưa dừng ở đó: các dòng chi tiết của "
    "đơn này trong Order_Items (item 8, 9) <b>không hề bị dọn</b>. Khi báo cáo "
    "doanh thu hoặc tồn kho quên lọc đơn đã xóa mềm, những item này vẫn bị cộng vào.",
@@ -2709,7 +2785,7 @@ ENTRIES = [
     "Sắp xếp theo item_id để dễ đối chiếu với bảng gốc."),
  ],
  "explain":
-   "Câu 10 soi <b>bảng cha</b> (Orders) để tìm đơn xóa mềm; câu này đi tiếp xuống "
+   "Câu 12 soi <b>bảng cha</b> (Orders) để tìm đơn xóa mềm; câu này đi tiếp xuống "
    "<b>bảng con</b> (Order_Items) để tìm những dòng bị bỏ lại.<br/>"
    "Đây là mẫu kiểm tra <b>tính nhất quán khi xóa mềm</b>: xóa cha thì con phải được "
    "đánh dấu hoặc loại khỏi mọi phép tính.<br/>"
@@ -2793,12 +2869,12 @@ ENTRIES = [
    "ORD_003 hủy nhưng chưa được xóa mềm — nếu báo cáo lọc theo deleted_at, đơn này "
    "vẫn lọt vào như đơn còn hiệu lực. Cần đồng bộ lại hai cột.",
  "note":
-   "Mở rộng kiểm tra đồng bộ trạng thái:<br/>"
-   "(1) Thêm cặp cột khác: <b>paid_at</b> với status = 'PAID', "
-   "<b>shipped_at</b> với status = 'SHIPPED'.<br/>"
-   "(2) Đưa câu này vào bộ kiểm tra định kỳ sau mỗi lần đổi luồng trạng thái.<br/>"
-   "(3) Gốc rễ thường nằm ở code: nên cập nhật status và deleted_at "
-   "trong cùng một transaction.",
+   "Khi tìm thấy đơn CANCELLED mà deleted_at trống, hỏi dev: đây là lỗi của một bước bị thiếu "
+   "trong transaction hủy đơn, hay quy trình nghiệp vụ thực sự tách hai bước này ra? "
+   "Nếu tách ra thì có window mà đơn bị hủy nhưng vẫn bị tính vào báo cáo — cần bổ sung "
+   "điều kiện lọc. "
+   "Gốc rễ thường nằm ở code: nên cập nhật status và deleted_at trong cùng một transaction "
+   "để tránh cập nhật nửa vời (half-update — sửa được cột này nhưng cột kia chưa kịp).",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2817,8 +2893,10 @@ ENTRIES = [
    ["ORD_003","C003","CANCELLED","2026-06-23"],
    ["ORD_004","C999","PENDING",  "2026-06-24"],
    ["ORD_005","C001","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","PENDING",  "2027-01-01"],
  ],
- "before_bugs": [3],
+ "before_bugs": [3, 5],
  "before_col_widths": [90, 100, 120, 183],
  "sql": (
    "SELECT order_id,\n"
@@ -2838,24 +2916,29 @@ ENTRIES = [
     "chính là tuổi của đơn. Dùng ngày cố định để kết quả không trôi theo thời gian."),
    ("WHERE status = 'PENDING'\n  AND DATEDIFF('2026-06-30',\n        order_date) > 3",
     "Lọc đơn còn <b>PENDING</b> và đã treo quá <b>3 ngày</b>. "
-    "Ngưỡng 3 ngày tùy SLA của hệ thống. Lưu ý: DATEDIFF() bọc quanh order_date khiến "
-    "điều kiện này <b>non-sargable</b> — xem cách viết thay thế tận dụng được index ở "
-    "phần Ghi chú."),
+    "Ngưỡng 3 ngày tùy SLA (cam kết thời gian xử lý) của hệ thống. Lưu ý: DATEDIFF() bọc quanh "
+    "order_date khiến điều kiện này <b>non-sargable</b> — tức là dạng điều kiện mà index không "
+    "tận dụng được, DB phải quét từng dòng. Xem cách viết thay thế ở phần Ghi chú."),
    ("ORDER BY so_ngay_ton_dong DESC",
     "Đơn treo lâu nhất lên đầu — ưu tiên xử lý trước."),
  ],
  "explain":
    "Câu 34 bắt ngày <b>vô lý</b> (tương lai hoặc quá xa quá khứ); câu này bắt đơn "
    "<b>tồn đọng</b> — ngày hợp lệ nhưng trạng thái mắc kẹt quá lâu.<br/>"
-   "ORD_004 đặt 2026-06-24, tính đến mốc 2026-06-30 là 6 ngày vẫn PENDING.<br/>"
+   "ORD_006 đặt 2026-06-23 (7 ngày) và ORD_004 đặt 2026-06-24 (6 ngày) — cả hai vẫn PENDING.<br/>"
+   "ORD_007 (2027-01-01) cho DATEDIFF âm → không hiện (đơn 'tương lai', bắt bởi Câu 34).<br/>"
    "Trên production thường thay 2026-06-30 bằng <b>CURDATE()</b> để đo theo thời gian thực.",
  "result_table": (
    ["order_id","customer_id","status","order_date","so_ngay_ton_dong"],
-   [["ORD_004","C999","PENDING","2026-06-24",6]],
+   [
+     ["ORD_006","C003","PENDING","2026-06-23",7],
+     ["ORD_004","C999","PENDING","2026-06-24",6],
+   ]
  ),
  "result_note":
-   "ORD_004 treo 6 ngày chưa xử lý — lại đúng đơn có customer_id C999 không tồn tại "
-   "(Câu 5). Đơn treo lâu là nơi nên soi kỹ vì thường đi kèm lỗi khác.",
+   "ORD_006 treo 7 ngày — đây cũng là đơn double order với ORD_003 (Câu 29). "
+   "ORD_004 treo 6 ngày — customer_id C999 không tồn tại (Câu 7). "
+   "Đơn treo lâu là nơi nên soi kỹ vì thường đi kèm nhiều lỗi khác.",
  "note":
    "Tinh chỉnh câu này theo nghiệp vụ:<br/>"
    "(1) Đổi mốc cố định thành <b>CURDATE()</b> khi chạy giám sát thực tế.<br/>"
@@ -2878,7 +2961,7 @@ ENTRIES = [
    "<b>khoảng lặng dài</b> (nhiều ngày không có đơn) hoặc <b>cụm dày đặc</b> (nhiều đơn "
    "trong tích tắc), đó là dấu vết đáng soi: job tạo đơn chết, hoặc bot đặt hàng hàng "
    "loạt. Câu này đo số ngày giữa mỗi đơn và đơn liền trước nó.",
- "before_label": "Bảng Orders — dòng thời gian 5 đơn theo order_date:",
+ "before_label": "Bảng Orders — dòng thời gian 7 đơn theo order_date:",
  "before_cols": ["order_id","order_date"],
  "before_rows": [
    ["ORD_001","2026-06-20"],
@@ -2886,8 +2969,10 @@ ENTRIES = [
    ["ORD_003","2026-06-23"],
    ["ORD_004","2026-06-24"],
    ["ORD_005","2026-06-25"],
+   ["ORD_006","2026-06-23"],
+   ["ORD_007","2027-01-01"],
  ],
- "before_bugs": [],
+ "before_bugs": [6],
  "before_col_widths": [140, 353],
  "sql": (
    "SELECT o.order_id,\n"
@@ -2925,14 +3010,17 @@ ENTRIES = [
      ["ORD_001","2026-06-20","(NULL)"],
      ["ORD_002","2026-06-22",2],
      ["ORD_003","2026-06-23",1],
+     ["ORD_006","2026-06-23",1],
      ["ORD_004","2026-06-24",1],
      ["ORD_005","2026-06-25",1],
+     ["ORD_007","2027-01-01",190],
    ]
  ),
  "result_note":
-   "Dòng thời gian liền mạch: cách nhau 1–2 ngày. Đơn đầu tiên ORD_001 có khoảng cách "
-   "NULL vì không có đơn nào trước. Nếu thấy khoảng cách bất thường (vd 30 ngày, hay nhiều "
-   "đơn cách 0 ngày), đó mới là điểm cần soi.",
+   "ORD_003 và ORD_006 cùng ngày 2026-06-23 — subquery lấy max ngày TRƯỚC 2026-06-23 là 2026-06-22, "
+   "nên cả hai đều cho khoảng cách = 1. Hai đơn cùng ngày là dấu hiệu double-submit (xem Câu 29). "
+   "ORD_007 (2027-01-01) có khoảng cách = 190 ngày — khoảng lặng cực dài, đây là đơn ngày tương lai (xem Câu 34). "
+   "Đơn đầu tiên ORD_001 có khoảng cách NULL vì không có đơn nào trước.",
  "note":
    "Ứng dụng dòng thời gian trong kiểm thử:<br/>"
    "(1) <b>Khoảng lặng dài</b>: hệ thống ngừng nhận đơn — job hoặc API có thể đã chết.<br/>"
@@ -2951,23 +3039,26 @@ ENTRIES = [
  "part": 4, "id": 44,
  "title": "Phát hiện item_id bị nhảy — dấu vết của bản ghi bị xóa",
  "situation":
-   "item_id là khóa chính tự tăng (AUTO_INCREMENT). Nếu dãy số bị nhảy — "
-   "ví dụ tồn tại 1, 2, 4 nhưng không có 3 — có nghĩa là một bản ghi "
-   "đã từng tồn tại và bị xóa. Đây là kỹ thuật audit đơn giản "
-   "để phát hiện dữ liệu bị xóa không có log.",
- "before_label": "Bảng Order_Items — item_id=3 bị thiếu trong dãy 1→9:",
+   "Trên hệ thống thật, item_id thường là khóa chính tự tăng (AUTO_INCREMENT) — cấp số liên tục "
+   "1, 2, 3... Nếu dãy bị nhảy (có 1, 2, 4 nhưng thiếu 3), thường là dấu vết một bản ghi từng tồn "
+   "tại rồi bị xóa. Đây là kỹ thuật audit đơn giản để phát hiện dữ liệu bị xóa mà không để lại log. "
+   "(Trên DB mẫu, gap được tạo sẵn bằng INSERT tường minh để mô phỏng.)",
+ "before_label": "Bảng Order_Items — thiếu item_id 3, 10 và 11 trong dãy 1→14:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1,"1.000.000"],
-   [9,"ORD_005","PROD_002",1,"2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
- "before_bugs": [2],
+ "before_bugs": [2, 8],
  "before_col_widths": [50, 75, 90, 65, 213],
  "sql": (
    "SELECT a.item_id + 1      AS id_bi_mat\n"
@@ -2992,19 +3083,20 @@ ENTRIES = [
     "Kết quả là id <b>bị thiếu</b> — tức là a.item_id + 1."),
  ],
  "explain":
-   "<b>Self-join</b> là kỹ thuật dùng một bảng join với chính nó để phát hiện mối quan hệ "
-   "giữa các dòng trong cùng bảng.<br/>"
-   "Logic: với mỗi item_id=n, kiểm tra xem n+1 có tồn tại không. "
-   "Nếu không → n+1 là gap.<br/>"
-   "item_id=2 tồn tại nhưng item_id=3 không → trả về id_bi_mat=3.<br/>"
-   "item_id=9 là MAX nên không kiểm tra tiếp — 10 không phải gap, chỉ là chưa có.",
+   "Logic của câu: với mỗi item_id = n đang có, kiểm tra xem n+1 có tồn tại không. "
+   "Nếu không có → n+1 chính là một số bị thiếu.<br/>"
+   "Ví dụ: có item_id=2 nhưng không có 3 → báo thiếu 3; có 9 nhưng không có 10 → báo thiếu 10. "
+   "Riêng item_id=14 là số lớn nhất nên không xét tiếp.<br/>"
+   "<b>Điểm mù cần biết:</b> câu chỉ soi được số ngay sau một id ĐANG tồn tại. Số 11 cũng thiếu, "
+   "nhưng vì 10 cũng không có trong bảng nên không có dòng nào để 'nhìn sang' 11 — thành ra 11 bị "
+   "bỏ sót. Nói cách khác, với một khoảng thiếu liên tiếp, câu này chỉ báo số đầu tiên của khoảng.",
  "result_table": (
    ["id_bi_mat"],
-   [[3]],
+   [[3], [10]],
  ),
  "result_note":
-   "item_id=3 bị thiếu trong dãy 1→7. Một item đã từng tồn tại và bị xóa, "
-   "hoặc INSERT thất bại và AUTO_INCREMENT vẫn tiếp tục tăng.",
+   "Query báo 2 số bị thiếu: item_id=3 (giữa 2 và 4) và item_id=10 (giữa 9 và 12). "
+   "Đó là các vị trí từng có bản ghi rồi biến mất — cần đối chiếu audit log để biết vì sao mất.",
  "note":
    "Gap trong AUTO_INCREMENT không phải lúc nào cũng là bug:<br/>"
    "(1) <b>INSERT thất bại</b>: transaction rollback, nhưng AUTO_INCREMENT "
@@ -3019,10 +3111,10 @@ ENTRIES = [
  "part": 4, "id": 45,
  "title": "Phân tích đơn hàng bị hủy — khách nào hay hủy nhất",
  "situation":
-   "Đơn bị hủy không chỉ là vấn đề kinh doanh — còn là tín hiệu kỹ thuật. "
-   "Nếu một khách hàng cụ thể có tỷ lệ hủy cao bất thường, "
-   "có thể luồng thanh toán gặp lỗi chỉ với profile đó, "
-   "hoặc dữ liệu test chưa được dọn sạch sau sprint.",
+   "Đơn bị hủy không chỉ là chuyện kinh doanh — còn là tín hiệu kỹ thuật. "
+   "Nếu một khách cụ thể hủy nhiều đơn bất thường, có thể luồng thanh toán gặp lỗi riêng với "
+   "profile đó, hoặc là dữ liệu test chưa dọn sau sprint. "
+   "Câu này đếm số đơn hủy theo từng khách và xếp ai hủy nhiều nhất lên đầu.",
  "before_label": "Bảng Orders — dòng đỏ: ORD_003 có status = CANCELLED:",
  "before_cols": ["order_id","customer_id","total_amount","status","order_date"],
  "before_rows": [
@@ -3047,21 +3139,20 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Orders o\n  JOIN Customers c\n    ON o.customer_id = c.customer_id",
-    "<b>INNER JOIN</b>: chỉ ghép đơn có customer_id hợp lệ. "
-    "ORD_004 (C999) bị loại khỏi kết quả vì C999 không có trong Customers."),
+    "<b>INNER JOIN</b> lấy tên khách cho mỗi đơn. Đơn mồ côi (customer_id không có trong Customers) "
+    "sẽ bị loại — nhưng ở câu này không ảnh hưởng, vì đơn mồ côi ORD_004 vốn là PENDING nên đã bị "
+    "mệnh đề WHERE lọc trước rồi."),
    ("WHERE o.status = 'CANCELLED'",
-    "Lọc chỉ giữ đơn bị hủy trước khi group."),
+    "Chỉ giữ đơn bị hủy trước khi gom nhóm."),
    ("GROUP BY c.customer_id, c.customer_name\n  ORDER BY so_don_huy DESC",
-    "Gom theo khách hàng và sắp xếp giảm dần — "
-    "khách hủy nhiều nhất lên đầu."),
+    "Gom các đơn hủy về từng khách rồi đếm (COUNT), sắp xếp giảm dần — khách hủy nhiều nhất lên đầu."),
  ],
  "explain":
-   "Kỹ thuật <b>WHERE → GROUP BY → ORDER BY</b> là chuỗi chuẩn để phân tích theo nhóm:<br/>"
-   "(1) WHERE lọc loại đơn cần phân tích trước.<br/>"
-   "(2) GROUP BY gom về từng khách hàng.<br/>"
-   "(3) ORDER BY DESC đặt trường hợp đáng ngờ nhất lên đầu.<br/>"
-   "Data mẫu nhỏ nên chỉ có C001 và C003 có đơn bị hủy — trên production, "
-   "câu này hiệu quả nhất khi chạy kèm HAVING COUNT(*) > N để lọc noise.",
+   "Đây là mẫu <b>đếm-rồi-xếp-hạng trên một tập đã lọc</b>: lọc đúng loại đơn (CANCELLED), gom theo "
+   "khách, đưa ai nhiều nhất lên đầu — dùng được cho mọi câu hỏi 'ai/cái gì nhiều nhất trong nhóm X'.<br/>"
+   "Nhớ rằng kết quả là <b>tín hiệu, không phải kết luận</b>: 1 đơn hủy chưa nói lên gì. Trên data mẫu "
+   "ai cũng chỉ ~1 nên bảng này chưa có ý nghĩa — nó chỉ phát huy trên production đủ lớn, thường kèm "
+   "<b>HAVING COUNT(*) &gt; N</b> để bỏ nhiễu, chỉ giữ khách hủy nhiều đáng ngờ.",
  "result_table": (
    ["customer_id","customer_name","so_don_huy"],
     [
@@ -3071,15 +3162,14 @@ ENTRIES = [
  ),
  "result_note":
    "C001 và C003 mỗi khách hủy 1 đơn (C001 hủy ORD_005, C003 hủy ORD_003). "
-    "Câu này giúp theo dõi và cảnh báo sớm nếu tỷ lệ hủy của khách tăng đột biến.",
+    "Trên production, câu này giúp theo dõi và cảnh báo sớm khi số đơn hủy của một khách tăng đột biến.",
  "note":
-   "Mở rộng câu này để phân tích sâu hơn:<br/>"
-   "(1) Thêm <b>HAVING COUNT(*) > 2</b>: chỉ hiện khách hủy nhiều bất thường.<br/>"
-   "(2) Thêm <b>tỷ lệ</b>: số đơn hủy / tổng số đơn của khách — "
-   "khách có 1 đơn và hủy 1 đơn = 100% hủy, đáng ngờ hơn "
-   "khách có 10 đơn hủy 1.<br/>"
-   "(3) Kết hợp <b>order_date</b>: xem các đơn hủy có tập trung trong "
-   "một khoảng thời gian cụ thể không — có thể liên quan đến release lỗi.",
+   "<b>'Số đơn hủy' khác 'tỷ lệ hủy'.</b> Câu này đếm <b>số</b> đơn hủy — một khách hủy 1/1 đơn "
+   "(100%) và một khách hủy 1/50 đơn (2%) đều hiện so_don_huy = 1. Muốn đo mức bất thường thật, "
+   "phải tính tỷ lệ: số đơn hủy chia tổng đơn của khách đó.<br/>"
+   "Khi thấy khách hủy nhiều, phân biệt trước khi báo bug: hủy <b>tập trung một khoảng thời gian</b> "
+   "→ nghi release lỗi, soi luồng checkout đợt đó; hủy <b>rải đều</b> → có thể là dữ liệu test chưa "
+   "dọn hoặc lỗi UX mãn tính.",
 },
 
 
@@ -3090,23 +3180,25 @@ ENTRIES = [
  "part": 5, "id": 46,
  "title": "Dùng ROW_NUMBER() phát hiện item trùng trong cùng một đơn",
  "situation":
-   "Câu 2 đã phát hiện item trùng bằng GROUP BY + HAVING COUNT(*) > 1 — "
-   "cho biết nhóm nào bị trùng nhưng không chỉ ra dòng nào là bản gốc, dòng nào là bản thừa. "
-   "Câu này dùng <b>window function ROW_NUMBER()</b> để đánh số thứ tự "
-   "từng item trong cùng nhóm (order_id + product_id). "
-   "Bất kỳ item nào có số thứ tự > 1 là bản ghi trùng — "
-   "và ta có thể thấy chính xác item nào là lần xuất hiện đầu tiên, lần nào là trùng.",
+   "Câu 4 tìm được item trùng bằng GROUP BY, nhưng chỉ cho biết <b>nhóm nào</b> bị trùng — không "
+   "chỉ ra <b>dòng nào</b> mới là bản thừa cần xóa. Câu này dùng <b>ROW_NUMBER()</b> để đánh số thứ "
+   "tự cho từng dòng trong mỗi nhóm; dòng nào bị đánh số 2 trở lên chính là bản trùng.<br/>"
+   "ROW_NUMBER() thuộc nhóm <b>window function</b>: khác GROUP BY (gộp nhiều dòng thành một), "
+   "nó giữ nguyên từng dòng và chỉ thêm một cột đánh số bên cạnh.",
  "before_label": "Bảng Order_Items — dòng đỏ: item 1 và item 7 cùng ORD_001/PROD_001:",
  "before_cols": ["item_id","order_id","product_id","quantity","price"],
  "before_rows": [
-   [1,"ORD_001","PROD_001",1,"30.000.000"],
-   [2,"ORD_001","PROD_002",1, "2.000.000"],
-   [4,"ORD_002","PROD_001",1,"30.000.000"],
-   [5,"ORD_002","PROD_004",1, "1.000.000"],
-   [6,"ORD_003","PROD_003",1, "8.000.000"],
-   [7,"ORD_001","PROD_001",1,"30.000.000"],
-   [8,"ORD_005","PROD_004",1, "1.000.000"],
-   [9,"ORD_005","PROD_002",1, "2.000.000"],
+   [1, "ORD_001","PROD_001", 1,"30.000.000"],
+   [2, "ORD_001","PROD_002", 1, "2.000.000"],
+   [4, "ORD_002","PROD_001", 1,"30.000.000"],
+   [5, "ORD_002","PROD_004", 1, "1.000.000"],
+   [6, "ORD_003","PROD_003", 1, "8.000.000"],
+   [7, "ORD_001","PROD_001", 1,"30.000.000"],
+   [8, "ORD_005","PROD_004", 1, "1.000.000"],
+   [9, "ORD_005","PROD_002", 1, "2.000.000"],
+   [12,"ORD_003","PROD_002", 0, "1.500.000"],
+   [13,"ORD_006","PROD_003", 1, "8.000.000"],
+   [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
  "before_bugs": [0, 5],
  "before_col_widths": [50, 75, 90, 65, 213],
@@ -3123,55 +3215,74 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng Order_Items."),
-   ("ROW_NUMBER() OVER (\n  PARTITION BY order_id, product_id\n  ORDER BY item_id)\n  AS so_lan_trong_don",
-    "<b>ROW_NUMBER()</b> là window function — tính toán trên một 'cửa sổ' dữ liệu "
-    "mà không gộp các dòng lại. "
-    "<b>PARTITION BY</b> chia dữ liệu thành nhóm (như GROUP BY nhưng giữ nguyên từng dòng). "
-    "<b>ORDER BY item_id</b> xác định thứ tự đánh số trong mỗi nhóm."),
-   ("ORDER BY order_id,\n  product_id, item_id",
-    "Sắp xếp kết quả để dễ quan sát — "
-    "các item cùng nhóm (order+product) xếp liền nhau."),
+    "Nạp toàn bộ bảng Order_Items — 11 dòng. Window function không lọc bớt dòng nào, "
+    "giữ nguyên tất cả rồi thêm cột đánh số bên cạnh."),
+   ("ROW_NUMBER() OVER ( ... )\n  AS so_lan_trong_don",
+    "<b>ROW_NUMBER()</b> gán một số thứ tự tăng dần (1, 2, 3...) cho từng dòng.<br/>"
+    "Phần <b>OVER (...)</b> khai báo 'cửa sổ' — phạm vi dòng mà hàm nhìn vào để đánh số. "
+    "Nếu để OVER () trống thì cả bảng là một cửa sổ (đánh 1→11); ở đây ta chia nhỏ cửa sổ "
+    "bằng PARTITION BY ngay dưới."),
+   ("PARTITION BY\n  order_id, product_id",
+    "Chia dữ liệu thành từng nhóm theo cặp (đơn + sản phẩm) — giống cách gom của GROUP BY nhưng "
+    "<b>KHÔNG gộp dòng</b>. Mỗi khi sang một nhóm mới (cặp order_id/product_id khác), ROW_NUMBER "
+    "<b>đếm lại từ 1</b>. Nhờ vậy con số cho biết 'đây là lần xuất hiện thứ mấy của cặp này'."),
+   ("ORDER BY item_id\n  (bên trong OVER)",
+    "Trong mỗi nhóm, quyết định dòng nào được số 1: item_id nhỏ hơn xếp trước → nhận số 1 "
+    "(coi là bản gốc), dòng sau nhận số 2 (bản trùng). "
+    "Đây là ORDER BY <b>của cửa sổ</b> — đừng nhầm với ORDER BY sắp xếp kết quả ở cuối câu."),
+   ("ORDER BY order_id,\n  product_id, item_id\n  (cuối câu)",
+    "ORDER BY này chỉ sắp xếp bảng kết quả cho dễ đọc — đưa các dòng cùng nhóm nằm liền nhau. "
+    "Không ảnh hưởng gì đến số ROW_NUMBER đã tính ở trên."),
  ],
  "explain":
-   "<b>Window function</b> khác GROUP BY ở chỗ: GROUP BY gộp nhiều dòng thành 1, "
-   "còn window function giữ nguyên tất cả dòng và thêm một cột tính toán.<br/>"
-   "PARTITION BY order_id, product_id tạo nhóm cho mỗi cặp (đơn hàng + sản phẩm).<br/>"
-   "Trong nhóm ORD_001/PROD_001: item_id=1 được đánh số 1, item_id=7 được đánh số 2.<br/>"
-   "Bất kỳ dòng nào có <b>so_lan_trong_don > 1</b> là bản ghi trùng trong cùng đơn.",
+   "Ý tưởng cốt lõi: con số <b>so_lan_trong_don</b> cho biết mỗi dòng là <b>lần xuất hiện thứ mấy</b> "
+   "của cặp (đơn + sản phẩm). Số <b>1</b> = bản đầu tiên (giữ lại); số <b>2 trở lên</b> = bản lặp (thừa).<br/>"
+   "Nhờ vậy việc dọn trùng trở nên an toàn: chỉ cần xóa các dòng có số &gt; 1, giữ nguyên bản gốc số 1 "
+   "— không sợ xóa nhầm cả cặp.<br/>"
+   "Đó là lợi thế so với Câu 4: Câu 4 chỉ nói 'cặp này bị trùng', còn câu này chỉ thẳng <b>dòng nào</b> "
+   "phải xóa (item 7).",
  "result_table": (
    ["item_id","order_id","product_id","so_lan_trong_don"],
    [
-     [1, "ORD_001","PROD_001", 1],
-     [7, "ORD_001","PROD_001", 2],
-     [2, "ORD_001","PROD_002", 1],
-     [4, "ORD_002","PROD_001", 1],
-     [5, "ORD_002","PROD_004", 1],
-     [6, "ORD_003","PROD_003", 1],
-     [9, "ORD_005","PROD_002", 1],
-     [8, "ORD_005","PROD_004", 1],
+     [1,  "ORD_001","PROD_001", 1],
+     [7,  "ORD_001","PROD_001", 2],
+     [2,  "ORD_001","PROD_002", 1],
+     [4,  "ORD_002","PROD_001", 1],
+     [5,  "ORD_002","PROD_004", 1],
+     [12, "ORD_003","PROD_002", 1],
+     [6,  "ORD_003","PROD_003", 1],
+     [9,  "ORD_005","PROD_002", 1],
+     [8,  "ORD_005","PROD_004", 1],
+     [13, "ORD_006","PROD_003", 1],
+     [14, "ORD_007","PROD_004", 1],
    ]
  ),
  "result_note":
-   "Item_id=7 có so_lan_trong_don=2 — đây là bản ghi trùng của item_id=1 "
-   "trong cùng ORD_001/PROD_001. Lọc WHERE so_lan_trong_don > 1 để chỉ xem bản trùng.",
+   "Item_id=7 có so_lan_trong_don=2 — bản ghi trùng của item_id=1 trong ORD_001/PROD_001. "
+   "11 dòng tổng cộng; chỉ item 7 có số thứ tự > 1 → là bản ghi trùng duy nhất. "
+   "Lọc WHERE so_lan_trong_don > 1 để chỉ xem bản trùng.",
  "note":
-   "Ứng dụng thực tế của ROW_NUMBER() trong QA:<br/>"
-   "(1) <b>Phát hiện trùng</b>: WHERE so_lan > 1 → xem chính xác dòng nào là trùng.<br/>"
-   "(2) <b>Lấy bản ghi mới nhất</b>: PARTITION BY customer_id ORDER BY order_date DESC "
-   "→ lấy dòng số 1 của mỗi khách = đơn mới nhất.<br/>"
-   "(3) <b>Phân trang logic</b>: đánh số thứ tự trong nhóm để lấy top-N mỗi nhóm.<br/>"
-   "ROW_NUMBER yêu cầu MySQL 8.0+. Kiểm tra phiên bản: <b>SELECT VERSION();</b>",
+   "<b>Trước khi xóa các dòng có số &gt; 1, phải chốt 'giữ dòng nào'.</b> ORDER BY trong OVER quyết "
+   "định dòng nào là bản gốc được giữ — ở đây là item_id nhỏ nhất. Nhưng có khi bản mới hơn mới là "
+   "bản đã sửa đúng; hỏi dev/PO quy tắc giữ bản nào trước khi DELETE.<br/>"
+   "<b>Cảnh giác khi cột ORDER BY không duy nhất:</b> nếu các dòng trùng có cùng giá trị ORDER BY, "
+   "dòng nào nhận số 1 là ngẫu nhiên — dễ xóa nhầm dòng cần giữ. Luôn ORDER BY theo một cột xác định "
+   "(id, thời gian tạo).<br/>"
+   "Ngoài bắt trùng, ROW_NUMBER() còn hay dùng để <b>lấy bản ghi mới nhất mỗi nhóm</b> "
+   "(PARTITION BY nhóm, ORDER BY thời gian DESC, giữ dòng số 1) — mẫu rất thường gặp khi kiểm thử báo cáo.<br/>"
+   "Lưu ý: ROW_NUMBER() cần MySQL 8.0+ (kiểm tra: <b>SELECT VERSION();</b>).",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 5, "id": 47,
  "title": "Dùng CTE + RANK() xếp hạng sản phẩm bán chạy",
  "situation":
-   "Kết hợp hai kỹ thuật nâng cao: <b>CTE</b> (Common Table Expression) "
-   "để tính doanh số trung gian, sau đó <b>RANK()</b> để xếp hạng. "
-   "Đây là cách viết SQL rõ ràng hơn nhiều so với subquery lồng nhau — "
-   "đặc biệt hữu ích khi kiểm thử hệ thống báo cáo.",
+   "Gần như báo cáo bán hàng nào cũng có bảng <b>'top sản phẩm bán chạy'</b> — xếp hạng sản phẩm "
+   "theo doanh số từ cao xuống thấp. Câu này dựng đúng bảng đó qua hai bước: trước tiên tính tổng "
+   "doanh số mỗi sản phẩm (dùng <b>CTE</b> đặt tên cho kết quả trung gian), rồi gán thứ hạng bằng "
+   "<b>RANK()</b> — hàm này còn xử lý được cả khi hai sản phẩm bằng doanh số (cùng nhận một hạng). "
+   "QA dựng lại bảng này để kiểm tra xếp hạng trên dashboard có đúng không, và quan trọng hơn: "
+   "con số xếp hạng có bị dữ liệu bẩn thổi phồng không.",
  "before_label": "Bảng Products — PROD_001 xếp hạng 1 nhưng doanh số bị thổi phồng do item trùng:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
@@ -3205,52 +3316,54 @@ ENTRIES = [
    "FROM   doanh_so;"
  ),
  "clauses": [
-   ("WITH doanh_so AS (\n  SELECT ..., SUM(...)\n  FROM Products JOIN Order_Items\n  GROUP BY ...)",
-    "<b>CTE (WITH ... AS)</b>: đặt tên cho một kết quả trung gian. "
-    "Câu SELECT bên trong tính tổng doanh số — giống Câu 22 nhưng "
-    "được đặt tên 'doanh_so' để tái sử dụng bên dưới."),
-   ("RANK() OVER\n  (ORDER BY tong_doanh_so DESC)\n  AS hang",
-    "<b>RANK()</b>: gán số thứ hạng theo thứ tự. "
-    "Khác ROW_NUMBER: nếu hai sản phẩm bằng doanh số, cả hai cùng nhận hạng 1 "
-    "và hạng 2 bị bỏ qua (1, 1, 3...)."),
-   ("FROM doanh_so",
-    "Tham chiếu tới CTE như một bảng thông thường — "
-    "đây là điểm mạnh của CTE: viết một lần, dùng nhiều chỗ."),
+   ("WITH doanh_so AS (\n  SELECT product_id, product_name,\n         SUM(quantity*price)\n           AS tong_doanh_so\n  FROM Products JOIN Order_Items\n  GROUP BY product_id, product_name)",
+    "<b>Cụm 1 — Dựng bảng tạm (CTE):</b> khối WITH tạo một bảng tạm tên <b>doanh_so</b> — mỗi sản "
+    "phẩm một dòng kèm tổng doanh số (giống Câu 22). Đặt tên để dùng lại ở cụm sau."),
+   ("SELECT ...,\n  RANK() OVER (\n    ORDER BY tong_doanh_so DESC)\n    AS hang\nFROM doanh_so",
+    "<b>Cụm 2 — Truy vấn trên bảng tạm:</b> đọc từ doanh_so và thêm cột thứ hạng bằng <b>RANK()</b>. "
+    "RANK khác ROW_NUMBER: nếu hai sản phẩm bằng doanh số, cả hai cùng nhận một hạng và hạng kế bị "
+    "bỏ qua (1, 1, 3...)."),
  ],
  "explain":
-   "<b>CTE</b> giúp viết SQL theo kiểu 'từng bước' thay vì lồng subquery:<br/>"
-   "Bước 1 (WITH): tính tổng doanh số từng sản phẩm → lưu vào 'doanh_so'.<br/>"
-   "Bước 2 (SELECT chính): lấy từ 'doanh_so', thêm cột RANK().<br/>"
-   "PROD_001 xếp hạng 1 với 90M nhưng con số này bị thổi phồng "
-   "do item trùng (Câu 2/46) — doanh số thực chỉ khoảng 60M.",
+   "Kết quả xếp hạng đúng về kỹ thuật, nhưng <b>bảng xếp hạng chỉ đáng tin khi dữ liệu nền sạch</b>:<br/>"
+   "PROD_001 đứng hạng 1 với 90M — nhưng con số này bị thổi phồng do item trùng (Câu 4/46), "
+   "doanh số thực chỉ khoảng 60M.<br/>"
+   "PROD_004 vọt lên hạng 2 với 22M do item 14 có quantity=20 — cần kiểm tra là đơn thật hay dữ liệu "
+   "test chưa dọn.<br/>"
+   "Bài học QA: một 'bảng bán chạy' trông chuyên nghiệp vẫn có thể sai nếu chưa đối soát dữ liệu gốc.",
  "result_table": (
    ["product_id","product_name","tong_doanh_so","hang"],
    [
      ["PROD_001","iPhone 15 Pro Max",        "90.000.000", 1],
-     ["PROD_003","Tai nghe Sony WH-1000XM5", "8.000.000",  2],
-     ["PROD_002","Ban phim co Logitech",     "4.000.000",  3],
-     ["PROD_004","Sac du phong Anker",       "2.000.000",  4],
+     ["PROD_004","Sac du phong Anker",       "22.000.000", 2],
+     ["PROD_003","Tai nghe Sony WH-1000XM5","16.000.000", 3],
+     ["PROD_002","Ban phim co Logitech",     "4.000.000",  4],
    ]
  ),
  "result_note":
    "4 sản phẩm có doanh số (PROD_005, 006, 007 chưa bán). "
-   "PROD_001 dẫn đầu với 90M nhưng bị phóng đại do item_id=7 trùng lặp.",
+   "PROD_001 dẫn đầu 90M (bị phóng đại do item 7 trùng). "
+   "PROD_004 hạng 2 với 22M (do item 14 qty=20). "
+   "PROD_003 hạng 3 với 16M. Xếp hạng này chỉ đáng tin sau khi làm sạch dữ liệu.",
  "note":
-   "Ba loại xếp hạng window function — chọn đúng theo nghiệp vụ:<br/>"
-   "(1) <b>ROW_NUMBER()</b>: luôn số liên tiếp, không cùng hạng — 1, 2, 3, 4.<br/>"
-   "(2) <b>RANK()</b>: cùng điểm = cùng hạng, bỏ hạng tiếp theo — 1, 1, 3, 4.<br/>"
-   "(3) <b>DENSE_RANK()</b>: cùng điểm = cùng hạng, không bỏ hạng — 1, 1, 2, 3.<br/>"
-   "Với báo cáo doanh số, RANK() thường phù hợp hơn ROW_NUMBER().",
+   "Bảng xếp hạng dễ 'trông đúng mà sai': thứ tự có thể chuẩn nhưng con số lại bị dữ liệu bẩn thổi "
+   "phồng — luôn soi cả con số, đừng chỉ soi thứ hạng.<br/>"
+   "Khi hai sản phẩm bằng doanh số, xác nhận với spec: báo cáo muốn <b>RANK()</b> (đồng hạng, bỏ "
+   "hạng kế) hay <b>ROW_NUMBER()</b> (số liên tiếp, không đồng hạng)? Nhìn giao diện không suy ra "
+   "được — phải hỏi.",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 5, "id": 48,
- "title": "Dùng CTE lồng nhau tìm khách chi tiêu trên mức trung bình",
+ "title": "Dùng lại một CTE nhiều lần: tìm khách chi tiêu trên mức trung bình",
  "situation":
-   "Câu 47 dùng CTE một lớp. Câu này đi thêm một bước: "
-   "<b>tái sử dụng CTE trong subquery</b> ngay bên trong câu SELECT chính — "
-   "tính tổng chi tiêu từng khách, rồi lọc những người vượt trung bình "
-   "của chính tập đó. Không dùng CTE, câu này phải viết subquery lồng 3 cấp.",
+   "Nhiều hệ thống cần lọc ra nhóm <b>khách chi tiêu cao hơn mặt bằng</b> — để chăm sóc VIP, mời "
+   "ưu đãi, phân tích khách giá trị. 'Cao hơn mặt bằng' nghĩa là chi nhiều hơn <b>mức trung bình "
+   "của tất cả khách</b>. Câu này làm ba việc: tính tổng chi mỗi khách, lấy trung bình các con số "
+   "đó, rồi giữ lại ai vượt trung bình.<br/>"
+   "Vì mức trung bình phải tính từ chính danh sách vừa dựng, ta đặt tên danh sách đó bằng <b>CTE</b> "
+   "(bảng tạm) để <b>dùng lại hai lần</b> — một lần lấy danh sách, một lần tính trung bình — thay "
+   "vì viết lại phép tính tổng hai lần.",
  "before_label": "Bảng Customers — C001 là khách duy nhất chi tiêu trên mức trung bình COMPLETED:",
  "before_cols": ["customer_id","customer_name","membership_tier","status"],
  "before_rows": [
@@ -3288,21 +3401,26 @@ ENTRIES = [
    "ORDER  BY tong_da_mua DESC;"
  ),
  "clauses": [
-   ("WITH tong_chi AS (\n  ... WHERE status = 'COMPLETED'\n  GROUP BY customer_id ...)",
-    "CTE tính tổng chi tiêu từng khách, chỉ tính đơn COMPLETED. "
-    "Lọc WHERE bên trong CTE — không tính đơn CANCELLED hay PENDING."),
-   ("WHERE tong_da_mua >\n  (SELECT AVG(tong_da_mua)\n   FROM tong_chi)",
-    "Điểm mạnh của CTE: <b>tái sử dụng 'tong_chi' trong subquery</b> "
-    "ngay bên trong mệnh đề WHERE. "
-    "Không CTE, ta phải tính lại toàn bộ GROUP BY một lần nữa trong subquery."),
+   ("WITH tong_chi AS (\n  SELECT customer_id,\n         SUM(total_amount)\n         AS tong_da_mua\n  ... WHERE status='COMPLETED'\n  GROUP BY customer_id)",
+    "<b>Cụm 1 — Dựng bảng tạm (CTE):</b> khối WITH tạo một bảng tạm tên <b>tong_chi</b> — mỗi khách "
+    "một dòng kèm tổng chi tiêu, chỉ tính đơn COMPLETED (bỏ CANCELLED, PENDING). "
+    "Xong cụm này, coi tong_chi như một bảng thật để dùng tiếp."),
+   ("SELECT ... FROM tong_chi      -- lan 1\nWHERE tong_da_mua > (\n  SELECT AVG(tong_da_mua)\n  FROM tong_chi)        -- lan 2",
+    "<b>Cụm 2 — Truy vấn trên bảng tạm:</b> ở đây tong_chi được gọi tên <b>hai lần</b>:<br/>"
+    "• <b>Lần 1</b> (FROM tong_chi ở câu chính): lấy danh sách khách kèm tổng chi.<br/>"
+    "• <b>Lần 2</b> (FROM tong_chi trong subquery): tính mức trung bình để làm ngưỡng so sánh.<br/>"
+    "Câu chỉ giữ khách có tổng chi lớn hơn mức trung bình đó. Định nghĩa CTE một lần, dùng lại hai "
+    "lần — khỏi phải chép lại khối GROUP BY."),
    ("ORDER BY tong_da_mua DESC",
-    "Sắp xếp giảm dần — khách chi nhiều nhất lên đầu."),
+    "Sắp xếp kết quả giảm dần — khách chi nhiều nhất lên đầu."),
  ],
  "explain":
-   "CTE 'tong_chi' được dùng <b>hai lần</b> trong câu lệnh — đây là lý do chính để dùng CTE:<br/>"
-   "(1) FROM tong_chi: lấy danh sách từng khách và tổng chi tiêu.<br/>"
-   "(2) SELECT AVG(tong_da_mua) FROM tong_chi: tính trung bình từ cùng tập đó.<br/>"
-   "Tổng COMPLETED: C001=32M, C002=20M → trung bình = 26M → chỉ C001 (32M) vượt qua.",
+   "Câu này lọc theo một <b>ngưỡng động</b>: mức trung bình được tính ngay từ chính tập dữ liệu, "
+   "không phải con số cố định gõ tay — nên khi dữ liệu đổi, ngưỡng tự đổi theo.<br/>"
+   "Trong data mẫu (chỉ tính đơn COMPLETED): C001 = 32M, C002 = 20M → trung bình = 26M → "
+   "chỉ C001 (32M) vượt, C002 (20M) rớt.<br/>"
+   "Mẫu 'so với trung bình của chính tập' là nền của phân tích outlier — tìm cái bất thường so với "
+   "mặt bằng chung.",
  "result_table": (
    ["customer_id","customer_name","tong_da_mua"],
    [["C001","Nguyen Van A","32.000.000"]],
@@ -3311,22 +3429,23 @@ ENTRIES = [
    "Chỉ C001 (32M) vượt mức trung bình 26M. C002 có 20M < 26M nên bị loại. "
    "Đây là khách VIP tiềm năng — dữ liệu test nên cover luồng upgrade membership.",
  "note":
-   "CTE vs Subquery — khi nào dùng cái nào:<br/>"
-   "(1) <b>Dùng CTE</b> khi cần tái sử dụng kết quả trung gian nhiều lần, "
-   "hoặc khi logic chia thành nhiều bước rõ ràng.<br/>"
-   "(2) <b>Dùng subquery</b> khi logic đơn giản và chỉ dùng một lần.<br/>"
-   "(3) <b>CTE đệ quy</b> (WITH RECURSIVE): dùng cho cấu trúc cây "
-   "(category cha/con, cây tổ chức) — MySQL 8.0+ hỗ trợ.",
+   "'Trên mức trung bình' — trung bình của cái gì? Câu này lấy trung bình của <b>tổng chi từng "
+   "khách</b> (gộp về mỗi khách một số rồi mới tính trung bình), khác với trung bình của <b>từng "
+   "đơn</b>. Hai cách cho hai ngưỡng khác nhau — xác nhận với PO đang cần loại nào.<br/>"
+   "Ngưỡng này còn 'động': thêm/bớt khách là trung bình đổi theo, nên một khách 'trên trung bình' "
+   "hôm nay có thể rớt xuống sau — đừng chốt danh sách VIP cứng từ một lần chạy.",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 5, "id": 49,
  "title": "Tính doanh thu tích lũy theo thời gian với SUM() OVER()",
  "situation":
-   "Báo cáo tài chính thường yêu cầu 'running total' — tổng cộng dồn theo thời gian. "
-   "Không có window function, ta phải dùng self-join hoặc subquery tương quan "
-   "rất phức tạp. <b>SUM() OVER()</b> giải quyết trong một câu lệnh đơn giản, "
-   "và QA dùng nó để kiểm tra xem hệ thống báo cáo có tính đúng không.",
+   "Nhiều báo cáo hiện con số <b>lũy kế</b> — 'tính đến thời điểm này đã cộng được tổng bao nhiêu'. "
+   "Giống cột số dư trên sao kê ngân hàng: mỗi dòng không phải số của riêng nó, mà là tổng dồn "
+   "tất cả các dòng từ đầu đến đó (ngày 1 bán 32M → lũy kế 32M; ngày 2 bán 20M → lũy kế 52M; cứ thế). "
+   "QA gặp con số lũy kế này trên dashboard 'doanh thu từ đầu tháng', biểu đồ tăng trưởng... "
+   "và cần tự tính lại bằng SQL để đối chiếu — lệch là có bug. "
+   "<b>SUM() OVER()</b> là công cụ đẻ ra cột lũy kế đó chỉ trong một câu lệnh.",
  "before_label": "Bảng Orders — doanh thu tích lũy tính theo order_date tăng dần:",
  "before_cols": ["order_id","customer_id","total_amount","status","order_date"],
  "before_rows": [
@@ -3335,6 +3454,8 @@ ENTRIES = [
    ["ORD_003","C003","8.000.000","CANCELLED","2026-06-23"],
    ["ORD_004","C999","5.000.000","PENDING",  "2026-06-24"],
    ["ORD_005","C001","15.000.000","CANCELLED","2026-06-25"],
+   ["ORD_006","C003","8.000.000","PENDING",  "2026-06-23"],
+   ["ORD_007","C001","20.000.000","PENDING",  "2027-01-01"],
  ],
  "before_bugs": [2, 3],
  "before_col_widths": [65, 80, 105, 95, 148],
@@ -3353,58 +3474,70 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Orders",
-    "MySQL tải toàn bộ bảng Orders — tất cả 5 đơn, "
+    "MySQL tải toàn bộ bảng Orders — tất cả 7 đơn, "
     "kể cả CANCELLED và PENDING."),
    ("SUM(total_amount) OVER (\n  ORDER BY order_date\n  ROWS BETWEEN UNBOUNDED\n  PRECEDING AND CURRENT ROW)\n  AS luy_ke",
-    "<b>SUM() OVER()</b>: cộng dồn total_amount theo thứ tự order_date. "
-    "<b>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</b>: "
-    "cửa sổ tính từ dòng đầu tiên đến dòng hiện tại. "
-    "Bản rút gọn SUM(...) OVER (ORDER BY order_date) chỉ cho CÙNG kết quả khi cột "
-    "ORDER BY là duy nhất. Nếu có dòng trùng giá trị (vd nhiều đơn cùng order_date), "
-    "frame mặc định là RANGE — gộp mọi dòng trùng vào cùng một mốc tích lũy, KHÁC với ROWS "
-    "(cộng từng dòng). Viết ROWS tường minh khi cần cộng dồn theo từng dòng."),
+    "<b>SUM() OVER()</b> là kiểu 'tổng chạy dồn': với mỗi đơn, cộng total_amount của nó với mọi đơn "
+    "đứng trước — khác <b>SUM()</b> thường vốn gộp tất cả thành một con số duy nhất.<br/>"
+    "<b>ORDER BY order_date</b> (đặt bên trong OVER) quyết định thứ tự cộng dồn: theo ngày, cũ trước "
+    "mới sau.<br/>"
+    "<b>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</b> là phạm vi cộng — từ dòng đầu tiên "
+    "(<i>UNBOUNDED PRECEDING</i> = không giới hạn về trước) đến dòng đang xét (<i>CURRENT ROW</i>).<br/>"
+    "Có thể viết gọn <b>OVER (ORDER BY order_date)</b>, cùng kết quả khi mỗi ngày chỉ có một đơn. "
+    "Nhưng khi nhiều đơn cùng ngày thì hai kiểu khác nhau:<br/>"
+    "• <b>RANGE</b> (bản gọn ngầm dùng): các đơn cùng ngày bị gộp chung một mốc tích lũy.<br/>"
+    "• <b>ROWS</b> (viết tường minh như trên): cộng lần lượt từng dòng, mỗi đơn một mốc riêng."),
    ("ORDER BY order_date",
     "Sắp xếp kết quả cuối cùng theo ngày — "
     "đảm bảo luy_ke tăng dần theo thời gian khi đọc từ trên xuống."),
  ],
  "explain":
-   "<b>SUM() OVER()</b> tính tổng tích lũy mà không gộp dòng — giữ nguyên từng đơn hàng.<br/>"
-   "ORD_001 (32M) → luy_ke = 32M. "
-   "ORD_002 (20M) → luy_ke = 52M. "
-   "ORD_003 (8M, CANCELLED) → luy_ke = 60M. "
-   "ORD_004 (5M, C999) → luy_ke = 65M.<br/>"
-   "Lưu ý: câu này cộng tất cả đơn kể cả CANCELLED và PENDING — "
-   "luy_ke thực tế (chỉ COMPLETED) là 52M, không phải 65M.",
+   "<b>SUM() OVER()</b> tính tổng tích lũy mà không gộp dòng — khác GROUP BY (gộp tất cả thành một "
+   "con số): window function vừa giữ chi tiết đủ 7 đơn, vừa thêm cột tổng dồn. "
+   "Cách cột luy_ke hình thành — mỗi dòng = số của chính nó cộng lũy kế của dòng ngay trên:",
+ "explain_table": (
+   ["Đơn (theo ngày)", "Bán trong đơn", "Lũy kế = trước + nay"],
+   [
+     ["ORD_001", "32M", "32M"],
+     ["ORD_002", "20M", "52M  (32 + 20)"],
+     ["ORD_003", "8M",  "60M  (52 + 8)"],
+     ["ORD_006", "8M",  "68M  (60 + 8)"],
+     ["ORD_004", "5M",  "73M  (68 + 5)"],
+     ["ORD_005", "15M", "88M  (73 + 15)"],
+     ["ORD_007", "20M", "108M (88 + 20)"],
+   ],
+ ),
  "result_table": (
    ["order_id","customer_id","order_date","total_amount","luy_ke"],
    [
-     ["ORD_001","C001","2026-06-20","32.000.000","32.000.000"],
-     ["ORD_002","C002","2026-06-22","20.000.000","52.000.000"],
-     ["ORD_003","C003","2026-06-23", "8.000.000","60.000.000"],
-     ["ORD_004","C999","2026-06-24", "5.000.000","65.000.000"],
-     ["ORD_005","C001","2026-06-25","15.000.000","80.000.000"],
+     ["ORD_001","C001","2026-06-20","32.000.000", "32.000.000"],
+     ["ORD_002","C002","2026-06-22","20.000.000", "52.000.000"],
+     ["ORD_003","C003","2026-06-23", "8.000.000", "60.000.000"],
+     ["ORD_006","C003","2026-06-23", "8.000.000", "68.000.000"],
+     ["ORD_004","C999","2026-06-24", "5.000.000", "73.000.000"],
+     ["ORD_005","C001","2026-06-25","15.000.000", "88.000.000"],
+     ["ORD_007","C001","2027-01-01","20.000.000","108.000.000"],
    ]
  ),
  "result_note":
-   "luy_ke = 80M nhưng đây là tổng thô gồm cả đơn CANCELLED (ORD_003/8M, ORD_005/15M) "
-   "và đơn lỗi (ORD_004/5M). Doanh thu thực COMPLETED: 52M.",
+   "luy_ke = 108M nhưng đây là tổng thô gồm cả CANCELLED (ORD_003/8M, ORD_005/15M), "
+   "PENDING bất thường (ORD_006 double order/8M, ORD_007 ngày tương lai/20M), "
+   "và orphan (ORD_004/5M). Doanh thu thực COMPLETED: chỉ 52M.",
  "note":
-   "Để tính running total chỉ của đơn COMPLETED:<br/>"
-   "<b>SUM(CASE WHEN status = 'COMPLETED'</b><br/>"
-   "<b>    THEN total_amount ELSE 0 END)</b><br/>"
-   "<b>OVER (ORDER BY order_date) AS luy_ke_thuc</b><br/>"
-   "Kỹ thuật CASE WHEN bên trong window function cho phép "
-   "tính tích lũy có điều kiện mà không cần WHERE lọc trước "
-   "(vì WHERE loại bỏ dòng → mất ORDER BY liên tục theo thời gian).",
+   "Khi kiểm thử báo cáo tích lũy, hỏi spec rõ ngay từ đầu: cộng dồn theo <b>tất cả đơn</b> hay chỉ "
+   "đơn đã hoàn tất? Nếu chỉ tính đơn hoàn tất, thêm <b>WHERE status = 'COMPLETED'</b> trước khi cộng "
+   "dồn — nếu không, tổng dồn sẽ gồm cả đơn hủy và đơn treo, làm sai báo cáo.<br/>"
+   "Với nhiều đơn cùng ngày, kết quả tích lũy còn phụ thuộc cách viết frame ROWS vs RANGE "
+   "(đã giải thích ở phần phân tích mệnh đề bên trên).",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 5, "id": 50,
  "title": "Báo cáo tổng hợp: nhiều loại lỗi trong một câu UNION ALL",
  "situation":
-   "Câu cuối tổng hợp nhiều kiểm tra thành <b>một báo cáo duy nhất</b>: "
-   "email trùng (Câu 6), tồn kho âm (Câu 12), khách hàng ma (Câu 5). "
-   "QA dùng câu này như một 'health check' nhanh — "
+   "Câu cuối gộp nhiều kiểm tra vào <b>một báo cáo duy nhất</b>. Mỗi loại lỗi là một câu SELECT "
+   "riêng — email trùng (Câu 3), tồn kho âm (Câu 14), khách hàng ma (Câu 7) — rồi <b>UNION ALL</b> "
+   "xếp chồng ba kết quả đó lại thành một bảng. QA dùng câu này như một 'health check' nhanh: "
    "chạy một lần, thấy ngay hệ thống đang có bao nhiêu loại lỗi tồn đọng.",
  "before_label": "Bảng Orders (1 trong 3 nguồn lỗi minh hoạ) — câu lệnh quét cả Customers, Products và Orders:",
  "before_cols": ["order_id","customer_id","total_amount","status","order_date"],
@@ -3439,32 +3572,29 @@ ENTRIES = [
    "ORDER  BY loai_loi;"
  ),
  "clauses": [
-   ("SELECT 'Email trung' AS loai_loi,\n  customer_id, 'Customers' AS bang\nFROM Customers WHERE email IN (...)",
-    "Khối 1: tìm email trùng bằng subquery "
-    "(tương tự Câu 6 nhưng nhúng vào đây). "
-    "Cột 'Email trung' là chuỗi cố định — "
-    "giúp phân biệt loại lỗi trong kết quả gộp."),
+   ("FROM Customers\nWHERE email IN (\n  SELECT email FROM Customers\n  GROUP BY email\n  HAVING COUNT(*) > 1)",
+    "<b>Khối 1 — quét &amp; lọc:</b> subquery bên trong tìm các email xuất hiện &gt; 1 lần; câu ngoài "
+    "giữ lại những khách có email nằm trong danh sách trùng đó (kỹ thuật Câu 3; bọc LOWER() như Câu 8 "
+    "nếu muốn an toàn với mọi collation)."),
+   ("SELECT 'Email trung' AS loai_loi,\n  customer_id AS doi_tuong,\n  'Customers' AS bang",
+    "<b>Khối 1 — chiếu kết quả:</b> mỗi dòng gắn một nhãn cố định 'Email trung' + đối tượng "
+    "(customer_id) + tên bảng, để trong báo cáo gộp biết dòng này thuộc loại lỗi gì."),
    ("UNION ALL\nSELECT 'Ton kho am', ...\nUNION ALL\nSELECT 'Khach hang ma', ...",
-    "<b>UNION ALL</b> ghép ba khối SELECT thành một bảng. "
-    "Điều kiện: cùng số cột, kiểu dữ liệu tương thích. "
-    "Dùng UNION ALL thay UNION để không mất dòng trùng — "
-    "các lỗi ở bảng khác nhau không bao giờ trùng. Khối 'Khach hang ma' dùng "
-    "<b>NOT IN</b> — an toàn ở đây vì customer_id là PRIMARY KEY của Customers "
-    "(không thể NULL), nhưng xem lại bẫy NOT IN + NULL đã học ở Câu 9 trước khi tái "
-    "sử dụng pattern này cho cột khác."),
+    "<b>UNION ALL</b> xếp chồng thêm hai khối kiểm tra nữa (tồn kho âm, khách hàng ma) xuống dưới "
+    "khối 1. Điều kiện: cả ba khối <b>cùng số cột</b> và kiểu tương thích. Dùng UNION ALL (không phải "
+    "UNION) để giữ nguyên mọi dòng — nhanh hơn và không vô tình gộp mất dòng."),
    ("ORDER BY loai_loi",
-    "Sắp xếp theo loại lỗi — nhóm các lỗi cùng loại lại gần nhau "
-    "để dễ đọc báo cáo."),
+    "Sắp xếp theo loại lỗi — gom các lỗi cùng loại lại gần nhau để dễ đọc báo cáo."),
  ],
  "explain":
-   "Kết quả có 6 dòng — nhiều hơn dự kiến do một phát hiện bất ngờ:<br/>"
-   "<b>Email trùng: C001, C004, C005, C009</b> — không chỉ C004 và C005.<br/>"
-   "Nguyên nhân: MySQL 8.0+ mặc định so sánh VARCHAR <b>không phân biệt hoa/thường</b> "
-   "(collation utf8mb4_0900_ai_ci). "
-   "'a.nguyen@email.com' (C001) và 'A.NGUYEN@EMAIL.COM' (C009) "
-   "được coi là cùng email → cả hai bị bắt.<br/>"
-   "Đây là bug ẩn mà Câu 6 cũng đã bắt — cần xác nhận lại policy: "
-   "hệ thống có phân biệt hoa thường trong email không?",
+   "Sức mạnh của câu này là <b>gộp nhiều kiểm tra độc lập vào một lần chạy</b>: mỗi khối UNION ALL "
+   "là một câu kiểm tra hoàn chỉnh, không phụ thuộc khối khác — thêm hay bớt một loại lỗi chỉ là "
+   "thêm/bớt một khối, rất dễ biến thành 'bảng theo dõi sức khỏe dữ liệu' chạy định kỳ.<br/>"
+   "Một điểm đáng chú ý ở kết quả: nhóm email bắt <b>4 dòng (C001, C004, C005, C009)</b> thay vì 2 "
+   "như nhìn bằng mắt. Vì MySQL 8.0+ mặc định so sánh chuỗi <b>không phân biệt hoa/thường</b>, "
+   "'a.nguyen@email.com' (C001) và 'A.NGUYEN@EMAIL.COM' (C009) bị coi là cùng một email → cả hai bị bắt. "
+   "Đây là bug ẩn mà Câu 8 cũng phát hiện — cần xác nhận policy: hệ thống có phân biệt hoa/thường "
+   "trong email không?",
  "result_table": (
    ["loai_loi","doi_tuong","bang"],
    [
@@ -3481,41 +3611,38 @@ ENTRIES = [
    "1 đơn mồ côi (ORD_004), 1 tồn kho âm (PROD_003). "
    "Chạy câu này mỗi ngày để theo dõi dữ liệu sạch hay không.",
  "note":
-   "Mở rộng health check: thêm loại lỗi mới bằng cách thêm UNION ALL:<br/>"
-   "<b>UNION ALL</b><br/>"
-   "<b>SELECT 'Gia NULL', product_id, 'Products'</b><br/>"
-   "<b>FROM Products WHERE price IS NULL</b><br/>"
-   "Để báo cáo có thêm cột 'so_luong' đếm bao nhiêu lỗi mỗi loại, "
-   "bọc toàn bộ UNION ALL vào một CTE rồi GROUP BY loai_loi bên ngoài.<br/>"
-   "Khi thêm khối mới dùng <b>NOT IN (subquery)</b> như khối 'Khach hang ma': nếu cột "
-   "trong subquery CÓ thể NULL, đổi sang <b>NOT EXISTS</b> để an toàn tuyệt đối (xem cách "
-   "viết tương đương ở Bài tập 5.2) — đừng dựa vào giả định 'cột này chắc không NULL', vì "
-   "giả định đó có thể đúng hôm nay nhưng sai sau khi schema đổi.",
+   "<b>Bẫy 'sạch giả':</b> nếu một khối kiểm tra bị viết sai điều kiện, nó lặng lẽ trả 0 dòng — cả "
+   "báo cáo trông 'không có lỗi' trong khi thực ra khối đó đã hỏng, không còn bắt được gì. "
+   "Nên chạy thử từng khối riêng ít nhất một lần để chắc nó thật sự phát hiện được lỗi.<br/>"
+   "Khi thêm khối dùng <b>NOT IN (subquery)</b> như 'Khach hang ma': nếu cột trong subquery có thể "
+   "NULL, đổi sang <b>NOT EXISTS</b> — cùng bẫy NULL đã học ở Câu 11, nay ở dạng subquery.",
 },
 
 ]  # end ENTRIES
 
 
 # ===========================================================================
-# EXERCISES — bài tập tự luyện cuối mỗi phần (đáp án ở Phụ lục D)
+# EXERCISES — bài tập tự luyện cuối mỗi phần (đáp án ở Phụ lục B)
 #   part: khớp index PARTS (0..5)
 #   Đáp án đã được verify trên DB nhỏ ecommerce_test.
 # ===========================================================================
 EXERCISES = [
     # ---- PHẦN 1 — Toàn vẹn và trùng lặp ----
     {"part": 0, "code": "1.1",
-     "prompt": "Có những hạng thành viên (membership_tier) nào đang được gán cho "
-               "từ 2 khách trở lên? Đếm mỗi hạng có bao nhiêu khách.",
-     "hint": "GROUP BY membership_tier rồi lọc bằng HAVING COUNT(*) > 1.",
+     "prompt": "Đếm số khách theo từng hạng thành viên (membership_tier) và chỉ ra hạng nào "
+               "nằm NGOÀI danh sách hợp lệ (Standard, Silver, Gold, Platinum).",
+     "hint": "GROUP BY membership_tier để đếm; đối chiếu danh sách hợp lệ như Câu 11.",
      "sql": "SELECT membership_tier,\n"
-            "       COUNT(*) AS so_khach\n"
+            "       COUNT(*) AS so_khach,\n"
+            "       CASE WHEN membership_tier NOT IN\n"
+            "            ('Standard','Silver','Gold','Platinum')\n"
+            "            THEN 'NGOAI DANH SACH' ELSE 'OK' END AS trang_thai\n"
             "FROM   Customers\n"
             "GROUP  BY membership_tier\n"
-            "HAVING COUNT(*) > 1\n"
             "ORDER  BY so_khach DESC;",
-     "answer": "Standard (5), Silver (2), Gold (2). VIP chỉ 1 khách nên bị HAVING loại — "
-               "nhưng VIP vẫn là giá trị sai (Câu 9). HAVING lọc theo SỐ LƯỢNG, "
-               "không phải tính hợp lệ của giá trị."},
+     "answer": "Standard (5), Silver (2), Gold (2), VIP (1). Chỉ VIP bị đánh dấu 'NGOAI DANH SACH' — "
+               "đây mới là giá trị cần điều tra (Bug-H). Đếm theo tier là bình thường; "
+               "điều đáng quan tâm với QA là tier lạ, không phải tier trùng."},
     {"part": 0, "code": "1.2",
      "prompt": "Tìm những khách hàng có customer_name chứa khoảng trắng thừa ở đầu hoặc cuối.",
      "hint": "So sánh customer_name với TRIM(customer_name); khác nhau là có khoảng trắng thừa.",
@@ -3534,10 +3661,12 @@ EXERCISES = [
             "FROM   Order_Items\n"
             "GROUP  BY product_id\n"
             "HAVING COUNT(DISTINCT order_id) > 1;",
-     "answer": "PROD_001, PROD_002, PROD_004 — mỗi sản phẩm nằm trong 2 đơn khác nhau "
-               "(PROD_001: ORD_001+ORD_002; PROD_002: ORD_001+ORD_005; PROD_004: ORD_002+ORD_005). "
-               "Lưu ý COUNT(DISTINCT order_id) khác COUNT(*): PROD_001 có 3 dòng item nhưng item 1 "
-               "và 7 cùng thuộc ORD_001 nên chỉ tính 1 đơn cho lần đó."},
+     "answer": "4 sản phẩm đạt điều kiện: PROD_001 (2 đơn: ORD_001+ORD_002), "
+               "PROD_002 (3 đơn: ORD_001+ORD_003+ORD_005), "
+               "PROD_003 (2 đơn: ORD_003+ORD_006), "
+               "PROD_004 (3 đơn: ORD_002+ORD_005+ORD_007). "
+               "Lưu ý COUNT(DISTINCT order_id) khác COUNT(*): PROD_001 có 3 dòng item "
+               "nhưng item 1 và 7 cùng thuộc ORD_001 — chỉ tính 1 đơn cho lần đó."},
 
     # ---- PHẦN 2 — Ràng buộc nghiệp vụ ----
     {"part": 1, "code": "2.1",
@@ -3549,7 +3678,7 @@ EXERCISES = [
             "FROM   Products\n"
             "WHERE  price > (SELECT AVG(price) FROM Products)\n"
             "ORDER  BY price DESC;",
-     "answer": "PROD_001 (30M) và PROD_003 (8M). Trung bình ≈ 7,4M. Lưu ý: AVG tự bỏ qua "
+     "answer": "PROD_001 (30M) và PROD_003 (8M). Trung bình ≈ 7.4M. Lưu ý: AVG tự bỏ qua "
                "PROD_006 (giá NULL) nên ngưỡng chỉ tính trên 6 sản phẩm có giá."},
     {"part": 1, "code": "2.2",
      "prompt": "Trong các đơn COMPLETED, đơn nào có total_amount KHÁC tổng tiền tính từ Order_Items?",
@@ -3563,7 +3692,7 @@ EXERCISES = [
             "GROUP  BY o.order_id, o.total_amount\n"
             "HAVING SUM(oi.quantity * oi.price) <> o.total_amount;",
      "answer": "ORD_001 (32M vs 62M — item trùng) và ORD_002 (20M vs 31M — Bug-B). ORD_003 "
-               "bị loại vì CANCELLED. Đây là Câu 11 thu hẹp vào đơn đã hoàn tất — nơi sai số "
+               "bị loại vì CANCELLED. Đây là Câu 13 thu hẹp vào đơn đã hoàn tất — nơi sai số "
                "gây hậu quả tài chính thật."},
     {"part": 1, "code": "2.3",
      "prompt": "Sản phẩm nào CHƯA từng được bán nhưng vẫn còn tồn kho lớn hơn 0?",
@@ -3578,6 +3707,18 @@ EXERCISES = [
             "  AND  p.stock > 0;",
      "answer": "PROD_005 (30) và PROD_006 (10). PROD_007 bị loại vì stock = NULL — so sánh "
                "'NULL > 0' cho UNKNOWN, không phải TRUE. Đây là lý do hàng tồn 'tàng hình' dễ bị bỏ sót."},
+    {"part": 1, "code": "2.4",
+     "prompt": "Tìm tất cả sản phẩm có giá (price) bằng NULL hoặc bằng 0.",
+     "hint": "Dùng IS NULL để bắt giá chưa nhập và <= 0 để bắt giá không hợp lệ — kết hợp bằng OR.",
+     "sql": "SELECT product_id,\n"
+            "       product_name,\n"
+            "       price\n"
+            "FROM   Products\n"
+            "WHERE  price IS NULL\n"
+            "    OR price <= 0;",
+     "answer": "Chỉ PROD_006 (Loa Bluetooth JBL, price = NULL) khớp; trong data mẫu không sản phẩm "
+               "nào có price ≤ 0. Tương tự Câu 14 nhưng áp cho cột price thay vì stock: "
+               "NULL = chưa nhập giá; ≤ 0 = giá âm hoặc miễn phí ngoài ý muốn."},
 
     # ---- PHẦN 3 — Đối soát và tính toán ----
     {"part": 2, "code": "3.1",
@@ -3589,8 +3730,10 @@ EXERCISES = [
             "JOIN   Order_Items oi ON o.order_id = oi.order_id\n"
             "GROUP  BY o.order_id\n"
             "ORDER  BY doanh_thu DESC;",
-     "answer": "ORD_001 = 62M · ORD_002 = 31M · ORD_003 = 8M. ORD_001 = 62M (bị item trùng "
-               "thổi phồng) so với total_amount ghi 32M — luôn đối soát hai con số này (Câu 11)."},
+     "answer": "6 đơn có item (ORD_004 rỗng nên không hiện): "
+               "ORD_001=62M · ORD_002=31M · ORD_007=20M · ORD_003=8M · ORD_006=8M · ORD_005=3M. "
+               "ORD_001 đứng đầu nhưng bị thổi phồng do item trùng (62M vs total_amount ghi 32M) — "
+               "luôn đối soát hai con số này (Câu 13)."},
     {"part": 2, "code": "3.2",
      "prompt": "Mỗi danh mục (category) có bao nhiêu sản phẩm, kể cả sản phẩm chưa bán?",
      "hint": "Đếm trực tiếp trên bảng Products (không JOIN Order_Items), GROUP BY category.",
@@ -3616,8 +3759,9 @@ EXERCISES = [
             "           FROM   Orders o2\n"
             "           JOIN   Customers c2 ON o2.customer_id = c2.customer_id\n"
             "           GROUP  BY o2.customer_id) x);",
-     "answer": "C001 (47M). Trung bình ba khách có đơn = 25M ((47+20+8)/3); chỉ C001 vượt. Mẫu "
-               "'so với trung bình của chính tập' là nền của phân tích outlier — Câu 48 dùng CTE "
+     "answer": "C001 (67M). Trung bình ba khách có đơn ≈ 34.3M ((67+20+16)/3); chỉ C001 vượt. "
+               "C001 có 3 đơn (ORD_001+ORD_005+ORD_007=67M), C003 có 2 đơn (ORD_003+ORD_006=16M). "
+               "Mẫu 'so với trung bình của chính tập' là nền của phân tích outlier — Câu 48 dùng CTE "
                "để viết gọn hơn (lưu ý: Câu 48 chỉ tính đơn COMPLETED nên số khác bài này)."},
 
     # ---- PHẦN 4 — Biên và dữ liệu bất thường ----
@@ -3642,7 +3786,7 @@ EXERCISES = [
             "FROM   Customers\n"
             "WHERE  customer_name REGEXP '[0-9]';",
      "answer": "C009 ('Nguyen Van A (2)'). Tên người thật hiếm khi có chữ số; '(2)' là dấu hiệu "
-               "dữ liệu được thêm để né ràng buộc trùng tên (Câu 31)."},
+               "tài khoản nhân bản hoặc dữ liệu test được đánh số thủ công (Câu 31)."},
     {"part": 3, "code": "4.3",
      "prompt": "Tìm các tên sản phẩm bị trùng sau khi chuẩn hóa (bỏ khoảng trắng + đưa về chữ thường).",
      "hint": "GROUP BY LOWER(TRIM(product_name)) rồi HAVING COUNT(*) > 1.",
@@ -3656,27 +3800,31 @@ EXERCISES = [
 
     # ---- PHẦN 5 — Audit, log và dấu vết ----
     {"part": 4, "code": "5.1",
-     "prompt": "Dùng NOT EXISTS để liệt kê sản phẩm chưa bao giờ xuất hiện trong Order_Items.",
-     "hint": "WHERE NOT EXISTS (SELECT 1 FROM Order_Items WHERE product_id khớp).",
-     "sql": "SELECT p.product_id,\n"
-            "       p.product_name\n"
-            "FROM   Products p\n"
-            "WHERE  NOT EXISTS (\n"
-            "         SELECT 1 FROM Order_Items oi\n"
-            "         WHERE oi.product_id = p.product_id);",
-     "answer": "PROD_005, PROD_006, PROD_007. Kết quả giống Câu 16 (LEFT JOIN + IS NULL) nhưng "
-               "NOT EXISTS an toàn hơn khi khóa có thể NULL (xem bẫy NOT IN ở Câu 9)."},
+     "prompt": "Liệt kê các đơn đã bị xóa mềm (deleted_at có giá trị) kèm số ngày từ lúc đặt "
+               "đến lúc xóa (DATEDIFF) — đơn 'sống' quá ngắn là dấu vết đáng soi.",
+     "hint": "WHERE deleted_at IS NOT NULL; dùng DATEDIFF(deleted_at, order_date).",
+     "sql": "SELECT order_id,\n"
+            "       order_date,\n"
+            "       deleted_at,\n"
+            "       DATEDIFF(deleted_at, order_date) AS ngay_ton_tai\n"
+            "FROM   Orders\n"
+            "WHERE  deleted_at IS NOT NULL;",
+     "answer": "ORD_005 — đặt và xóa cùng ngày 2026-06-25 → ngay_ton_tai = 0. Đơn bị hủy ngay "
+               "trong ngày thường là đặt nhầm, test, hoặc thao tác gian lận — dấu vết audit "
+               "cần đối chiếu với log thao tác."},
     {"part": 4, "code": "5.2",
-     "prompt": "Dùng NOT EXISTS tìm đơn hàng trỏ tới khách hàng không tồn tại trong Customers.",
-     "hint": "Orders mà NOT EXISTS một khách có customer_id tương ứng.",
-     "sql": "SELECT o.order_id,\n"
-            "       o.customer_id\n"
-            "FROM   Orders o\n"
-            "WHERE  NOT EXISTS (\n"
-            "         SELECT 1 FROM Customers c\n"
-            "         WHERE c.customer_id = o.customer_id);",
-     "answer": "ORD_004 / C999 (đơn mồ côi). Cùng kết quả Câu 5 (LEFT JOIN + IS NULL) nhưng "
-               "viết bằng NOT EXISTS — QA cần đọc được cả hai cách trong dự án thật."},
+     "prompt": "Tìm các item vẫn còn trong Order_Items nhưng thuộc đơn hàng đã bị xóa mềm "
+               "(deleted_at IS NOT NULL) — dấu vết dọn dẹp không triệt để.",
+     "hint": "JOIN Order_Items với Orders, lọc WHERE o.deleted_at IS NOT NULL.",
+     "sql": "SELECT oi.item_id,\n"
+            "       oi.order_id,\n"
+            "       oi.product_id\n"
+            "FROM   Order_Items oi\n"
+            "JOIN   Orders o ON oi.order_id = o.order_id\n"
+            "WHERE  o.deleted_at IS NOT NULL;",
+     "answer": "Item 8 (PROD_004) và item 9 (PROD_002) — cả hai thuộc ORD_005 đã xóa mềm nhưng "
+               "item chưa được dọn. Nếu báo cáo doanh số tính thẳng từ Order_Items mà không JOIN "
+               "sang Orders để lọc deleted_at, hai item này vẫn bị cộng vào — đúng mẫu rò rỉ ở Câu 40."},
 
     # ---- PHẦN 6 — Truy vấn nâng cao cho QA ----
     {"part": 5, "code": "6.1",
@@ -3688,9 +3836,9 @@ EXERCISES = [
             "         ORDER BY SUM(quantity * price) DESC) AS hang\n"
             "FROM   Order_Items\n"
             "GROUP  BY product_id;",
-     "answer": "PROD_001 90M (hạng 1) · PROD_003 8M (2) · PROD_002 2M (3) · PROD_004 1M (4). "
+     "answer": "PROD_001 90M (hạng 1) · PROD_004 22M (hạng 2) · PROD_003 16M (hạng 3) · PROD_002 4M (hạng 4). "
                "Xếp hạng đúng kỹ thuật nhưng 90M của PROD_001 bị thổi phồng do item trùng — "
-               "dữ liệu nền vẫn bẩn (Câu 47)."},
+               "dữ liệu nền vẫn bẩn (Câu 47). PROD_002 chỉ 4M vì item 12 có quantity=0 (không đóng góp doanh số)."},
     {"part": 5, "code": "6.2",
      "prompt": "Dùng UNION ALL tạo báo cáo đếm nhanh: bao nhiêu khách lỗi email, "
                "bao nhiêu sản phẩm giá NULL, bao nhiêu đơn mồ côi.",

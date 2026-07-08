@@ -559,17 +559,17 @@ ORDER  BY tong_chi_tieu DESC;
 Columns: `['customer_id', 'customer_name', 'so_don', 'tong_chi_tieu']`
 Rows:
 ```python
-  ['C001', 'Nguyen Van A', 2, '47.000.000']
+  ['C001', 'Nguyen Van A', 3, '67.000.000']
   ['C002', 'Tran Van B', 1, '20.000.000']
-  ['C003', 'Le Thi C', 1, '8.000.000']
+  ['C003', 'Le Thi C', 2, '16.000.000']
 ```
 #### Actual Database Output:
 Columns: `['customer_id', 'customer_name', 'so_don', 'tong_chi_tieu']`
 Rows:
 ```python
-  ['C001', 'Nguyen Van A', 2, Decimal('47000000.00')]
+  ['C001', 'Nguyen Van A', 3, Decimal('67000000.00')]
   ['C002', 'Tran Van B', 1, Decimal('20000000.00')]
-  ['C003', 'Le Thi C', 1, Decimal('8000000.00')]
+  ['C003', 'Le Thi C', 2, Decimal('16000000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -589,13 +589,15 @@ HAVING SUM(oi.quantity) > p.stock;
 Columns: `['product_id', 'product_name', 'stock', 'tong_da_ban']`
 Rows:
 ```python
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, 1]
+  ['PROD_004', 'Sac du phong Anker', 20, 22]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, 2]
 ```
 #### Actual Database Output:
 Columns: `['product_id', 'product_name', 'stock', 'tong_da_ban']`
 Rows:
 ```python
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, Decimal('1')]
+  ['PROD_004', 'Sac du phong Anker', 20, Decimal('22')]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, Decimal('2')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -616,8 +618,10 @@ Rows:
 ```python
   ['ORD_001', 3, 3, '62.000.000']
   ['ORD_002', 2, 2, '31.000.000']
-  ['ORD_003', 1, 1, '8.000.000']
+  ['ORD_003', 2, 1, '8.000.000']
   ['ORD_005', 2, 2, '3.000.000']
+  ['ORD_006', 1, 1, '8.000.000']
+  ['ORD_007', 1, 20, '20.000.000']
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'so_dong_items', 'tong_so_luong', 'doanh_thu_thuc']`
@@ -625,8 +629,10 @@ Rows:
 ```python
   ['ORD_001', 3, Decimal('3'), Decimal('62000000.00')]
   ['ORD_002', 2, Decimal('2'), Decimal('31000000.00')]
-  ['ORD_003', 1, Decimal('1'), Decimal('8000000.00')]
+  ['ORD_003', 2, Decimal('1'), Decimal('8000000.00')]
   ['ORD_005', 2, Decimal('2'), Decimal('3000000.00')]
+  ['ORD_006', 1, Decimal('1'), Decimal('8000000.00')]
+  ['ORD_007', 1, Decimal('20'), Decimal('20000000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -648,18 +654,18 @@ Columns: `['product_id', 'product_name', 'tong_so_luong', 'tong_doanh_so']`
 Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', 3, '90.000.000']
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', 1, '8.000.000']
+  ['PROD_004', 'Sac du phong Anker', 22, '22.000.000']
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', 2, '16.000.000']
   ['PROD_002', 'Ban phim co Logitech', 2, '4.000.000']
-  ['PROD_004', 'Sac du phong Anker', 2, '2.000.000']
 ```
 #### Actual Database Output:
 Columns: `['product_id', 'product_name', 'tong_so_luong', 'tong_doanh_so']`
 Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', Decimal('3'), Decimal('90000000.00')]
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', Decimal('1'), Decimal('8000000.00')]
+  ['PROD_004', 'Sac du phong Anker', Decimal('22'), Decimal('22000000.00')]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', Decimal('2'), Decimal('16000000.00')]
   ['PROD_002', 'Ban phim co Logitech', Decimal('2'), Decimal('4000000.00')]
-  ['PROD_004', 'Sac du phong Anker', Decimal('2'), Decimal('2000000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -717,11 +723,13 @@ WHERE  oi.price <> p.price;
 Columns: `['order_id', 'product_id', 'gia_luc_ban', 'gia_hien_tai', 'chenh_lech']`
 Rows:
 ```python
+  ['ORD_003', 'PROD_002', '1.500.000', '2.000.000', '-500.000']
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'product_id', 'gia_luc_ban', 'gia_hien_tai', 'chenh_lech']`
 Rows:
 ```python
+  ['ORD_003', 'PROD_002', Decimal('1500000.00'), Decimal('2000000.00'), Decimal('-500000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -770,17 +778,17 @@ ORDER  BY so_don DESC;
 Columns: `['status', 'so_don', 'phan_tram']`
 Rows:
 ```python
-  ['COMPLETED', 2, '40.0']
-  ['CANCELLED', 2, '40.0']
-  ['PENDING', 1, '20.0']
+  ['PENDING', 3, '42.9']
+  ['COMPLETED', 2, '28.6']
+  ['CANCELLED', 2, '28.6']
 ```
 #### Actual Database Output:
 Columns: `['status', 'so_don', 'phan_tram']`
 Rows:
 ```python
-  ['COMPLETED', 2, Decimal('40.0')]
-  ['CANCELLED', 2, Decimal('40.0')]
-  ['PENDING', 1, Decimal('20.0')]
+  ['PENDING', 3, Decimal('42.9')]
+  ['COMPLETED', 2, Decimal('28.6')]
+  ['CANCELLED', 2, Decimal('28.6')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -802,14 +810,14 @@ Columns: `['category', 'so_don_co_sp', 'tong_so_luong', 'tong_doanh_so']`
 Rows:
 ```python
   ['Dien thoai', 2, 3, '90.000.000']
-  ['Phu kien', 4, 5, '14.000.000']
+  ['Phu kien', 6, 26, '42.000.000']
 ```
 #### Actual Database Output:
 Columns: `['category', 'so_don_co_sp', 'tong_so_luong', 'tong_doanh_so']`
 Rows:
 ```python
   ['Dien thoai', 2, Decimal('3'), Decimal('90000000.00')]
-  ['Phu kien', 4, Decimal('5'), Decimal('14000000.00')]
+  ['Phu kien', 6, Decimal('26'), Decimal('42000000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -835,8 +843,8 @@ Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', 50, 3, 53]
   ['PROD_002', 'Ban phim co Logitech', 100, 2, 102]
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, 1, -4]
-  ['PROD_004', 'Sac du phong Anker', 20, 2, 22]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, 2, -3]
+  ['PROD_004', 'Sac du phong Anker', 20, 22, 42]
   ['PROD_005', 'Ban phim co Logitech', 30, 0, 30]
   ['PROD_006', 'Loa Bluetooth JBL', 10, 0, 10]
   ['PROD_007', 'Chuot gaming Razer', '(NULL)', 0, '(NULL)']
@@ -847,8 +855,8 @@ Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', 50, Decimal('3'), Decimal('53')]
   ['PROD_002', 'Ban phim co Logitech', 100, Decimal('2'), Decimal('102')]
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, Decimal('1'), Decimal('-4')]
-  ['PROD_004', 'Sac du phong Anker', 20, Decimal('2'), Decimal('22')]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', -5, Decimal('2'), Decimal('-3')]
+  ['PROD_004', 'Sac du phong Anker', 20, Decimal('22'), Decimal('42')]
   ['PROD_005', 'Ban phim co Logitech', 30, Decimal('0'), Decimal('30')]
   ['PROD_006', 'Loa Bluetooth JBL', 10, Decimal('0'), Decimal('10')]
   ['PROD_007', 'Chuot gaming Razer', None, Decimal('0'), None]
@@ -870,11 +878,13 @@ HAVING COUNT(*) > 1;
 Columns: `['customer_id', 'total_amount', 'order_date', 'so_lan']`
 Rows:
 ```python
+  ['C003', '8.000.000', '2026-06-23', 2]
 ```
 #### Actual Database Output:
 Columns: `['customer_id', 'total_amount', 'order_date', 'so_lan']`
 Rows:
 ```python
+  ['C003', Decimal('8000000.00'), datetime.date(2026, 6, 23), 2]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -969,11 +979,13 @@ WHERE  quantity <= 0
 Columns: `['item_id', 'order_id', 'product_id', 'quantity']`
 Rows:
 ```python
+  [12, 'ORD_003', 'PROD_002', 0]
 ```
 #### Actual Database Output:
 Columns: `['item_id', 'order_id', 'product_id', 'quantity']`
 Rows:
 ```python
+  [12, 'ORD_003', 'PROD_002', 0]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -991,11 +1003,13 @@ WHERE  order_date > CURDATE()
 Columns: `['order_id', 'customer_id', 'order_date']`
 Rows:
 ```python
+  ['ORD_007', 'C001', '2027-01-01']
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'customer_id', 'order_date']`
 Rows:
 ```python
+  ['ORD_007', 'C001', datetime.date(2027, 1, 1)]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -1215,12 +1229,14 @@ ORDER  BY so_ngay_ton_dong DESC;
 Columns: `['order_id', 'customer_id', 'status', 'order_date', 'so_ngay_ton_dong']`
 Rows:
 ```python
+  ['ORD_006', 'C003', 'PENDING', '2026-06-23', 7]
   ['ORD_004', 'C999', 'PENDING', '2026-06-24', 6]
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'customer_id', 'status', 'order_date', 'so_ngay_ton_dong']`
 Rows:
 ```python
+  ['ORD_006', 'C003', 'PENDING', datetime.date(2026, 6, 23), 7]
   ['ORD_004', 'C999', 'PENDING', datetime.date(2026, 6, 24), 6]
 ```
 **Verification status**: ✅ MATCH
@@ -1246,8 +1262,10 @@ Rows:
   ['ORD_001', '2026-06-20', '(NULL)']
   ['ORD_002', '2026-06-22', 2]
   ['ORD_003', '2026-06-23', 1]
+  ['ORD_006', '2026-06-23', 1]
   ['ORD_004', '2026-06-24', 1]
   ['ORD_005', '2026-06-25', 1]
+  ['ORD_007', '2027-01-01', 190]
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'order_date', 'ngay_ke_tu_don_truoc']`
@@ -1256,8 +1274,10 @@ Rows:
   ['ORD_001', datetime.date(2026, 6, 20), None]
   ['ORD_002', datetime.date(2026, 6, 22), 2]
   ['ORD_003', datetime.date(2026, 6, 23), 1]
+  ['ORD_006', datetime.date(2026, 6, 23), 1]
   ['ORD_004', datetime.date(2026, 6, 24), 1]
   ['ORD_005', datetime.date(2026, 6, 25), 1]
+  ['ORD_007', datetime.date(2027, 1, 1), 190]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -1278,12 +1298,14 @@ Columns: `['id_bi_mat']`
 Rows:
 ```python
   [3]
+  [10]
 ```
 #### Actual Database Output:
 Columns: `['id_bi_mat']`
 Rows:
 ```python
   [3]
+  [10]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -1338,9 +1360,12 @@ Rows:
   [2, 'ORD_001', 'PROD_002', 1]
   [4, 'ORD_002', 'PROD_001', 1]
   [5, 'ORD_002', 'PROD_004', 1]
+  [12, 'ORD_003', 'PROD_002', 1]
   [6, 'ORD_003', 'PROD_003', 1]
   [9, 'ORD_005', 'PROD_002', 1]
   [8, 'ORD_005', 'PROD_004', 1]
+  [13, 'ORD_006', 'PROD_003', 1]
+  [14, 'ORD_007', 'PROD_004', 1]
 ```
 #### Actual Database Output:
 Columns: `['item_id', 'order_id', 'product_id', 'so_lan_trong_don']`
@@ -1351,9 +1376,12 @@ Rows:
   [2, 'ORD_001', 'PROD_002', 1]
   [4, 'ORD_002', 'PROD_001', 1]
   [5, 'ORD_002', 'PROD_004', 1]
+  [12, 'ORD_003', 'PROD_002', 1]
   [6, 'ORD_003', 'PROD_003', 1]
   [9, 'ORD_005', 'PROD_002', 1]
   [8, 'ORD_005', 'PROD_004', 1]
+  [13, 'ORD_006', 'PROD_003', 1]
+  [14, 'ORD_007', 'PROD_004', 1]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -1383,18 +1411,18 @@ Columns: `['product_id', 'product_name', 'tong_doanh_so', 'hang']`
 Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', '90.000.000', 1]
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', '8.000.000', 2]
-  ['PROD_002', 'Ban phim co Logitech', '4.000.000', 3]
-  ['PROD_004', 'Sac du phong Anker', '2.000.000', 4]
+  ['PROD_004', 'Sac du phong Anker', '22.000.000', 2]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', '16.000.000', 3]
+  ['PROD_002', 'Ban phim co Logitech', '4.000.000', 4]
 ```
 #### Actual Database Output:
 Columns: `['product_id', 'product_name', 'tong_doanh_so', 'hang']`
 Rows:
 ```python
   ['PROD_001', 'iPhone 15 Pro Max', Decimal('90000000.00'), 1]
-  ['PROD_003', 'Tai nghe Sony WH-1000XM5', Decimal('8000000.00'), 2]
-  ['PROD_002', 'Ban phim co Logitech', Decimal('4000000.00'), 3]
-  ['PROD_004', 'Sac du phong Anker', Decimal('2000000.00'), 4]
+  ['PROD_004', 'Sac du phong Anker', Decimal('22000000.00'), 2]
+  ['PROD_003', 'Tai nghe Sony WH-1000XM5', Decimal('16000000.00'), 3]
+  ['PROD_002', 'Ban phim co Logitech', Decimal('4000000.00'), 4]
 ```
 **Verification status**: ✅ MATCH
 ---
@@ -1456,8 +1484,10 @@ Rows:
   ['ORD_001', 'C001', '2026-06-20', '32.000.000', '32.000.000']
   ['ORD_002', 'C002', '2026-06-22', '20.000.000', '52.000.000']
   ['ORD_003', 'C003', '2026-06-23', '8.000.000', '60.000.000']
-  ['ORD_004', 'C999', '2026-06-24', '5.000.000', '65.000.000']
-  ['ORD_005', 'C001', '2026-06-25', '15.000.000', '80.000.000']
+  ['ORD_006', 'C003', '2026-06-23', '8.000.000', '68.000.000']
+  ['ORD_004', 'C999', '2026-06-24', '5.000.000', '73.000.000']
+  ['ORD_005', 'C001', '2026-06-25', '15.000.000', '88.000.000']
+  ['ORD_007', 'C001', '2027-01-01', '20.000.000', '108.000.000']
 ```
 #### Actual Database Output:
 Columns: `['order_id', 'customer_id', 'order_date', 'total_amount', 'luy_ke']`
@@ -1466,8 +1496,10 @@ Rows:
   ['ORD_001', 'C001', datetime.date(2026, 6, 20), Decimal('32000000.00'), Decimal('32000000.00')]
   ['ORD_002', 'C002', datetime.date(2026, 6, 22), Decimal('20000000.00'), Decimal('52000000.00')]
   ['ORD_003', 'C003', datetime.date(2026, 6, 23), Decimal('8000000.00'), Decimal('60000000.00')]
-  ['ORD_004', 'C999', datetime.date(2026, 6, 24), Decimal('5000000.00'), Decimal('65000000.00')]
-  ['ORD_005', 'C001', datetime.date(2026, 6, 25), Decimal('15000000.00'), Decimal('80000000.00')]
+  ['ORD_006', 'C003', datetime.date(2026, 6, 23), Decimal('8000000.00'), Decimal('68000000.00')]
+  ['ORD_004', 'C999', datetime.date(2026, 6, 24), Decimal('5000000.00'), Decimal('73000000.00')]
+  ['ORD_005', 'C001', datetime.date(2026, 6, 25), Decimal('15000000.00'), Decimal('88000000.00')]
+  ['ORD_007', 'C001', datetime.date(2027, 1, 1), Decimal('20000000.00'), Decimal('108000000.00')]
 ```
 **Verification status**: ✅ MATCH
 ---
