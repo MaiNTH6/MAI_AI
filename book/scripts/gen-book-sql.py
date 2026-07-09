@@ -728,11 +728,6 @@ def _build_pass(out_path):
         "→ nhấn <b>Ctrl+Shift+Enter</b>.",
         S("normal", fontName="Arial", fontSize=9.5, textColor=colors.HexColor("#374151"))))
     story.append(Paragraph(
-        "<b>Chạy bằng CLI:</b>  "
-        "mysql -u root -p &lt; ecommerce_test_setup.sql",
-        S("normal", fontName="Arial", fontSize=9.5, textColor=colors.HexColor("#374151"),
-          spaceBefore=3)))
-    story.append(Paragraph(
         "Script tự xóa và tạo lại data mỗi lần chạy — tiện để reset sau khi thực hành.",
         S("normal", fontName="Arial", fontSize=9, textColor=colors.HexColor("#6b7280"),
           spaceBefore=4)))
