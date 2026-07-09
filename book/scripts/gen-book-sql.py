@@ -738,9 +738,9 @@ def _build_pass(out_path):
           spaceBefore=4)))
     story.append(Spacer(1, 6))
     story.append(color_box("PHIÊN BẢN MYSQL",
-        "Khuyến nghị <b>MySQL 8.0 trở lên</b>. Câu 1-45 chạy được trên MySQL 5.7, "
-        "nhưng PHẦN 6 (Câu 46-50) dùng window function và CTE — hai tính năng chỉ có "
-        "từ MySQL 8.0. Kiểm tra phiên bản đang dùng: "
+        "Khuyến nghị <b>MySQL 8.0 trở lên</b>. Chỉ <b>Câu 46-49</b> (PHẦN 6) cần MySQL 8.0 "
+        "vì dùng window function và CTE; các câu còn lại — kể cả Câu 50 (UNION ALL) — chạy "
+        "được cả trên MySQL 5.7. Kiểm tra phiên bản đang dùng: "
         "<font face='Mono' size='8.5'>SELECT VERSION();</font>",
         LAMBER, AMBER, colors.HexColor("#b45309")))
     story.append(Spacer(1, 8))

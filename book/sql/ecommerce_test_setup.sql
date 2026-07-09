@@ -13,8 +13,8 @@
 --  YÊU CẦU
 --  -------
 --  - Khuyến nghị MySQL 8.0+ (hoặc MariaDB 10.3+).
---    Câu 1-45 chạy được trên MySQL 5.7; riêng PHẦN 6 (Câu 46-50)
---    dùng window function và CTE nên cần MySQL 8.0 trở lên.
+--    Chỉ Câu 46-49 (PHẦN 6) cần MySQL 8.0 vì dùng window function và CTE;
+--    các câu còn lại — kể cả Câu 50 (UNION ALL) — chạy được trên MySQL 5.7.
 --  - Tài khoản có quyền CREATE DATABASE, CREATE TABLE, INSERT
 --
 --  CÁCH CHẠY — MySQL Workbench
