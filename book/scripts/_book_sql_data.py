@@ -638,6 +638,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "2.000.000", "30"],
    ["PROD_006","Loa Bluetooth JBL",        "(NULL)",    "10"],
    ["PROD_007","Chuot gaming Razer",       "1.500.000", "(NULL)"],
+   ["PROD_008","ban phim co logitech",     "2.000.000", "25"],
  ],
  "before_bugs": [5, 6],
  "before_col_widths": [65, 220, 108, 100],
@@ -696,6 +697,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000", "30"],
    ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",    "10"],
    ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000", "(NULL)"],
+   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", "25"],
  ],
  "before_bugs": [4],
  "before_col_widths": [58, 175, 75, 95, 90],
@@ -729,7 +731,9 @@ ENTRIES = [
  "result_note":
    "PROD_002 và PROD_005 trùng tên + giá nhưng có product_id khác nhau — "
    "hệ thống đang có hai bản ghi cho cùng một sản phẩm. "
-   "Cần xác định bản nào có đơn hàng liên kết để tránh xóa nhầm khi dọn dẹp.",
+   "Cần xác định bản nào có đơn hàng liên kết để tránh xóa nhầm khi dọn dẹp.<br/>"
+   "Lưu ý: PROD_008 cũng là bàn phím này nhưng gõ thường + dư khoảng trắng — cách so tên "
+   "<b>chính xác</b> ở đây KHÔNG bắt được nó; phải chuẩn hóa như Câu 35 mới thấy.",
  "note":
    "<b>Bẫy 1 — trùng theo 2 cột chưa đủ bằng chứng:</b> "
    "câu lệnh chỉ so sánh product_name và price. Hai sản phẩm cùng tên cùng giá "
@@ -963,6 +967,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
    ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
    ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech","Phu kien","2.000.000",25],
  ],
  "before_bugs": [2, 6],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1153,8 +1158,9 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000","30"],
    ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)","10"],
    ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech","Phu kien","2.000.000","25"],
  ],
- "before_bugs": [4, 5, 6],
+ "before_bugs": [4, 5, 6, 7],
  "before_col_widths": [65, 178, 65, 90, 95],
  "sql": (
    "SELECT p.product_id,\n"
@@ -1179,22 +1185,25 @@ ENTRIES = [
  ],
  "explain":
    "Cùng kỹ thuật LEFT JOIN + WHERE IS NULL với Câu 7 và Câu 16, áp dụng cho chiều Products → Order_Items.<br/>"
-   "Trong data mẫu, 3 sản phẩm chưa bán — mỗi cái có lý do khác nhau:<br/>"
+   "Trong data mẫu, 4 sản phẩm chưa bán — mỗi cái một lý do:<br/>"
    "(1) PROD_005: trùng tên PROD_002 — sản phẩm bị nhân đôi.<br/>"
    "(2) PROD_006: price = NULL — chưa định giá.<br/>"
    "(3) PROD_007: stock = NULL — chưa nhập kho.<br/>"
-   "Kết hợp với Câu 9, Câu 10 và Câu 14 để phân tích từng trường hợp.",
+   "(4) PROD_008: cũng là bản trùng của 'Ban phim co Logitech' nhưng gõ sai (chữ thường + dư "
+   "khoảng trắng, xem Câu 35) — bản thừa nên chẳng có đơn nào.<br/>"
+   "Kết hợp với Câu 9, Câu 10, Câu 14 và Câu 35 để phân tích từng trường hợp.",
  "result_table": (
    ["product_id","product_name","price","stock"],
    [
      ["PROD_005","Ban phim co Logitech","2.000.000",30],
      ["PROD_006","Loa Bluetooth JBL","(NULL)",10],
      ["PROD_007","Chuot gaming Razer","1.500.000","(NULL)"],
+     ["PROD_008","ban phim co logitech","2.000.000",25],
    ]
  ),
  "result_note":
-   "3 sản phẩm chưa bán: PROD_005 trùng tên PROD_002, "
-   "PROD_006 chưa có giá, PROD_007 chưa có tồn kho.",
+   "4 sản phẩm chưa bán: PROD_005 và PROD_008 đều là bản trùng của PROD_002 "
+   "(một bản gõ hệt, một bản gõ sai), PROD_006 chưa có giá, PROD_007 chưa có tồn kho.",
  "note":
    "Sản phẩm chưa bán không nhất thiết là lỗi — có thể là hàng mới chưa ra mắt. "
    "Để phân biệt trước khi báo bug: xem thêm cột price và stock trong kết quả. "
@@ -1367,6 +1376,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
    ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
    ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech","Phu kien","2.000.000",25],
  ],
  "before_bugs": [2],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1591,6 +1601,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
    ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
    ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [2, 5, 6],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1605,7 +1616,7 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Products",
-    "MySQL tải toàn bộ bảng <b>Products</b> — 7 sản phẩm trong dữ liệu mẫu."),
+    "MySQL tải toàn bộ bảng <b>Products</b> — 8 sản phẩm trong dữ liệu mẫu."),
    ("price * stock AS gia_tri_kho",
     "MySQL tính tích hai cột và đặt tên kết quả là <b>gia_tri_kho</b>. "
     "Quy tắc: NULL × bất kỳ = NULL; âm × dương = âm."),
@@ -1625,6 +1636,7 @@ ENTRIES = [
      ["PROD_007","Chuot gaming Razer","1.500.000","(NULL)",  "(NULL)"],
       ["PROD_003","Tai nghe Sony WH-1000XM5",       "8.000.000","-5","-40.000.000"],
      ["PROD_004","Sac du phong Anker",  "1.000.000","20", "20.000.000"],
+     ["PROD_008","ban phim co logitech","2.000.000","25", "50.000.000"],
      ["PROD_005","Ban phim co Logitech","2.000.000","30", "60.000.000"],
      ["PROD_002","Ban phim co Logitech","2.000.000","100","200.000.000"],
      ["PROD_001","iPhone 15 Pro Max","30.000.000","50","1.500.000.000"],
@@ -1934,6 +1946,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
    ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
    ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [2],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1982,6 +1995,7 @@ ENTRIES = [
      ["PROD_005","Ban phim co Logitech",       30,  0,  30],
      ["PROD_006","Loa Bluetooth JBL",          10,  0,  10],
      ["PROD_007","Chuot gaming Razer",    "(NULL)", 0,"(NULL)"],
+     ["PROD_008","ban phim co logitech",      25,  0,  25],
    ]
  ),
  "result_note":
@@ -2397,10 +2411,10 @@ ENTRIES = [
  "part": 3, "id": 35,
  "title": "Tìm tên sản phẩm trùng sau khi chuẩn hóa",
  "situation":
-   "Câu 10 đã bắt trùng chính xác theo tên và giá. Câu này đi sâu hơn: "
-   "chuẩn hóa tên về chữ thường và cắt khoảng trắng trước khi so sánh. "
-   "Bắt được cả các kiểu trùng tinh vi hơn mà UNIQUE constraint "
-   "case-insensitive chưa chặn được.",
+   "Câu 10 bắt trùng khi hai dòng gõ <b>y hệt</b> nhau. Nhưng cùng một sản phẩm nhập hai lần "
+   "thường bị gõ lệch nhau chút ít — chữ hoa/thường khác, dư vài khoảng trắng — và khi đó so "
+   "tên thô sẽ bỏ sót. Câu này chuẩn hóa tên (về chữ thường, cắt khoảng trắng) <b>trước khi</b> "
+   "so, để những cặp 'trông khác mà thực ra là một' vẫn lộ ra.",
  "before_label": "Bảng Products — dòng đỏ: tên trùng sau khi LOWER + TRIM:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
@@ -2411,8 +2425,9 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
    ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
    ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
  ],
- "before_bugs": [1, 4],
+ "before_bugs": [1, 4, 7],
  "before_col_widths": [65, 178, 65, 90, 95],
  "sql": (
    "SELECT LOWER(TRIM(product_name)) AS ten_chuan,\n"
@@ -2423,29 +2438,34 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Products",
-    "MySQL tải toàn bộ bảng <b>Products</b>."),
+    "MySQL tải toàn bộ bảng Products — 8 sản phẩm."),
    ("GROUP BY LOWER(TRIM(product_name))",
-    "<b>LOWER</b> chuyển về chữ thường, <b>TRIM</b> cắt khoảng trắng hai đầu. "
-    "Nhờ vậy 'Ban phim co Logitech' và '  ban phim co logitech  ' "
-    "rơi vào cùng một nhóm."),
+    "Điểm mấu chốt: gom nhóm theo tên <b>đã chuẩn hóa</b>, không phải tên thô.<br/>"
+    "• <b>LOWER</b> hạ hết về chữ thường — 'Ban phim co Logitech' và 'ban phim co logitech' "
+    "thành một.<br/>"
+    "• <b>TRIM</b> cắt khoảng trắng thừa hai đầu — '  ban phim co logitech  ' cũng gộp vào.<br/>"
+    "Nhờ vậy PROD_002, PROD_005 (viết hệt nhau) và PROD_008 (viết thường + dư khoảng trắng) đều "
+    "rơi vào cùng một nhóm 'ban phim co logitech'."),
    ("HAVING COUNT(*) > 1",
-    "Chỉ giữ nhóm có nhiều hơn 1 bản ghi — tên bị trùng sau chuẩn hóa."),
+    "Chỉ giữ nhóm có nhiều hơn 1 bản ghi — tức tên bị trùng sau khi chuẩn hóa. Ở đây nhóm "
+    "'ban phim co logitech' có 3 bản ghi nên bị bắt."),
  ],
  "explain":
-   "Kỹ thuật <b>LOWER + TRIM + GROUP BY</b> là cách chuẩn hóa trước khi so sánh — "
-   "đã dùng ở Câu 8 (email), áp dụng tương tự cho product_name.<br/>"
-   "PROD_002 và PROD_005 đều là 'Ban phim co Logitech' → "
-   "sau LOWER+TRIM cho 'ban phim co logitech' → COUNT = 2.<br/>"
-   "Câu 10 đã bắt cặp này theo (tên + giá), câu này bắt lại chỉ theo tên "
-   "— phát hiện trùng ngay cả khi giá đã bị sửa khác nhau.",
+   "Câu 10 so tên <b>thô</b> nên chỉ bắt được các bản ghi gõ y hệt nhau. Nhưng trùng trong "
+   "thực tế thường 'tinh vi' hơn: cùng một sản phẩm bị nhập hai lần với cách gõ khác nhau — "
+   "hoa/thường lệch, dư khoảng trắng.<br/>"
+   "Chuẩn hóa <b>LOWER + TRIM trước khi gom nhóm</b> xóa các khác biệt vô nghĩa đó, nên bắt "
+   "được cả những cặp mà so thô bỏ sót. Trong data mẫu, PROD_008 chính là ca đó — Câu 10 không "
+   "thấy nó, còn câu này gộp chung với PROD_002/005 thành nhóm 3 bản ghi.<br/>"
+   "Đây cũng là kỹ thuật chuẩn hóa đã dùng cho email ở Câu 8, nay áp cho tên sản phẩm.",
  "result_table": (
    ["ten_chuan","so_ban_ghi"],
-   [["ban phim co logitech", 2]],
+   [["ban phim co logitech", 3]],
  ),
  "result_note":
-   "'ban phim co logitech' xuất hiện 2 lần (PROD_002 + PROD_005). "
-   "Chạy thêm SELECT * FROM Products WHERE LOWER(TRIM(product_name)) = 'ban phim co logitech' "
-   "để xem chi tiết cả hai dòng.",
+   "'ban phim co logitech' xuất hiện 3 lần: PROD_002, PROD_005 (viết hệt nhau) và PROD_008 "
+   "(viết thường + dư khoảng trắng). Câu 10 so tên thô chỉ bắt được PROD_002/005; riêng PROD_008 "
+   "chỉ lộ ra sau khi LOWER+TRIM — đó chính là giá trị của bước chuẩn hóa.",
  "note":
    "Kết quả câu này chỉ cho tên chuẩn hóa và số lần — không biết product_id nào.<br/>"
    "Để xem đầy đủ thông tin hai sản phẩm trùng, kết hợp với subquery:<br/>"
@@ -2493,25 +2513,34 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Customers",
-    "Duyệt bảng Customers — nơi có thể lẫn tài khoản test/demo giữa khách hàng thật."),
+    "Duyệt bảng Customers — nơi tài khoản test/demo có thể lẫn giữa khách hàng thật."),
    ("WHERE LOWER(customer_name)\n  LIKE '%test%'",
-    "<b>LOWER</b> chuẩn hóa trước khi so khớp — bắt được cả 'Test', 'TEST', 'test'. "
-    "<b>%...%</b> tìm chuỗi con ở bất kỳ vị trí nào trong tên."),
+    "Điều kiện lọc chính, ghép từ ba mảnh:<br/>"
+    "• <b>LOWER(...)</b> đưa tên về chữ thường trước khi so — nhờ vậy bắt được cả 'Test', "
+    "'TEST', 'test'.<br/>"
+    "• <b>LIKE</b> so khớp theo <i>mẫu</i>, không cần bằng tuyệt đối.<br/>"
+    "• <b>%test%</b>: dấu % nghĩa là 'có gì cũng được', nên '%test%' = 'tên chứa chữ test ở "
+    "bất kỳ đâu'.<br/>"
+    "Ví dụ 'Khach Test VIP' có chứa 'test' → khớp."),
    ("LOWER(IFNULL(email,''))\n  LIKE '%test%'",
-    "<b>IFNULL(email,'')</b> thay NULL bằng chuỗi rỗng trước khi LOWER — tránh LOWER(NULL) "
-    "trả về NULL khiến LIKE luôn UNKNOWN và bỏ sót dòng có email NULL."),
+    "Cùng cách trên nhưng soi thêm cột <b>email</b>. Có một bẫy NULL: nếu email trống (NULL) "
+    "thì LOWER(NULL) ra NULL, và LIKE với NULL luôn cho 'không xác định' → dòng đó bị bỏ sót.<br/>"
+    "<b>IFNULL(email,'')</b> thay NULL bằng chuỗi rỗng trước, để dòng email trống vẫn được xét "
+    "bình thường (chỉ là không khớp từ khóa nào)."),
    ("OR ... OR ...",
-    "Mỗi từ khóa nghi vấn ('test', 'demo', 'fake'...) là một nhánh OR riêng. Riêng "
-    "<b>'ao bug'</b> là từ khóa đặt riêng để bắt đúng dòng mẫu 'Khach Hang Ao Bug' trong DB "
-    "thực hành — hệ thống thật cần thay bằng quy ước đặt tên test data của chính team bạn."),
+    "Tất cả điều kiện trên nối với nhau bằng <b>OR</b> — chỉ cần <b>một</b> từ khóa khớp "
+    "(trong tên hoặc email) là dòng đó bị bắt. Mỗi từ khóa nghi vấn ('test', 'demo', 'fake', "
+    "'ao bug') là một nhánh riêng.<br/>"
+    "Riêng <b>'ao bug'</b> đặt thêm để bắt đúng dòng mẫu 'Khach Hang Ao Bug' trong DB thực "
+    "hành — hệ thống thật nên thay bằng quy ước đặt tên test data của chính team bạn."),
  ],
  "explain":
-   "Kỹ thuật <b>LIKE '%từ_khóa%'</b> trên nhiều cột — khác hẳn các câu trùng lặp/ENUM trước đó "
-   "vì đây là tìm kiếm theo <b>ngữ nghĩa từ khóa</b>, không phải so khớp giá trị chính xác.<br/>"
-   "Bắt được 2 bản ghi: C004 'Khach Hang Ao Bug' (tên tự đặt là dữ liệu giả) và C010 'Khach "
-   "Test VIP' (có chữ 'Test' rõ ràng) — cả hai đều là tài khoản có dấu hiệu rõ ràng của dữ liệu test.<br/>"
-   "Trên hệ thống thật, danh sách từ khóa cần mở rộng theo quy ước nội bộ: 'qa_', 'sample_', "
-   "tên miền nội bộ dùng để test (vd '@company-test.com')...",
+   "Khác với các câu trước (so khớp giá trị chính xác, kiểm ràng buộc), câu này <b>đoán</b> "
+   "bản ghi test từ <b>ý nghĩa cái tên</b> — dò xem tên hoặc email có chứa các từ gợi ý như "
+   "'test', 'demo' không.<br/>"
+   "Vì chỉ dựa vào cái tên, kết quả là một <b>danh sách nghi ngờ</b> chứ không phải bằng chứng "
+   "chắc chắn — nó chính xác tới đâu hoàn toàn phụ thuộc vào bộ từ khóa bạn liệt kê "
+   "(xem thêm hạn chế ở Góc soi lỗi).",
  "result_table": (
    ["customer_id","customer_name","email"],
    [
@@ -2523,13 +2552,14 @@ ENTRIES = [
    "2 bản ghi nghi là dữ liệu test/demo. Trước khi xóa: xác nhận với team xem có phải seed "
    "data cố ý giữ lại cho mục đích nào đó không — đừng xóa chỉ vì tên 'nghe giống' test.",
  "note":
-   "LIKE theo từ khóa có hai rủi ro cần lường trước:<br/>"
-   "(1) <b>Dương tính giả (false positive)</b>: khách hàng thật tên trùng từ khóa (vd công ty "
-   "tên 'Testco') sẽ bị bắt nhầm — luôn xác nhận thủ công trước khi xóa hàng loạt.<br/>"
-   "(2) <b>Âm tính giả (false negative)</b>: dữ liệu test đặt tên khéo léo không chứa từ khóa "
-   "nào sẽ lọt qua — đây là giới hạn cố hữu của tìm kiếm theo từ khóa, không phải lỗi kỹ thuật.<br/>"
-   "Phòng ngừa tận gốc: thêm cột <b>is_test_data BOOLEAN</b> để đánh dấu tường minh ngay từ "
-   "lúc tạo, thay vì suy luận ngược từ tên gọi.",
+   "Cách dò theo từ khóa có hai rủi ro cần lường trước:<br/>"
+   "(1) <b>Bắt nhầm (dương tính giả)</b>: khách thật có tên chứa từ khóa — công ty 'Testco', "
+   "hay một cái tên lỡ có chuỗi 'demo' — cũng bị dính. Giảm bằng cách siết từ khóa cho chặt hơn "
+   "(ví dụ khớp tiền tố 'test_' thay vì '%test%' quá rộng).<br/>"
+   "(2) <b>Bỏ sót (âm tính giả)</b>: dữ liệu test đặt tên khéo, không chứa từ khóa nào, sẽ lọt "
+   "qua — đây là giới hạn cố hữu của cách dò theo tên, không phải lỗi kỹ thuật.<br/>"
+   "Phòng ngừa tận gốc: thêm cột <b>is_test_data</b> đánh dấu ngay lúc tạo bản ghi, thay vì suy "
+   "luận ngược từ tên — khi đó chỉ cần lọc theo cột này, hết cả bắt nhầm lẫn bỏ sót.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -3373,6 +3403,7 @@ ENTRIES = [
    ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
    ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
    ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [0],
  "before_col_widths": [65, 178, 65, 90, 95],

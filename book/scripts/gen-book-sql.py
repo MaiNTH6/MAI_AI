@@ -809,7 +809,7 @@ def _build_pass(out_path):
     story.append(Spacer(1, 8))
 
     story.append(Paragraph(
-        "Bảng Products (7 dòng — dòng đỏ: stock âm, NULL, tên trùng)",
+        "Bảng Products (8 dòng — dòng đỏ: stock âm, NULL, tên trùng)",
         S("lbl_pr", parent=st_label, keepWithNext=True)))
     # col widths: product_id=58 | product_name=175 | category=75 | price=95 | stock=90 = 493
     story.append(before_tbl(
@@ -820,8 +820,9 @@ def _build_pass(out_path):
          ["PROD_004","Sac du phong Anker","Phu kien","1.000.000","20"],
          ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000","30"],
          ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)","10"],
-         ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"]],
-        bugs=[2,4,5,6],
+         ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
+         ["PROD_008","ban phim co logitech","Phu kien","2.000.000","25"]],
+        bugs=[2,4,5,6,7],
         col_widths=[58, 175, 75, 95, 90]))
     story.append(Spacer(1, 8))
 

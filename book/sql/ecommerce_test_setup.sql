@@ -43,7 +43,7 @@
 --    Bug-D  C004/C005: trùng email trung_email@email.com                             → Câu 3, 36, 50
 --    Bug-E  C001/C009: trùng email khác hoa/thường                                   → Câu 8, 37, 50
 --    Bug-J  Item 1 và 7: trùng (order_id, product_id) = (ORD_001, PROD_001)          → Câu 4, 46
---    Bug-L  PROD_005: trùng tên + giá với PROD_002                                   → Câu 10, 35
+--    Bug-L  PROD_005 trùng hệt PROD_002 (Câu 10); PROD_008 trùng nhưng gõ sai hoa/thường+dấu cách (Câu 35)
 --    Bug-P  ORD_006: trùng hoàn toàn ORD_003 (khách/tổng tiền/ngày — đơn nhân đôi) → Câu 29
 --  NULL & dữ liệu thiếu:
 --    Bug-F  C006: email = NULL   C007: email = chuỗi rỗng                            → Câu 5, 9, 32
@@ -144,7 +144,11 @@ INSERT INTO Products (product_id, product_name, category, price, stock) VALUES
   -- Câu 9: cột price bị NULL
   ('PROD_006', 'Loa Bluetooth JBL',         'Phu kien',       NULL,  10),
   -- Câu 9: cột stock bị NULL
-  ('PROD_007', 'Chuot gaming Razer',        'Phu kien',   1500000, NULL);
+  ('PROD_007', 'Chuot gaming Razer',        'Phu kien',   1500000, NULL),
+  -- Câu 35: bản trùng của "Ban phim co Logitech" nhưng gõ sai (chữ thường + dư
+  --         khoảng trắng hai đầu). Chỉ LOWER(TRIM()) mới gom cùng nhóm; so khớp
+  --         thô theo tên chính xác (Câu 10) bỏ sót dòng này.
+  ('PROD_008', '  ban phim co logitech  ',  'Phu kien',    2000000,  25);
 
 -- ── Orders ───────────────────────────────────────────────────
 INSERT INTO Orders (order_id, customer_id, total_amount, status, order_date, deleted_at) VALUES
@@ -232,6 +236,10 @@ FROM Products;
 SELECT '--- Cau 10: Full duplicate (Products) ---' AS check_name;
 SELECT product_name, price, COUNT(*) AS so_lan
 FROM Products GROUP BY product_name, price HAVING COUNT(*) > 1;
+
+SELECT '--- Cau 35: Trung sau khi chuan hoa LOWER+TRIM (Products) ---' AS check_name;
+SELECT LOWER(TRIM(product_name)) AS ten_chuan, COUNT(*) AS so_lan
+FROM Products GROUP BY LOWER(TRIM(product_name)) HAVING COUNT(*) > 1;
 
 SELECT '--- Cau 11: Tier ngoai danh sach ---' AS check_name;
 SELECT customer_id, customer_name, membership_tier
