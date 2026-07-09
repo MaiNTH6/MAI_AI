@@ -2467,12 +2467,18 @@ ENTRIES = [
    "(viết thường + dư khoảng trắng). Câu 10 so tên thô chỉ bắt được PROD_002/005; riêng PROD_008 "
    "chỉ lộ ra sau khi LOWER+TRIM — đó chính là giá trị của bước chuẩn hóa.",
  "note":
-   "Kết quả câu này chỉ cho tên chuẩn hóa và số lần — không biết product_id nào.<br/>"
-   "Để xem đầy đủ thông tin hai sản phẩm trùng, kết hợp với subquery:<br/>"
-   "<b>SELECT * FROM Products</b><br/>"
-   "<b>WHERE LOWER(TRIM(product_name)) IN</b><br/>"
-   "<b>  (SELECT LOWER(TRIM(product_name)) FROM Products</b><br/>"
-   "<b>   GROUP BY LOWER(TRIM(product_name)) HAVING COUNT(*) > 1)</b>",
+   "Kết quả câu này chỉ cho tên đã chuẩn hóa và số lần trùng — chưa biết product_id nào. Để "
+   "lấy đầy đủ thông tin các bản ghi trùng, ghép ngược lại bằng một JOIN với chính nhóm đó:<br/>"
+   "<b>SELECT p.*</b><br/>"
+   "<b>FROM Products p</b><br/>"
+   "<b>JOIN (SELECT LOWER(TRIM(product_name)) AS ten_chuan</b><br/>"
+   "<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM Products GROUP BY LOWER(TRIM(product_name))</b><br/>"
+   "<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HAVING COUNT(*) &gt; 1) dup</b><br/>"
+   "<b>&nbsp;&nbsp;ON LOWER(TRIM(p.product_name)) = dup.ten_chuan;</b><br/>"
+   "Trả về đủ PROD_002, PROD_005 và PROD_008.<br/>"
+   "<b>Cạm bẫy MySQL 8.0:</b> nếu viết dạng <b>WHERE LOWER(TRIM(product_name)) IN (SELECT ... "
+   "GROUP BY ... HAVING COUNT(*)&gt;1)</b>, chế độ <b>only_full_group_by</b> (bật mặc định) có "
+   "thể báo lỗi khi MySQL biến subquery thành phép ghép trong. Viết dạng JOIN như trên thì tránh được.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -3906,8 +3912,9 @@ EXERCISES = [
             "FROM   Products\n"
             "GROUP  BY LOWER(TRIM(product_name))\n"
             "HAVING COUNT(*) > 1;",
-     "answer": "'ban phim co logitech' xuất hiện 2 lần (PROD_002 + PROD_005). Chuẩn hóa trước "
-               "khi GROUP giúp bắt trùng mà so khớp thô bỏ sót (Câu 35)."},
+     "answer": "'ban phim co logitech' xuất hiện 3 lần (PROD_002, PROD_005, PROD_008). Chuẩn hóa "
+               "trước khi GROUP giúp bắt cả bản gõ sai (PROD_008: thường + dư khoảng trắng) mà so "
+               "khớp thô bỏ sót (Câu 35)."},
 
     # ---- PHẦN 5 — Audit, log và dấu vết ----
     {"part": 4, "code": "5.1",
