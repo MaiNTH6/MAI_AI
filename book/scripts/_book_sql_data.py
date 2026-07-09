@@ -1548,7 +1548,7 @@ ENTRIES = [
  "clauses": [
    ("FROM Products p\n  JOIN Order_Items oi\n    ON p.product_id = oi.product_id",
     "<b>INNER JOIN</b> ghép mỗi sản phẩm với tất cả items bán ra. "
-    "Sản phẩm chưa bán (PROD_005, 006, 007) bị loại — "
+    "Sản phẩm chưa bán (PROD_005, 006, 007, 008) bị loại — "
     "dùng LEFT JOIN nếu muốn hiện cả chúng với doanh_so = NULL."),
    ("GROUP BY p.product_id, p.product_name",
     "Gom tất cả dòng Order_Items của cùng một sản phẩm thành một nhóm "
@@ -3468,7 +3468,7 @@ ENTRIES = [
    ]
  ),
  "result_note":
-   "4 sản phẩm có doanh số (PROD_005, 006, 007 chưa bán). "
+   "4 sản phẩm có doanh số (PROD_005, 006, 007, 008 chưa bán). "
    "PROD_001 dẫn đầu 90M (bị phóng đại do item 7 trùng). "
    "PROD_004 hạng 2 với 22M (do item 14 qty=20). "
    "PROD_003 hạng 3 với 16M. Xếp hạng này chỉ đáng tin sau khi làm sạch dữ liệu.",
@@ -3805,8 +3805,8 @@ EXERCISES = [
             "FROM   Products\n"
             "WHERE  price > (SELECT AVG(price) FROM Products)\n"
             "ORDER  BY price DESC;",
-     "answer": "PROD_001 (30M) và PROD_003 (8M). Trung bình ≈ 7.4M. Lưu ý: AVG tự bỏ qua "
-               "PROD_006 (giá NULL) nên ngưỡng chỉ tính trên 6 sản phẩm có giá."},
+     "answer": "PROD_001 (30M) và PROD_003 (8M). Trung bình ≈ 6.6M. Lưu ý: AVG tự bỏ qua "
+               "PROD_006 (giá NULL) nên ngưỡng chỉ tính trên 7 sản phẩm có giá."},
     {"part": 1, "code": "2.2",
      "prompt": "Trong các đơn COMPLETED, đơn nào có total_amount KHÁC tổng tiền tính từ Order_Items?",
      "hint": "Lọc WHERE status='COMPLETED' trước, JOIN + GROUP BY, rồi HAVING so sánh hai tổng.",
@@ -3832,8 +3832,8 @@ EXERCISES = [
             "         SELECT 1 FROM Order_Items oi\n"
             "         WHERE oi.product_id = p.product_id)\n"
             "  AND  p.stock > 0;",
-     "answer": "PROD_005 (30) và PROD_006 (10). PROD_007 bị loại vì stock = NULL — so sánh "
-               "'NULL > 0' cho UNKNOWN, không phải TRUE. Đây là lý do hàng tồn 'tàng hình' dễ bị bỏ sót."},
+     "answer": "PROD_005 (30), PROD_006 (10) và PROD_008 (25). PROD_007 bị loại vì stock = NULL — "
+               "so sánh 'NULL > 0' cho UNKNOWN, không phải TRUE. Đây là lý do hàng tồn 'tàng hình' dễ bị bỏ sót."},
     {"part": 1, "code": "2.4",
      "prompt": "Tìm tất cả sản phẩm có giá (price) bằng NULL hoặc bằng 0.",
      "hint": "Dùng IS NULL để bắt giá chưa nhập và <= 0 để bắt giá không hợp lệ — kết hợp bằng OR.",
@@ -3869,7 +3869,7 @@ EXERCISES = [
             "FROM   Products\n"
             "GROUP  BY category\n"
             "ORDER  BY so_sp DESC;",
-     "answer": "Phu kien (6) · Dien thoai (1). Vì đếm trên Products nên bao gồm cả sản phẩm "
+     "answer": "Phu kien (7) · Dien thoai (1). Vì đếm trên Products nên bao gồm cả sản phẩm "
                "chưa bán — khác Câu 27 (chỉ đếm danh mục có phát sinh đơn qua JOIN)."},
     {"part": 2, "code": "3.3",
      "prompt": "Khách hàng nào có tổng chi tiêu cao hơn mức trung bình của các khách đã từng mua?",
