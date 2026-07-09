@@ -561,10 +561,12 @@ def _build_pass(out_path):
         "theo cùng một khuôn để bạn tra cứu nhanh:", st_lead))
     story.append(Spacer(1, 4))
     for t in [
+        "<b>Tình huống</b> — bối cảnh nghiệp vụ đặt ra câu lệnh: vì sao QA cần đến nó.",
         "<b>Dữ liệu trước query</b> — bảng mẫu cho thấy trạng thái dữ liệu; dòng tô đỏ là dòng lỗi "
         "hoặc dòng trọng tâm của câu lệnh. Bảng có thể chỉ trích các dòng liên quan cho gọn.",
         "<b>Câu lệnh SQL</b> — sẵn sàng copy, viết theo dialect MySQL.",
         "<b>Phân tích từng mệnh đề</b> — mỗi từ khóa SQL được giải thích riêng.",
+        "<b>Giải thích tổng thể</b> — ý nghĩa và bài học rút ra từ cả câu lệnh.",
         "<b>Kết quả sau query</b> — bảng output sau khi chạy lệnh trên dữ liệu mẫu.",
         "<b>Góc soi lỗi của Tester</b> — cạm bẫy, hiểu lầm và bước tiếp theo.",
     ]:
