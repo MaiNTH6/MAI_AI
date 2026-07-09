@@ -107,11 +107,11 @@ ENTRIES = [
    ("WHERE table_schema\n  = 'ecommerce_test'",
     "Lọc đúng database đang khảo sát — information_schema chứa metadata của TẤT CẢ database "
     "trên server, không lọc sẽ trả về lẫn lộn."),
-   ("SUM(CASE WHEN ...\n  THEN 1 ELSE 0 END)",
-    "Đếm có điều kiện: đếm số cột cho phép NULL và số cột là khóa chính, "
-    "cho cái nhìn nhanh về độ \"chặt\" của từng bảng."),
    ("GROUP BY table_name",
-    "Gom theo từng bảng để có một dòng tổng quan mỗi bảng."),
+    "Gom các cột theo từng bảng để có một dòng tổng quan mỗi bảng."),
+   ("SUM(CASE WHEN ...\n  THEN 1 ELSE 0 END)",
+    "Chạy ở bước SELECT (sau khi đã gom nhóm): đếm có điều kiện — số cột cho phép NULL và số "
+    "cột là khóa chính, cho cái nhìn nhanh về độ \"chặt\" của từng bảng."),
  ],
  "explain":
    "<b>information_schema.columns</b> là bản đồ schema luôn cập nhật — không như tài liệu "
@@ -2246,12 +2246,12 @@ ENTRIES = [
     "Chiếu đủ thông tin để QA liên hệ xác nhận email thật."),
  ],
  "explain":
-   "Câu này kiểm tra email theo <b>ba tầng</b>:<br/>"
+   "Câu này kiểm tra email theo <b>ba tầng</b>, từ thô đến tinh:<br/>"
    "(1) Tầng tồn tại: NULL hoặc chuỗi rỗng → không có email.<br/>"
    "(2) Tầng cấu trúc: thiếu @ → không thể là email hợp lệ.<br/>"
    "(3) Tầng domain: thiếu dấu chấm → không có phần .com/.vn.<br/>"
-   "LIKE '%@%.%' không bắt được email như 'abc@' hay '@domain.com' "
-   "— với dữ liệu nghiêm ngặt, dùng REGEXP thay thế.",
+   "Cả ba tầng đều dựa trên LIKE nên chỉ chặn được lỗi thô — email 'có @ và có dấu chấm nhưng "
+   "sai vị trí' vẫn lọt qua (xem Góc soi lỗi).",
  "result_table": (
    ["customer_id","customer_name","email"],
    [
@@ -2265,10 +2265,12 @@ ENTRIES = [
    "(các email còn lại đều đúng cấu trúc) — nhưng đó là tuyến phòng thủ quan trọng trên dữ liệu "
    "thật khi người dùng nhập email sai cấu trúc.",
  "note":
-   "LIKE là kiểm tra nhanh nhưng lỏng lẻo — không bắt được các trường hợp như:<br/>"
-   "(1) <b>'abc@'</b>: có @ nhưng không có domain → LIKE '%@%' vẫn pass.<br/>"
-   "(2) <b>'@domain.com'</b>: thiếu phần local → LIKE cũng pass.<br/>"
-   "Để kiểm tra chặt hơn, dùng REGEXP:<br/>"
+   "LIKE chỉ kiểm tra ký tự @ và dấu chấm <b>có tồn tại</b> hay không — <b>không quan tâm vị trí "
+   "hay thứ tự</b>. Nên các email sau vẫn lọt lưới dù rõ ràng sai:<br/>"
+   "(1) <b>'user.name@'</b>: có @ và có dấu chấm (trong phần tên) nhưng <b>thiếu domain</b> sau @.<br/>"
+   "(2) <b>'@domain.com'</b>: có @ và dấu chấm nhưng <b>thiếu phần tên</b> trước @.<br/>"
+   "(Ngược lại, 'abc@' lại BỊ bắt — vì nó không có dấu chấm nào.)<br/>"
+   "Để kiểm đúng thứ tự tên@domain.đuôi, dùng REGEXP:<br/>"
    "<b>WHERE email NOT REGEXP '^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}$'</b>",
 },
 # ─────────────────────────────────────────────────────────
@@ -2308,22 +2310,23 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items",
-    "MySQL tải toàn bộ bảng <b>Order_Items</b>."),
+    "MySQL duyệt toàn bộ dòng chi tiết đơn trong bảng Order_Items."),
    ("WHERE quantity <= 0\n    OR quantity > 1000",
-    "Hai điều kiện biên: <b><= 0</b> bắt lỗi âm và zero; "
-    "<b>> 1000</b> bắt số lượng bất thường lớn "
-    "(ngưỡng tùy ngành hàng)."),
+    "Hai điều kiện biên, dính <b>một</b> là bất thường:<br/>"
+    "• <b>quantity &lt;= 0</b>: bắt số lượng <b>âm hoặc bằng 0</b> — ví dụ item 12 có "
+    "quantity = 0 nên lọt vào đây.<br/>"
+    "• <b>quantity &gt; 1000</b>: bắt số lượng <b>lớn bất thường</b>. Ngưỡng 1000 tùy ngành "
+    "hàng (xem Góc soi lỗi)."),
    ("SELECT item_id, order_id,\n  product_id, quantity",
     "Chiếu đủ thông tin để QA xác định item nào vi phạm và thuộc đơn nào."),
  ],
  "explain":
-   "Kiểm tra biên dưới (<b>quantity <= 0</b>) và biên trên (<b>quantity > 1000</b>) "
-   "là cặp kiểm tra chuẩn cho mọi trường số lượng.<br/>"
-   "Item 12 (ORD_003/PROD_002) có quantity = 0 — vi phạm biên dưới. "
-   "Đơn không thể tồn tại với 0 sản phẩm; đây là lỗi logic, "
-   "không phải đơn bình thường hay đơn hoàn hàng (hoàn hàng phải dùng bảng riêng).<br/>"
-   "Item 14 (ORD_007/PROD_004) có quantity = 20 — không vi phạm (20 ≤ 1000), hợp lệ về kỹ thuật "
-   "nhưng cần kiểm tra nghiệp vụ (mua 20 sạc dự phòng cùng lúc có bình thường không?).",
+   "Đây là cặp kiểm biên chuẩn cho mọi trường số lượng: chặn <b>biên dưới</b> (≤ 0) và "
+   "<b>biên trên</b> (&gt; 1000) trong một câu.<br/>"
+   "Một điểm tinh tế đáng nhớ: <b>hợp lệ về kỹ thuật chưa chắc hợp lý về nghiệp vụ</b>. Item 14 "
+   "có quantity = 20 — nằm trong ngưỡng nên câu này KHÔNG bắt, nhưng mua 20 sạc dự phòng cùng "
+   "lúc vẫn đáng để QA hỏi lại. Ngưỡng số chỉ lọc được cái 'không thể đúng'; còn cái 'đúng luật "
+   "mà bất thường' thì phải cần mắt người soi.",
  "result_table": (
    ["item_id","order_id","product_id","quantity"],
    [[12,"ORD_003","PROD_002",0]],
@@ -2333,11 +2336,17 @@ ENTRIES = [
    "Một đơn hàng không thể chứa sản phẩm với số lượng bằng 0. "
    "Cần ADD CHECK CONSTRAINT hoặc validate tại tầng application để ngăn từ đầu.",
  "note":
-   "Ngưỡng > 1000 chỉ là ví dụ — điều chỉnh tùy nghiệp vụ: bán lẻ B2C thì quantity > 10 "
-   "đã đáng ngờ, bán buôn B2B thì có thể > 10.000 mới bất thường. "
-   "Khi tìm thấy quantity = 0 (item 12), hỏi dev: đây là lỗi khi nhập đơn hay có luồng nào "
-   "cố tình set về 0 (hoàn trả, điều chỉnh)? Nếu là hoàn trả, nên ghi vào bảng riêng thay vì "
-   "để trong Order_Items với số lượng 0.",
+   "(1) <b>Nhớ dùng &lt;= 0, không phải &lt; 0</b>: bẫy hay gặp là chỉ viết <b>quantity &lt; "
+   "0</b> (bắt số âm) mà quên <b>quantity = 0</b> — vốn mới là ca phổ biến (item 12). Phải "
+   "&lt;= 0 để gộp cả hai.<br/>"
+   "(2) <b>Thấy quantity = 0 thì hỏi dev</b>: lỗi lúc nhập đơn, hay có luồng cố tình set 0 "
+   "(hoàn trả, điều chỉnh)? Nếu là hoàn trả thì nên ghi vào bảng riêng, không để trong "
+   "Order_Items với số lượng 0.<br/>"
+   "(3) <b>Ngưỡng trên tùy ngành</b>: &gt; 1000 chỉ là ví dụ — bán lẻ B2C thì quantity &gt; 10 "
+   "đã đáng ngờ, bán buôn B2B có thể &gt; 10.000 mới bất thường.<br/>"
+   "(4) <b>Coi chừng NULL</b>: nếu cột quantity cho phép NULL (DB mẫu thì NOT NULL nên không "
+   "gặp), dòng NULL sẽ lọt lưới vì NULL không thỏa cả hai vế so sánh — thêm <b>OR quantity IS "
+   "NULL</b> khi cần.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2371,25 +2380,25 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Orders",
-    "MySQL tải toàn bộ bảng <b>Orders</b>."),
+    "MySQL duyệt toàn bộ đơn trong bảng Orders."),
    ("WHERE order_date > CURDATE()\n    OR order_date < '2020-01-01'",
-    "<b>CURDATE()</b> trả về ngày hiện tại của server — "
-    "không cần hardcode ngày vào câu lệnh. "
-    "Ngày < 2020-01-01 là ngưỡng tự chọn; điều chỉnh tùy thời điểm "
-    "hệ thống bắt đầu hoạt động."),
+    "Hai điều kiện nối bằng OR — dính <b>một</b> trong hai là bất thường:<br/>"
+    "• <b>order_date &gt; CURDATE()</b>: ngày đặt <b>ở tương lai</b>. CURDATE() luôn là ngày "
+    "hôm nay của server nên câu lệnh không phải sửa lại theo thời gian. Ví dụ ORD_007 "
+    "(2027-01-01) rơi vào nhánh này.<br/>"
+    "• <b>order_date &lt; '2020-01-01'</b>: ngày <b>quá xa quá khứ</b>. Mốc 2020 là ngưỡng tự "
+    "chọn — chỉnh theo thời điểm hệ thống của bạn bắt đầu hoạt động."),
    ("SELECT order_id, customer_id,\n  order_date",
-    "Chiếu ngày để QA xác minh nguồn gốc dữ liệu."),
+    "Chiếu mã đơn, khách và ngày để QA truy lại nguồn gốc dòng dữ liệu bất thường."),
  ],
  "explain":
-   "Dùng <b>CURDATE()</b> thay vì hardcode ngày giúp câu lệnh luôn đúng "
-   "mà không cần sửa theo thời gian.<br/>"
-   "ORD_007 có order_date = 2027-01-01 — vượt CURDATE() "
-   "→ ngày ở tương lai, là dấu hiệu đồng hồ server sai, nhập tay sai, hoặc bug timezone.<br/>"
-   "Câu này nên chạy định kỳ — đặc biệt sau khi deploy tính năng "
-   "mới có liên quan đến xử lý thời gian hoặc timezone.<br/>"
-   "<i>Lưu ý khi thực hành: kết quả trên đúng khi bạn chạy TRƯỚC ngày 2027-01-01. "
-   "Nếu chạy sau ngày đó, ORD_007 không còn là 'tương lai' nữa và kết quả sẽ rỗng — "
-   "hãy sửa order_date của ORD_007 thành một ngày xa hơn hiện tại để tái hiện.</i>",
+   "Bài học chính: <b>đừng tin tuyệt đối vào cột thời gian</b>. Ngày tháng là dữ liệu do người "
+   "hoặc máy ghi vào nên vẫn có thể sai — lệch múi giờ, nhập tay nhầm, đồng hồ server chạy sai. "
+   "Một phép kiểm biên đơn giản như câu này lọc ra ngay những giá trị 'không thể đúng'.<br/>"
+   "Nên chạy định kỳ, nhất là sau khi deploy tính năng có xử lý thời gian/timezone.<br/>"
+   "<i>Lưu ý khi thực hành: kết quả trên đúng khi bạn chạy TRƯỚC ngày 2027-01-01. Nếu chạy sau "
+   "ngày đó, ORD_007 không còn là 'tương lai' nữa và kết quả sẽ rỗng — hãy sửa order_date của "
+   "ORD_007 thành một ngày xa hơn hiện tại để tái hiện.</i>",
  "result_table": (
    ["order_id","customer_id","order_date"],
    [["ORD_007","C001","2027-01-01"]],
@@ -2402,9 +2411,10 @@ ENTRIES = [
    "Nếu app chạy ở timezone khác, ngày có thể lệch nhau quanh nửa đêm: "
    "đơn đặt lúc 06:30 sáng 25/06 giờ Việt Nam (UTC+7) = 23:30 đêm 24/06 giờ UTC — "
    "app hiển thị ngày 25 nhưng server UTC ghi ngày 24.<br/>"
-   "Khi nghi ngờ timezone gây lỗi, thêm điều kiện: "
-   "<b>TIMESTAMPDIFF(HOUR, order_date, NOW()) &lt; -8</b> "
-   "để bắt đơn 'tương lai' trong vòng 8 giờ.",
+   "Khi nghi ngờ timezone gây báo nhầm, siết lại bằng độ lệch GIỜ thay vì chỉ so ngày: "
+   "<b>TIMESTAMPDIFF(HOUR, order_date, NOW()) &lt; -8</b>. Điều kiện này chỉ giữ đơn ở tương "
+   "lai <b>quá 8 giờ</b> — tức <b>bỏ qua</b> những đơn chỉ lệch tương lai vài giờ (phần lớn do "
+   "chênh timezone, không phải bug thật). Ngưỡng 8 giờ chỉnh theo khoảng cách múi giờ của hệ thống bạn.",
 },
 # ─────────────────────────────────────────────────────────
 {
