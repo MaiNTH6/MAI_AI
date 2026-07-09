@@ -1043,6 +1043,9 @@ ENTRIES = [
    "  AND  p.stock  <= 0;"
  ),
  "clauses": [
+   ("FROM Orders o",
+    "Bắt đầu từ bảng Orders (mỗi đơn là một dòng), gán alias <b>o</b>. Đây là bảng gốc "
+    "để lần lượt nối thêm chi tiết đơn và sản phẩm."),
    ("JOIN Order_Items oi\n  ON o.order_id = oi.order_id",
     "Nối Orders với chi tiết sản phẩm — bỏ qua đơn rỗng (ORD_004) vì không có "
     "dòng nào trong Order_Items để nối."),
@@ -2489,7 +2492,9 @@ ENTRIES = [
    "    OR LOWER(IFNULL(email,'')) LIKE '%demo%';"
  ),
  "clauses": [
-   ("LOWER(customer_name)\n  LIKE '%test%'",
+   ("FROM Customers",
+    "Duyệt bảng Customers — nơi có thể lẫn tài khoản test/demo giữa khách hàng thật."),
+   ("WHERE LOWER(customer_name)\n  LIKE '%test%'",
     "<b>LOWER</b> chuẩn hóa trước khi so khớp — bắt được cả 'Test', 'TEST', 'test'. "
     "<b>%...%</b> tìm chuỗi con ở bất kỳ vị trí nào trong tên."),
    ("LOWER(IFNULL(email,''))\n  LIKE '%test%'",
@@ -2562,26 +2567,30 @@ ENTRIES = [
    "      AND a.customer_id < b.customer_id;"
  ),
  "clauses": [
-   ("SOUNDEX(a.customer_name)\n  = SOUNDEX(b.customer_name)",
-    "<b>SOUNDEX</b> chuyển chuỗi thành mã 4 ký tự đại diện cho cách phát âm — hai chuỗi viết "
-    "khác nhau nhưng đọc gần giống sẽ cho cùng mã."),
    ("FROM Customers a\n  JOIN Customers b",
-    "<b>Self-join</b>: bảng tự ghép với chính nó để so sánh từng cặp bản ghi. "
-    "Vì điều kiện JOIN bọc trong hàm SOUNDEX(), MySQL không dùng được index — "
-    "đây là phép so khớp toàn bảng × toàn bảng, xem cảnh báo hiệu năng ở phần Ghi chú."),
+    "<b>Self-join</b> — bảng Customers tự ghép với chính nó: hình dung có hai bản sao cùng "
+    "bảng, đặt tên <b>a</b> và <b>b</b>, rồi xét từng cặp (một dòng ở a với một dòng ở b) xem "
+    "tên có nghe giống nhau không.<br/>"
+    "Lưu ý: điều kiện ghép bọc trong hàm SOUNDEX() nên MySQL không dùng được index — phải so "
+    "mọi dòng với mọi dòng, rất nặng trên bảng lớn (xem Góc soi lỗi)."),
+   ("ON SOUNDEX(a.customer_name)\n     = SOUNDEX(b.customer_name)",
+    "Điều kiện ghép cặp: <b>SOUNDEX</b> chuyển mỗi tên thành một <b>mã phát âm</b> — bắt đầu "
+    "bằng chữ cái đầu, tiếp theo là các số mã hóa phụ âm (bỏ nguyên âm và ký tự không phải chữ). "
+    "Hai tên đọc gần giống sẽ ra cùng mã và được ghép thành một cặp.<br/>"
+    "Ví dụ: 'Nguyen Van A' và 'Nguyen Van A (2)' đều cho mã <b>N2515</b> (SOUNDEX bỏ qua phần "
+    "' (2)') → ghép thành cặp nghi trùng."),
    ("AND a.customer_id\n  < b.customer_id",
-    "Điều kiện chống trùng cặp: nếu không có dòng này, mỗi cặp sẽ xuất hiện 2 lần (A-B và "
-    "B-A) và mỗi dòng còn tự khớp với chính nó."),
+    "Điều kiện chống đếm trùng cặp. Nếu bỏ dòng này:<br/>"
+    "• mỗi cặp hiện 2 lần — cả (a ghép b) lẫn (b ghép a);<br/>"
+    "• mỗi dòng còn tự khớp với chính nó (tên luôn trùng mã với chính nó).<br/>"
+    "Điều kiện <b>a.customer_id &lt; b.customer_id</b> chỉ giữ lại một chiều, loại cả hai "
+    "trường hợp thừa trên."),
  ],
  "explain":
-   "SOUNDEX là kỹ thuật <b>fuzzy matching</b> — khác hẳn so khớp chính xác (Câu 3) hay "
-   "chuẩn hóa hoa/thường-khoảng trắng (Câu 8, 35): nó so khớp theo <b>âm đọc</b>, không theo "
-   "ký tự.<br/>"
-   "C001 'Nguyen Van A' và C009 'Nguyen Van A (2)' cho cùng mã SOUNDEX vì SOUNDEX bỏ qua "
-   "khoảng trắng và ký tự không phải chữ cái khi mã hóa — cùng một cặp trùng mà Câu 31 (regex "
-   "ký tự lạ) đã phát hiện, nay được xác nhận bằng một kỹ thuật hoàn toàn khác.<br/>"
-   "SOUNDEX được thiết kế gốc cho tiếng Anh nên kém chính xác với tên có dấu tiếng Việt — "
-   "hữu ích nhất khi dữ liệu đã được chuyển về không dấu hoặc cho các trường mã/tên tiếng Anh.",
+   "Điểm cốt lõi: câu này đổi <b>thước đo</b> so trùng từ <b>ký tự</b> sang <b>âm đọc</b>. "
+   "Các cách trước cần hai chuỗi giống hệt nhau sau khi chuẩn hóa; còn ở đây, chỉ cần đọc lên "
+   "nghe gần giống là bị ghép cặp — nhờ vậy bắt được loại trùng do lỗi đánh máy mà cách so "
+   "ký tự bỏ sót.",
  "result_table": (
    ["id_a","ten_a","id_b","ten_b"],
    [["C001","Nguyen Van A","C009","Nguyen Van A (2)"]],
@@ -2591,23 +2600,18 @@ ENTRIES = [
    "số/ngoặc trong tên) — SOUNDEX hữu ích nhất khi lỗi gõ không để lại dấu hiệu ký tự rõ ràng "
    "như vậy, ví dụ 'Nguyen Van A' bị gõ nhầm thành 'Nguyenn Van A'.",
  "note":
-   "SOUNDEX chỉ là một trong các thuật toán fuzzy matching — hạn chế cần biết trước khi dùng:<br/>"
-   "(1) Độ nhạy thấp với tiếng Việt có dấu — cân nhắc bỏ dấu (UNACCENT/REPLACE thủ công) "
-   "trước khi SOUNDEX để tăng độ chính xác.<br/>"
-   "(2) Dễ cho <b>dương tính giả</b> với tên ngắn — luôn xác nhận thủ công, không tự động xóa.<br/>"
-   "(3) Hệ quản trị khác có hàm tương đương: PostgreSQL có <b>SOUNDEX</b> qua extension "
-   "fuzzystrmatch (kèm LEVENSHTEIN đo khoảng cách chỉnh sửa), SQL Server có <b>DIFFERENCE()</b>.<br/>"
-   "(4) <b>⚠️ CẢNH BÁO HIỆU NĂNG — không chạy nguyên văn câu này trên bảng lớn:</b> đây là "
-   "self-join với điều kiện bọc hàm, không index nào hỗ trợ được — EXPLAIN cho thấy MySQL "
-   "phải quét toàn bảng cho từng dòng (chi phí xấp xỉ N²). Với 10 dòng demo là tức thì; với "
-   "bảng khách hàng thật hàng trăm nghìn dòng, câu này có thể chạy hàng giờ hoặc làm nghẽn "
-   "DB đang phục vụ giao dịch. Chạy an toàn theo một trong các cách:<br/>"
-   "— Lọc trước bằng <b>WHERE</b> để thu hẹp tập so sánh (vd theo khu vực, theo ngày tạo "
-   "gần đây) thay vì so toàn bảng với toàn bảng.<br/>"
-   "— Nếu cần chạy định kỳ, thêm cột tính sẵn <b>soundex_name</b> (cập nhật lúc ghi dữ liệu) "
-   "và đánh index trên cột đó — khi ấy JOIN so sánh giá trị thường, không còn bọc hàm.<br/>"
-   "— Luôn chạy trên <b>replica/read-only</b> (xem chương \"Chạy SQL an toàn trên "
-   "production\"), không chạy trực tiếp trên DB giao dịch chính.",
+   "Vài hạn chế cần biết trước khi dùng cách dò theo âm này:<br/>"
+   "(1) <b>Kém với tiếng Việt có dấu</b>: SOUNDEX vốn cho tiếng Anh, nên bỏ dấu ('Nguyễn' → "
+   "'Nguyen') trước khi so để tăng độ chính xác.<br/>"
+   "(2) <b>Dễ báo nhầm với tên ngắn</b>: nhiều tên ngắn khác nghĩa vẫn ra cùng mã → luôn xác "
+   "nhận bằng mắt trước khi xử lý, tuyệt đối không tự động xóa hay gộp.<br/>"
+   "(3) <b>Cảnh báo hiệu năng — đừng chạy nguyên câu này trên bảng lớn</b>: nó ghép mọi dòng "
+   "với mọi dòng, lại bọc hàm nên không xài được index; số khách càng nhiều thì chi phí phình "
+   "theo cấp số nhân (khoảng N×N). 10 dòng demo thì tức thì, nhưng bảng khách thật hàng trăm "
+   "nghìn dòng có thể chạy hàng giờ hoặc làm nghẽn DB. Cách chạy an toàn: lọc trước bằng "
+   "<b>WHERE</b> để thu hẹp phạm vi (theo khu vực, theo ngày tạo gần đây...); hoặc thêm cột "
+   "<b>soundex_name</b> tính sẵn + đánh index rồi so trên cột đó (hết bọc hàm); và luôn chạy "
+   "trên bản sao read-only (xem chương 'Chạy SQL an toàn trên production').",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2642,21 +2646,30 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Orders o\n  LEFT JOIN Order_Items oi\n    ON o.order_id = oi.order_id",
-    "<b>LEFT JOIN</b> giữ tất cả đơn hàng. "
-    "Đơn không có item sẽ có oi.order_id = NULL sau LEFT JOIN."),
+    "<b>LEFT JOIN</b> giữ lại <b>tất cả</b> đơn, kể cả đơn không có dòng item nào. "
+    "Với đơn có items, mỗi item ghép thành một dòng; với đơn rỗng, phần cột của Order_Items "
+    "bị bỏ trống — tức <b>oi.order_id = NULL</b>.<br/>"
+    "Ví dụ ORD_004 không có item nào → sau LEFT JOIN, dòng ORD_004 vẫn còn nhưng oi.order_id "
+    "để trống. (Nếu dùng INNER JOIN, ORD_004 sẽ biến mất — không bắt được đơn rỗng.)"),
    ("WHERE o.total_amount > 0\n  AND  oi.order_id IS NULL",
-    "Kết hợp hai điều kiện: <b>total_amount > 0</b> (có ghi nhận tiền) "
-    "VÀ <b>oi.order_id IS NULL</b> (không có items). "
-    "Mâu thuẫn này là bug nghiêm trọng."),
+    "Hai điều kiện phải thỏa cùng lúc:<br/>"
+    "• <b>total_amount &gt; 0</b>: đơn có ghi nhận số tiền.<br/>"
+    "• <b>oi.order_id IS NULL</b>: nhưng không có item nào — chính là dấu hiệu đơn rỗng lộ ra "
+    "ở bước LEFT JOIN trên.<br/>"
+    "Ghép lại: đơn <b>có tiền mà không có sản phẩm</b> — một mâu thuẫn nghiêm trọng."),
    ("SELECT o.order_id, o.customer_id,\n  o.total_amount, o.status",
-    "Chiếu đủ thông tin để QA điều tra: bao nhiêu tiền, trạng thái gì."),
+    "Chiếu đủ thông tin để QA điều tra tiếp: đơn của khách nào, ghi bao nhiêu tiền, đang ở "
+    "trạng thái gì."),
  ],
  "explain":
-   "Câu 16 bắt <b>mọi đơn rỗng</b> (kể cả total_amount = 0). "
-   "Câu 38 chỉ bắt đơn rỗng <b>nhưng có tiền</b> — trường hợp nghiêm trọng hơn.<br/>"
-   "ORD_004 bị phát hiện: total_amount = 5M nhưng không có item nào trong Order_Items.<br/>"
-   "ORD_004 còn có thêm bug customer_id = C999 không tồn tại (Câu 7) — "
-   "một đơn tích lũy nhiều lỗi chồng nhau.",
+   "Vì sao đơn rỗng-có-tiền xếp mức nghiêm trọng hơn đơn rỗng thường? Vì hệ thống đang ghi nhận "
+   "một khoản tiền mà <b>không có dòng hàng nào chống lưng</b> để đối chiếu — không cách nào biết "
+   "5M đó đúng hay sai, từ đâu ra. Số tiền 'lơ lửng' như vậy là rủi ro toàn vẹn tài chính, không "
+   "chỉ là bản ghi thừa.<br/>"
+   "Một bài học soi lỗi đi kèm: <b>dữ liệu bẩn thật thường trượt nhiều phép kiểm cùng lúc</b>. "
+   "ORD_004 vừa rỗng-có-tiền (câu này), vừa gắn customer_id C999 không tồn tại (Câu 7) — hai lỗi "
+   "độc lập chồng lên một dòng. Nên khi bắt được một đơn kiểu này, đừng dừng ở một phát hiện: "
+   "soi luôn các dấu hiệu lân cận (khách có thật không, trạng thái có hợp lý không).",
  "result_table": (
    ["order_id","customer_id","total_amount","status"],
    [["ORD_004","C999","5.000.000","PENDING"]],
@@ -2665,12 +2678,16 @@ ENTRIES = [
    "ORD_004: 5M nhưng không có sản phẩm nào. Thêm vào đó: C999 không tồn tại. "
    "Đây là đơn hàng 'ma' — cần điều tra log xem được tạo như thế nào.",
  "note":
-   "ORD_004 là ví dụ điển hình của <b>bug chồng bug</b>:<br/>"
-   "(1) Câu 7: customer_id = C999 không có trong Customers.<br/>"
-   "(2) Câu 16: không có item nào trong Order_Items.<br/>"
-   "(3) Câu 38: có total_amount = 5M nhưng không có gì để tính.<br/>"
-   "Khi tìm thấy loại đơn này, ưu tiên kiểm tra access log và payment log "
-   "để xác định có transaction thật không.",
+   "(1) <b>Cạm bẫy khi dùng LEFT JOIN để tìm đơn không có bản ghi con</b>: điều kiện lọc bảng "
+   "con phải đặt <b>đúng chỗ</b>. "
+   "<b>oi.order_id IS NULL phải nằm ở WHERE</b> (lọc sau khi đã LEFT JOIN); nếu vô ý chuyển nó "
+   "lên ON thì không đơn nào bị loại và kết quả trả về sai bét. Và phải kiểm IS NULL trên "
+   "<b>cột khóa</b> của bảng con (oi.order_id) — chọn nhầm một cột vốn cho phép NULL thì kết "
+   "quả không còn tin được.<br/>"
+   "(2) <b>Hỏi trước khi kết luận là bug</b>: đơn có tiền mà không item thường do bước tạo đơn "
+   "và bước thêm item <b>không nằm chung một transaction</b> — tạo đơn xong nhưng thêm item "
+   "thất bại giữa chừng, để lại cái vỏ có tiền mà rỗng ruột. Cũng có thể là đơn điều chỉnh/hoàn "
+   "phí cố ý không gắn sản phẩm. Biết nhóm nguyên nhân giúp hỏi đúng người (dev hay vận hành).",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2718,9 +2735,16 @@ ENTRIES = [
  "explain":
     "Hai mức độ kiểm tra khác nhau: Câu 13 bắt <b>mọi</b> chênh lệch dù nhỏ, "
     "câu này chỉ bắt khi tổng items vượt <b>1.5 lần</b> total_amount.<br/>"
-    "ORD_001: items 62M &gt; 48M (= 32M × 1.5) → bị bắt.<br/>"
-    "ORD_002: items 31M &gt; 30M (= 20M × 1.5) → bị bắt.<br/>"
-    "Cả hai đều bị bắt: ORD_001 do item trùng, ORD_002 do Bug-B (total_amount bị ghi thấp).",
+    "<b>Vì sao là 1.5×?</b> Tiền hàng và total_amount thường lệch nhau chút ít vì lý do hợp lệ "
+    "— phí vận chuyển, giảm giá, làm tròn — nhưng các khác biệt này hiếm khi vượt vài chục phần "
+    "trăm. Đặt ngưỡng ở mức +50% là để bỏ qua vùng 'nhiễu' đó: đã vượt 1.5× thì gần như chắc "
+    "chắn là lỗi dữ liệu thật, không phải phí hay khuyến mãi. Đây là tham số nghiệp vụ — mỗi hệ "
+    "thống nên tự chỉnh (các mức thay thế xem ở Góc soi lỗi).<br/>"
+    "ORD_001: items 62M &gt; 48M (= 32M × 1.5) → bị bắt (do item trùng).<br/>"
+    "ORD_002: items 31M &gt; 30M (= 20M × 1.5), tỷ lệ ≈ 1,55× — chỉ <b>vừa đủ</b> vượt ngưỡng → "
+    "bị bắt (do Bug-B: total_amount ghi thấp). Nếu nâng ngưỡng lên 2× thì cả ORD_001 (1,94×) lẫn "
+    "ORD_002 (1,55×) đều lọt lưới — cho thấy chọn con số nào quyết định ranh giới 'bao nhiêu thì "
+    "coi là bất thường'.",
   "result_table": (
     ["order_id","total_amount","tinh_tu_items"],
     [
@@ -2776,20 +2800,26 @@ ENTRIES = [
  ),
  "clauses": [
    ("FROM Order_Items oi\n  JOIN Orders o\n    ON oi.order_id = o.order_id",
-    "<b>INNER JOIN</b> ghép mỗi dòng item với đơn cha của nó "
-    "để đọc được trạng thái xóa mềm từ bảng Orders."),
+    "<b>INNER JOIN</b> ghép mỗi dòng item với đơn cha của nó (khớp theo order_id), để đọc được "
+    "cột <b>deleted_at</b> — cột này nằm bên bảng Orders, không có trong Order_Items.<br/>"
+    "Ví dụ item 8 mang order_id = ORD_005 → JOIN sang Orders lấy được trạng thái xóa mềm của "
+    "đơn ORD_005."),
    ("WHERE o.deleted_at IS NOT NULL",
-    "Chỉ giữ item thuộc đơn đã bị <b>xóa mềm</b> — "
-    "deleted_at có giá trị nghĩa là đơn lẽ ra không còn hiệu lực."),
+    "Chỉ giữ lại item thuộc đơn đã bị <b>xóa mềm</b> — tức đơn cha có deleted_at khác NULL "
+    "(đã đánh dấu xóa, lẽ ra không còn hiệu lực).<br/>"
+    "Với dữ liệu mẫu chỉ ORD_005 có deleted_at, nên chỉ item 8 và 9 lọt qua; item của các đơn "
+    "khác (deleted_at trống) đều bị loại."),
    ("ORDER BY oi.item_id",
-    "Sắp xếp theo item_id để dễ đối chiếu với bảng gốc."),
+    "Sắp xếp theo item_id để dễ đối chiếu ngược lại với bảng Order_Items gốc."),
  ],
  "explain":
-   "Câu 12 soi <b>bảng cha</b> (Orders) để tìm đơn xóa mềm; câu này đi tiếp xuống "
-   "<b>bảng con</b> (Order_Items) để tìm những dòng bị bỏ lại.<br/>"
-   "Đây là mẫu kiểm tra <b>tính nhất quán khi xóa mềm</b>: xóa cha thì con phải được "
-   "đánh dấu hoặc loại khỏi mọi phép tính.<br/>"
-   "item 8 và 9 thuộc ORD_005 — vẫn tồn tại dù đơn đã bị hủy và xóa mềm.",
+   "Câu 12 soi <b>bảng cha</b> (Orders) để tìm đơn bị xóa mềm; câu này đi tiếp xuống "
+   "<b>bảng con</b> (Order_Items) tìm những dòng chi tiết bị bỏ lại.<br/>"
+   "Đây là mẫu kiểm tra <b>tính nhất quán khi xóa mềm</b>: đã xóa (mềm) đơn cha thì các dòng "
+   "con cũng phải được đánh dấu hoặc loại khỏi mọi phép tính. Nếu không, dữ liệu con 'sống' "
+   "lâu hơn dữ liệu cha, và mọi con số cộng từ bảng con đều lệch.<br/>"
+   "Điểm mấu chốt: bug ở đây không nằm ở một dòng sai giá trị, mà ở <b>thao tác xóa làm nửa "
+   "vời</b> — dọn cha nhưng quên con.",
  "result_table": (
    ["item_id","order_id","product_id","quantity","price"],
    [
@@ -2802,12 +2832,14 @@ ENTRIES = [
    "Order_Items phải thêm điều kiện loại đơn có deleted_at, nếu không doanh thu và "
    "lượng bán sẽ bị thổi phồng.",
  "note":
-   "Cách phòng và soát loại lỗi này:<br/>"
-   "(1) <b>Lọc nhất quán</b>: mọi truy vấn báo cáo nên JOIN sang Orders và thêm "
-   "<b>WHERE deleted_at IS NULL</b>.<br/>"
-   "(2) <b>Dọn theo tầng</b>: khi xóa mềm đơn, cân nhắc đánh dấu cả item con.<br/>"
-   "(3) <b>Đối soát định kỳ</b>: chạy câu này theo lịch để phát hiện sớm "
-   "item mồ côi sau mỗi đợt xóa.",
+   "(1) <b>Điểm mù của câu lệnh</b>: INNER JOIN chỉ bắt được item mà đơn cha <b>còn</b> trong "
+   "bảng Orders (bị xóa mềm). Nếu đơn cha bị <b>xóa cứng</b> (xóa hẳn dòng khỏi Orders), item "
+   "con thành mồ côi thật sự nhưng câu này KHÔNG thấy — vì INNER JOIN đã loại luôn dòng không "
+   "tìm được cha. Muốn bắt cả trường hợp đó, đối chiếu order_id của item với danh sách đơn tồn "
+   "tại bằng <b>LEFT JOIN ... WHERE o.order_id IS NULL</b>.<br/>"
+   "(2) <b>Hỏi dev về ý đồ</b>: xóa mềm một đơn CÓ nên tự động dọn (hoặc đánh dấu) item con "
+   "không? Nếu có mà code chưa làm → bug ở luồng xóa; nên xóa cha và con trong <b>cùng một "
+   "transaction</b> để không bỏ sót nửa vời.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2847,14 +2879,26 @@ ENTRIES = [
    "ORDER  BY order_id;"
  ),
  "clauses": [
-   ("CASE WHEN ... THEN ...\n  END AS van_de",
-    "<b>CASE</b> gán nhãn mô tả loại lệch cho từng dòng — "
-    "giúp QA đọc kết quả là biết ngay vi phạm kiểu nào."),
+   ("FROM Orders",
+    "MySQL bắt đầu từ đây: lấy toàn bộ đơn trong bảng Orders, rồi các bước sau mới lọc và "
+    "gán nhãn trên đó."),
    ("WHERE (status = 'CANCELLED'\n    AND deleted_at IS NULL)\n  OR (status <> 'CANCELLED'\n    AND deleted_at IS NOT NULL)",
-    "Hai vế OR bắt hai chiều lệch: hủy mà chưa xóa mềm, "
-    "và xóa mềm mà status chưa chuyển CANCELLED."),
+    "Bước lọc, chạy ngay sau FROM — chỉ giữ những đơn có hai cột dấu vết <b>lệch nhau</b>. "
+    "Hai vế OR bắt hai chiều lệch:<br/>"
+    "• <b>status = 'CANCELLED' AND deleted_at IS NULL</b>: đã hủy nhưng chưa xóa mềm "
+    "(ví dụ ORD_003).<br/>"
+    "• <b>status &lt;&gt; 'CANCELLED' AND deleted_at IS NOT NULL</b>: đã xóa mềm nhưng trạng "
+    "thái chưa chuyển sang hủy.<br/>"
+    "Đơn nào có hai cột <b>khớp nhau</b> (cùng đã hủy, hoặc cùng còn bình thường) đều không "
+    "lọt qua bước này."),
+   ("CASE WHEN ... THEN ...\n  END AS van_de",
+    "Thuộc phần SELECT nên chạy <b>sau</b> WHERE, dù được viết ở đầu câu lệnh.<br/>"
+    "Trên các đơn đã lọc, CASE dán cho mỗi đơn một <b>nhãn mô tả</b> đúng chiều lệch của nó "
+    "vào cột <b>van_de</b> — một trong hai chuỗi: 'Hủy nhưng chưa xóa mềm' hoặc 'Xóa mềm nhưng "
+    "status chưa CANCELLED'.<br/>"
+    "Nhờ nhãn sẵn này, QA đọc kết quả là biết ngay đơn sai kiểu gì, khỏi phải tự đối chiếu."),
    ("ORDER BY order_id",
-    "Sắp xếp theo mã đơn cho dễ tra."),
+    "Sắp xếp theo mã đơn cho dễ tra cứu."),
  ],
  "explain":
    "Khi một sự kiện nghiệp vụ được ghi ở <b>nhiều cột dấu vết</b>, các cột đó phải "
@@ -2869,12 +2913,13 @@ ENTRIES = [
    "ORD_003 hủy nhưng chưa được xóa mềm — nếu báo cáo lọc theo deleted_at, đơn này "
    "vẫn lọt vào như đơn còn hiệu lực. Cần đồng bộ lại hai cột.",
  "note":
-   "Khi tìm thấy đơn CANCELLED mà deleted_at trống, hỏi dev: đây là lỗi của một bước bị thiếu "
-   "trong transaction hủy đơn, hay quy trình nghiệp vụ thực sự tách hai bước này ra? "
-   "Nếu tách ra thì có window mà đơn bị hủy nhưng vẫn bị tính vào báo cáo — cần bổ sung "
-   "điều kiện lọc. "
-   "Gốc rễ thường nằm ở code: nên cập nhật status và deleted_at trong cùng một transaction "
-   "để tránh cập nhật nửa vời (half-update — sửa được cột này nhưng cột kia chưa kịp).",
+   "(1) <b>Hỏi dev trước khi kết luận</b>: đơn CANCELLED mà deleted_at trống là <b>bug của một "
+   "bước bị thiếu</b> trong luồng hủy đơn, hay quy trình cố ý tách riêng hai bước? Hai câu trả "
+   "lời dẫn tới hai hướng xử lý khác nhau — nếu là cố ý, phải rà lại mọi báo cáo/màn hình đang "
+   "lọc theo deleted_at xem có bỏ sót đơn đã hủy không.<br/>"
+   "(2) <b>Gốc rễ thường nằm ở code</b>: nên cập nhật status và deleted_at trong <b>cùng một "
+   "transaction</b>, tránh cập nhật nửa vời (half-update — sửa được cột này nhưng cột kia chưa "
+   "kịp) khiến hai cột lệch nhau.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -2911,23 +2956,41 @@ ENTRIES = [
    "ORDER  BY so_ngay_ton_dong DESC;"
  ),
  "clauses": [
-   ("DATEDIFF('2026-06-30', order_date)\n  AS so_ngay_ton_dong",
-    "<b>DATEDIFF</b> tính số ngày giữa mốc chốt sổ và ngày đặt đơn — "
-    "chính là tuổi của đơn. Dùng ngày cố định để kết quả không trôi theo thời gian."),
+   ("FROM Orders",
+    "MySQL bắt đầu từ đây: lấy toàn bộ đơn trong bảng Orders làm tập dữ liệu, "
+    "rồi các bước sau mới lọc và tính toán trên đó."),
    ("WHERE status = 'PENDING'\n  AND DATEDIFF('2026-06-30',\n        order_date) > 3",
-    "Lọc đơn còn <b>PENDING</b> và đã treo quá <b>3 ngày</b>. "
-    "Ngưỡng 3 ngày tùy SLA (cam kết thời gian xử lý) của hệ thống. Lưu ý: DATEDIFF() bọc quanh "
-    "order_date khiến điều kiện này <b>non-sargable</b> — tức là dạng điều kiện mà index không "
-    "tận dụng được, DB phải quét từng dòng. Xem cách viết thay thế ở phần Ghi chú."),
+    "Bước lọc, chạy ngay sau FROM — chỉ giữ đơn thỏa <b>cả hai</b> điều kiện:<br/>"
+    "• <b>status = 'PENDING'</b>: đơn đang treo, chưa xử lý xong.<br/>"
+    "• <b>DATEDIFF('2026-06-30', order_date) &gt; 3</b>: đã treo quá 3 ngày.<br/>"
+    "Trong đó <b>DATEDIFF(mốc, ngày_đặt)</b> là số ngày từ ngày đặt đơn đến mốc chốt sổ 30-06. "
+    "Ví dụ đơn đặt 24-06 → cách 30-06 là 6 ngày, lớn hơn 3 nên được giữ lại.<br/>"
+    "Ngưỡng 3 ngày chỉ là ví dụ — tùy SLA (cam kết thời gian xử lý) của mỗi hệ thống.<br/>"
+    "Lưu ý: DATEDIFF bọc quanh cột order_date khiến điều kiện này chậm trên bảng lớn "
+    "(<b>non-sargable</b>) — chi tiết và cách viết nhanh hơn xem ở Góc soi lỗi."),
+   ("DATEDIFF('2026-06-30', order_date)\n  AS so_ngay_ton_dong",
+    "Thuộc phần SELECT nên chạy <b>sau</b> WHERE, dù được viết ở đầu câu lệnh.<br/>"
+    "Nó lấy chính con số 'số ngày treo' vừa dùng để lọc và <b>hiển thị thành một cột riêng</b> "
+    "(đặt tên <b>so_ngay_ton_dong</b>) để đọc và sắp xếp.<br/>"
+    "Dùng mốc cố định 2026-06-30 (thay vì ngày hôm nay) để con số trong sách không đổi mỗi lần chạy."),
    ("ORDER BY so_ngay_ton_dong DESC",
-    "Đơn treo lâu nhất lên đầu — ưu tiên xử lý trước."),
+    "Sắp xếp giảm dần theo số ngày treo — đơn treo lâu nhất lên đầu, để ưu tiên xử lý trước."),
  ],
  "explain":
-   "Câu 34 bắt ngày <b>vô lý</b> (tương lai hoặc quá xa quá khứ); câu này bắt đơn "
-   "<b>tồn đọng</b> — ngày hợp lệ nhưng trạng thái mắc kẹt quá lâu.<br/>"
-   "ORD_006 đặt 2026-06-23 (7 ngày) và ORD_004 đặt 2026-06-24 (6 ngày) — cả hai vẫn PENDING.<br/>"
-   "ORD_007 (2027-01-01) cho DATEDIFF âm → không hiện (đơn 'tương lai', bắt bởi Câu 34).<br/>"
-   "Trên production thường thay 2026-06-30 bằng <b>CURDATE()</b> để đo theo thời gian thực.",
+   "Câu này săn đơn <b>tồn đọng</b> — đơn có ngày đặt hợp lệ nhưng trạng thái mắc kẹt ở PENDING "
+   "quá lâu. (Khác Câu 34: câu đó bắt ngày <b>vô lý</b> như ngày tương lai.)<br/>"
+   "Bộ lọc gồm hai điều kiện phải thỏa cùng lúc: trạng thái là <b>PENDING</b>, và số ngày treo "
+   "(tính đến mốc 30-06) phải <b>lớn hơn 3</b>. Bảng dưới cho thấy câu lệnh quyết định giữ hay "
+   "loại từng đơn thế nào:",
+ "explain_table": (
+   ["Đơn", "Trạng thái", "Số ngày treo (đến 30-06)", "Kết quả"],
+   [
+     ["ORD_006", "PENDING", "7  (&gt; 3)", "Giữ lại"],
+     ["ORD_004", "PENDING", "6  (&gt; 3)", "Giữ lại"],
+     ["ORD_001", "COMPLETED", "10", "Loại — không PENDING"],
+     ["ORD_007", "PENDING", "−185 (đơn tương lai)", "Loại — không quá 3 ngày"],
+   ],
+ ),
  "result_table": (
    ["order_id","customer_id","status","order_date","so_ngay_ton_dong"],
    [
@@ -2940,27 +3003,27 @@ ENTRIES = [
    "ORD_004 treo 6 ngày — customer_id C999 không tồn tại (Câu 7). "
    "Đơn treo lâu là nơi nên soi kỹ vì thường đi kèm nhiều lỗi khác.",
  "note":
-   "Tinh chỉnh câu này theo nghiệp vụ:<br/>"
-   "(1) Đổi mốc cố định thành <b>CURDATE()</b> khi chạy giám sát thực tế.<br/>"
-   "(2) Điều chỉnh ngưỡng ngày theo SLA: thanh toán có thể là vài giờ, "
-   "giao hàng có thể là vài ngày.<br/>"
-   "(3) Áp dụng cho các trạng thái 'mắc kẹt' khác: PROCESSING, AWAITING_PAYMENT.<br/>"
-   "(4) <b>Hiệu năng trên bảng lớn</b>: khác với Câu 34 (so sánh trực tiếp order_date, tận "
-   "dụng được index nếu có), <b>DATEDIFF(...) &gt; 3</b> bọc hàm quanh cột nên non-sargable "
-   "— dù order_date có được đánh index, MySQL vẫn phải tính DATEDIFF cho từng dòng thay vì "
-   "dùng index range scan. Trên bảng lớn, viết lại dạng sargable cho cùng kết quả:<br/>"
+   "(1) <b>Đừng quên mốc thời gian</b>: mốc 30-06 ở đây là cố định để ví dụ chạy ra kết quả "
+   "ổn định. Nếu bê nguyên lên hệ thống thật mà quên đổi thành <b>CURDATE()</b>, câu lệnh sẽ "
+   "đo theo một ngày đứng yên — 'tuổi đơn' tính ra ngày càng sai mà không báo lỗi gì. Khi giám "
+   "sát thực tế, luôn đo theo ngày hiện tại.<br/>"
+   "(2) <b>Cạm bẫy hiệu năng (non-sargable)</b>: bọc hàm quanh cột — <b>DATEDIFF(order_date) "
+   "&gt; 3</b> — khiến dù order_date có index, MySQL vẫn phải tính DATEDIFF cho <b>từng dòng</b> "
+   "thay vì dùng index, nên chậm trên bảng lớn. Viết lại dạng dùng được index (cùng kết quả):<br/>"
    "<b>WHERE status = 'PENDING'</b><br/>"
-   "<b>  AND order_date &lt; DATE_SUB('2026-06-30', INTERVAL 3 DAY);</b>",
+   "<b>  AND order_date &lt; DATE_SUB(CURDATE(), INTERVAL 3 DAY);</b>",
 },
 # ─────────────────────────────────────────────────────────
 {
  "part": 4, "id": 43,
  "title": "Dựng dòng thời gian đơn hàng — khoảng cách giữa các đơn",
  "situation":
-   "Một chuỗi đơn hàng đều đặn là dấu hiệu hệ thống chạy bình thường. Khi xuất hiện "
-   "<b>khoảng lặng dài</b> (nhiều ngày không có đơn) hoặc <b>cụm dày đặc</b> (nhiều đơn "
-   "trong tích tắc), đó là dấu vết đáng soi: job tạo đơn chết, hoặc bot đặt hàng hàng "
-   "loạt. Câu này đo số ngày giữa mỗi đơn và đơn liền trước nó.",
+   "Mỗi đơn hàng đến vào một thời điểm, và khoảng cách giữa các đơn liên tiếp cho biết "
+   "<b>nhịp đặt đơn</b> của hệ thống. Câu này xếp đơn theo thời gian rồi tính, với mỗi đơn, "
+   "đã cách đơn liền trước bao nhiêu ngày — biến một danh sách đơn thành đường nhịp để nhìn ra "
+   "chỗ bất thường. Có hai kiểu bất thường đáng soi: <b>khoảng lặng dài</b> (nhiều ngày liền "
+   "không có đơn — có thể job tạo đơn hoặc API đã ngừng chạy mà không ai hay) và <b>cụm dày "
+   "đặc</b> (nhiều đơn dồn trong tích tắc — nghi vấn bot đặt hàng loạt hoặc khách bấm gửi hai lần).",
  "before_label": "Bảng Orders — dòng thời gian 7 đơn theo order_date:",
  "before_cols": ["order_id","order_date"],
  "before_rows": [
@@ -2972,7 +3035,7 @@ ENTRIES = [
    ["ORD_006","2026-06-23"],
    ["ORD_007","2027-01-01"],
  ],
- "before_bugs": [6],
+ "before_bugs": [5, 6],
  "before_col_widths": [140, 353],
  "sql": (
    "SELECT o.order_id,\n"
@@ -2987,23 +3050,43 @@ ENTRIES = [
    "ORDER  BY o.order_date;"
  ),
  "clauses": [
+   ("FROM Orders o",
+    "MySQL bắt đầu từ đây: lấy toàn bộ đơn trong bảng Orders, gán alias <b>o</b> cho mỗi đơn "
+    "đang xét. Bước này xác định 'sẽ duyệt trên những dòng nào' — chạy <b>trước</b>, rồi phần "
+    "SELECT mới tính toán trên từng dòng đã chọn."),
    ("(SELECT MAX(o2.order_date)\n   FROM Orders o2\n   WHERE o2.order_date\n         < o.order_date)",
-    "<b>Subquery tương quan</b>: với mỗi đơn, tìm ngày đặt lớn nhất "
-    "trong số các đơn <b>trước nó</b> — chính là đơn liền trước. Đây là correlated "
-    "subquery (EXPLAIN gắn nhãn <b>dependent</b>) — MySQL chạy lại subquery này cho "
-    "TỪNG dòng outer, không phải 1 lần — xem cảnh báo hiệu năng ở phần Ghi chú."),
+    "<b>Subquery tương quan — trái tim của câu lệnh.</b> Nhiệm vụ của nó rất gọn: tìm "
+    "<b>ngày của đơn liền ngay trước</b> đơn đang xét.<br/>"
+    "Cách làm: với mỗi đơn (gọi là o), nó nhìn qua mọi đơn khác, chỉ giữ những đơn có ngày "
+    "<b>trước</b> ngày của o, rồi lấy ngày <b>mới nhất</b> (MAX) trong số đó — đúng là đơn ngay "
+    "trước o.<br/>"
+    "Ví dụ đơn ORD_004 (24-06): các đơn trước nó rơi vào ngày 20, 22, 23, 23 → lấy MAX = 23-06.<br/>"
+    "Hai điểm dễ vấp:<br/>"
+    "• Dùng dấu &lt; (ngày <b>nhỏ hơn</b>), không phải ≤ — để đơn không tự so với chính nó, và "
+    "để hai đơn cùng ngày cùng nhìn lùi về ngày khác gần nhất.<br/>"
+    "• Gọi là 'tương quan' (correlated) vì bên trong có nhắc <b>o.order_date</b> của truy vấn "
+    "ngoài. Do đó MySQL phải chạy lại subquery này cho <b>từng đơn</b> (EXPLAIN gắn nhãn "
+    "dependent) — chính là lý do câu chậm khi bảng lớn (xem Góc soi lỗi)."),
    ("DATEDIFF(o.order_date, ...)\n  AS ngay_ke_tu_don_truoc",
-    "Lấy hiệu số ngày giữa đơn hiện tại và đơn liền trước. "
-    "Đơn đầu tiên không có đơn nào trước nên trả về NULL."),
+    "<b>DATEDIFF(a, b)</b> trả về số ngày của a trừ b. Ở đây a = ngày đơn hiện tại, "
+    "b = ngày đơn liền trước (do subquery trả về) → kết quả là 'đơn này cách đơn trước bao "
+    "nhiêu ngày'.<br/>"
+    "Ví dụ ORD_004: DATEDIFF(24-06, 23-06) = 1.<br/>"
+    "Riêng đơn đầu tiên (ORD_001) không có đơn nào trước → subquery trả NULL → "
+    "DATEDIFF(ngày, NULL) = NULL, nên cột này hiển thị trống."),
    ("ORDER BY o.order_date",
-    "Sắp theo thời gian để đọc như một dòng sự kiện."),
+    "Sắp xếp kết quả hiển thị theo thời gian tăng dần, để đọc bảng như một dòng sự kiện từ "
+    "cũ đến mới. Mệnh đề này <b>không ảnh hưởng cách tính</b> khoảng cách — bỏ đi thì các con "
+    "số vẫn đúng, chỉ là thứ tự dòng xáo trộn nên khó đọc hơn."),
  ],
  "explain":
-   "Đây là cách dựng dòng thời gian <b>không dùng window function</b> — phù hợp cả MySQL "
-   "phiên bản cũ. Subquery tương quan đóng vai trò như LAG() nhưng viết bằng subquery.<br/>"
-   "Câu 49 ở PHẦN 6 sẽ làm việc tương tự gọn hơn bằng window function.<br/>"
-   "Khoảng cách đều 1–2 ngày ở data mẫu là bình thường; trên thực tế, một con số đột biến "
-   "mới là dấu hiệu cần điều tra.",
+   "Cách đọc kết quả: cột 'số ngày cách đơn trước' chính là thước đo nhịp bán hàng. Với dữ liệu "
+   "mẫu, các khoảng 1–2 ngày là đều đặn — bình thường; chỉ con số vọt lên bất thường (như 190 "
+   "ngày) mới đáng điều tra. Nói ngắn gọn: bản thân con số không phải bug — <b>chỗ lệch khỏi "
+   "nhịp thường ngày</b> mới là dấu hiệu cần soi.<br/>"
+   "Một điểm hay của cách viết này: nó dựng được dòng thời gian mà <b>không cần công cụ đặc biệt "
+   "nào</b>, chạy được cả trên các bản MySQL cũ. Từ MySQL 8.0 trở lên có 'window function' "
+   "(giới thiệu ở Câu 49) giúp viết kiểu bài này ngắn gọn hơn.",
  "result_table": (
    ["order_id","order_date","ngay_ke_tu_don_truoc"],
    [
@@ -3022,17 +3105,15 @@ ENTRIES = [
    "ORD_007 (2027-01-01) có khoảng cách = 190 ngày — khoảng lặng cực dài, đây là đơn ngày tương lai (xem Câu 34). "
    "Đơn đầu tiên ORD_001 có khoảng cách NULL vì không có đơn nào trước.",
  "note":
-   "Ứng dụng dòng thời gian trong kiểm thử:<br/>"
-   "(1) <b>Khoảng lặng dài</b>: hệ thống ngừng nhận đơn — job hoặc API có thể đã chết.<br/>"
-   "(2) <b>Cụm 0 ngày dày đặc</b>: nhiều đơn cùng lúc — nghi vấn bot hoặc double-submit.<br/>"
-   "(3) Thêm điều kiện trên khoảng cách để chỉ liệt kê các điểm vượt ngưỡng.<br/>"
-   "(4) <b>⚠️ CẢNH BÁO HIỆU NĂNG</b>: subquery tương quan ở đây chạy lại có table scan cho "
-   "mỗi dòng outer — chi phí xấp xỉ N² giống hệt mức rủi ro ở Câu 37 (SOUNDEX self-join). "
-   "Với vài nghìn đơn vẫn ổn; với bảng Orders production hàng triệu dòng, cách viết này có "
-   "thể chạy rất lâu hoặc nghẽn DB. Khi cần chạy thật trên dữ liệu lớn, dùng "
-   "<b>LAG(order_date) OVER (ORDER BY order_date)</b> (window function, MySQL 8.0+, xem "
-   "Câu 49) — cùng kết quả nhưng chỉ quét bảng một lần. Cách viết subquery ở Câu 43 này chỉ "
-   "nên dùng để minh hoạ logic hoặc khi chạy trên MySQL cũ chưa có window function.",
+   "(1) <b>Muốn tự động hoá</b>: thêm điều kiện lọc theo khoảng cách (ví dụ chỉ lấy đơn cách đơn "
+   "trước hơn 7 ngày, hoặc bằng 0) để câu lệnh tự chỉ ra điểm bất thường, khỏi phải dò tay.<br/>"
+   "(2) <b>Cảnh báo hiệu năng</b>: subquery ở đây phải quét lại bảng cho <b>từng đơn</b>, nên số "
+   "đơn càng nhiều thì chi phí phình rất nhanh (khoảng N×N — cùng kiểu rủi ro với Câu 37). Vài "
+   "nghìn đơn vẫn ổn; nhưng bảng Orders thật hàng triệu dòng thì câu này có thể chạy rất lâu. Khi "
+   "đó nên dùng <b>window function LAG()</b> (MySQL 8.0+; xem Câu 49) — chỉ quét bảng một lần.<br/>"
+   "(3) <b>Khác biệt cần nhớ nếu đổi sang LAG</b>: với hai đơn <b>trùng ngày</b>, LAG cho khoảng "
+   "cách 0 (so đúng dòng liền trước), còn subquery ở đây (dùng dấu &lt;) cho 1 (đếm lùi về ngày "
+   "khác gần nhất) — chọn cách khớp với điều bạn muốn đo.",
 },
 # ─────────────────────────────────────────────────────────
 {
@@ -3058,7 +3139,6 @@ ENTRIES = [
    [13,"ORD_006","PROD_003", 1, "8.000.000"],
    [14,"ORD_007","PROD_004",20, "1.000.000"],
  ],
- "before_bugs": [2, 8],
  "before_col_widths": [50, 75, 90, 65, 213],
  "sql": (
    "SELECT a.item_id + 1      AS id_bi_mat\n"
