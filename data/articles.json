@@ -147,15 +147,15 @@
       },
       {
         "title": "Bước 2 — Giải nén và đặt đúng thư mục",
-        "body": "Trong gói Bundle có nhiều file zip. Tìm file nặng nhất (khoảng 400–500MB) tên dạng mysql-commercial-[phiên_bản]-winx64.zip — đây mới là Server, các file còn lại là driver phụ.\n\nGiải nén ra, đổi tên thư mục thành 'MySQL Server 9.7' (theo đúng phiên bản của bạn), rồi di chuyển vào đường dẫn hệ thống:",
-        "code": "C:\\Program Files\\MySQL\\MySQL Server 9.7\\",
+        "body": "Trong gói Bundle có nhiều file zip. Tìm file nặng nhất (khoảng 400–500MB) tên dạng mysql-[phiên_bản]-winx64.zip — đây mới là Server, các file còn lại là driver phụ.\n\nGiải nén ra, đổi tên thư mục thành 'MySQL Server 8.4' (theo đúng phiên bản của bạn), rồi di chuyển vào đường dẫn hệ thống:",
+        "code": "C:\\Program Files\\MySQL\\MySQL Server 8.4\\",
         "tip": "✅ Kiểm tra: mở thư mục vừa di chuyển và đảm bảo thấy thư mục bin bên trong. Thấy bin là bước này đã đúng."
       },
       {
         "title": "Bước 3 — Kích hoạt Server bằng CMD quyền Administrator",
         "body": "Đây là bước 99% người dùng bị lỗi vì mở CMD thường thay vì mở bằng quyền Administrator.\n\nCách mở đúng: nhấn phím Windows → gõ cmd → click chuột phải vào Command Prompt → chọn Run as administrator. Dòng đầu cửa sổ CMD phải là C:\\Windows\\system32> mới đúng.\n\nSau đó chạy lần lượt 4 lệnh sau:",
-        "code": "REM 1. Di chuyển vào thư mục bin\ncd \"C:\\Program Files\\MySQL\\MySQL Server 9.7\\bin\"\n\nREM 2. Khởi tạo dữ liệu, xóa trắng mật khẩu root (tiện cho môi trường học)\nmysqld --initialize-insecure\n\nREM 3. Đăng ký dịch vụ vào Windows\nmysqld --install MySQL97\n\nREM 4. Khởi động dịch vụ\nnet start MySQL97",
-        "tip": "🎉 Nếu thấy 'The MySQL97 service was started successfully.' — bộ lõi đã chạy thành công."
+        "code": "REM 1. Di chuyển vào thư mục bin\ncd \"C:\\Program Files\\MySQL\\MySQL Server 8.4\\bin\"\n\nREM 2. Khởi tạo dữ liệu, xóa trắng mật khẩu root (tiện cho môi trường học)\nmysqld --initialize-insecure\n\nREM 3. Đăng ký dịch vụ vào Windows\nmysqld --install MySQL84\n\nREM 4. Khởi động dịch vụ\nnet start MySQL84",
+        "tip": "🎉 Nếu thấy 'The MySQL84 service was started successfully.' — bộ lõi đã chạy thành công."
       },
       {
         "title": "Bước 4 — Kết nối Workbench vào Server",
