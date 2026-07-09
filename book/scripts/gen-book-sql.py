@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Sinh ebook PDF: "Cẩm nang 50 câu lệnh SQL săn Bug thực chiến cho QA"
-- Font Arial + Consolas (hỗ trợ tiếng Việt đầy đủ)
+- Font Liberation Sans + Liberation Mono (giấy phép SIL OFL, nhúng kèm repo ở scripts/fonts/;
+  metric tương thích Arial/Courier, hỗ trợ tiếng Việt đầy đủ)
 - Bìa, mục lục, 6 chương, 50 câu lệnh chi tiết
 Chạy: python book/scripts/gen-book-sql.py
 Xuất ra: book/dist/cam-nang-50-cau-lenh-sql-san-bug.pdf
@@ -22,13 +23,16 @@ from reportlab.platypus import (
 # ----------------------------------------------------------------------------
 # Fonts
 # ----------------------------------------------------------------------------
-FD = "C:/Windows/Fonts"
-pdfmetrics.registerFont(TTFont("Arial", f"{FD}/arial.ttf"))
-pdfmetrics.registerFont(TTFont("Arial-Bold", f"{FD}/arialbd.ttf"))
-pdfmetrics.registerFont(TTFont("Arial-Italic", f"{FD}/ariali.ttf"))
-pdfmetrics.registerFont(TTFont("Arial-BoldItalic", f"{FD}/arialbi.ttf"))
-pdfmetrics.registerFont(TTFont("Mono", f"{FD}/consola.ttf"))
-pdfmetrics.registerFont(TTFont("Mono-Bold", f"{FD}/consolab.ttf"))
+# Font nhúng kèm repo (SIL OFL) — KHÔNG dùng font hệ thống để sách bán ra sạch bản quyền.
+# Alias nội bộ giữ nguyên tên "Arial"/"Mono" để không phải sửa ~100 chỗ tham chiếu style;
+# file thật nhúng vào PDF là Liberation Sans/Mono (xem scripts/fonts/LICENSE-Liberation.txt).
+FD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+pdfmetrics.registerFont(TTFont("Arial", f"{FD}/LiberationSans-Regular.ttf"))
+pdfmetrics.registerFont(TTFont("Arial-Bold", f"{FD}/LiberationSans-Bold.ttf"))
+pdfmetrics.registerFont(TTFont("Arial-Italic", f"{FD}/LiberationSans-Italic.ttf"))
+pdfmetrics.registerFont(TTFont("Arial-BoldItalic", f"{FD}/LiberationSans-BoldItalic.ttf"))
+pdfmetrics.registerFont(TTFont("Mono", f"{FD}/LiberationMono-Regular.ttf"))
+pdfmetrics.registerFont(TTFont("Mono-Bold", f"{FD}/LiberationMono-Bold.ttf"))
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 registerFontFamily("Arial", normal="Arial", bold="Arial-Bold",
                    italic="Arial-Italic", boldItalic="Arial-BoldItalic")
