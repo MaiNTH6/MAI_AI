@@ -10,7 +10,8 @@
   - `kho-prompt` — prompt cho QA + văn phòng (free)
   - `kho-template-qa` — template Excel: Test Scenario, Test Case, Checklist, Bug Report, RTM, Defect Log... (free)
 - Bài mới mặc định thuộc QA. Nếu sau này mở mảng khác → thêm category mới + bàn lại với user trước.
-- **KHÔNG** dùng: `rating`, `pricing`, `affiliateUrl`, bán khóa học, CTA mua hàng. Không tô hồng.
+- **KHÔNG** dùng trong nội dung hướng dẫn (bài viết): `rating`, `pricing`, `affiliateUrl`, affiliate, bán khóa học, CTA mua hàng chèn vào bài. Không tô hồng.
+- **Ngoại lệ — sách/tài liệu TỰ XUẤT BẢN trả phí:** maiqai được bán tài liệu chuyên sâu do chính mình viết ở **trang bán riêng** (vd `/sach-sql`, thanh toán QR thủ công). Đây KHÔNG phải affiliate/tô hồng — được phép có giá + CTA mua **trên trang bán đó**; bài viết/prompt/template vẫn miễn phí như thường. Chi tiết: memory `mai-tools-paid-book`.
 - Tài nguyên (prompt, template) **luôn miễn phí, không gate email** — liệt kê thẳng theo chủ đề, mỗi item có nút Copy / Tải về.
 
 ## 2. Bố cục chuẩn 1 bài hướng dẫn (`/bai-viet/[slug]`)

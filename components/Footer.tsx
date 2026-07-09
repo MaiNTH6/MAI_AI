@@ -65,8 +65,7 @@ export function Footer() {
           <p className="text-sm text-slate-400 leading-relaxed">
             Prompt và quy trình đều được chạy thử trước khi đăng; ví dụ kết quả
             là minh họa dựng từ đầu vào mẫu. Chỉ rõ chỗ AI hay &quot;bịa&quot;
-            để bạn không bị bất ngờ. Không bán khóa học, không quảng cáo trá
-            hình.
+            để bạn không bị bất ngờ. Không quảng cáo trá hình, không affiliate.
           </p>
         </div>
       </div>

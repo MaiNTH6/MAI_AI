@@ -4,16 +4,21 @@ import { LegalPage } from "@/components/LegalPage";
 export const metadata = {
   title: "Giới thiệu",
   description:
-    "maiqai.com là dự án cá nhân, phi lợi nhuận — hướng dẫn ứng dụng AI vào công việc thực tế cho người Việt.",
+    "maiqai.com là dự án cá nhân — hướng dẫn ứng dụng AI vào công việc kiểm thử (QA) cho người Việt: bài viết, prompt, template miễn phí, kèm sách chuyên sâu trả phí.",
 };
 
 export default function Page() {
   return (
     <LegalPage title="Giới thiệu" emoji="👋">
       <p>
-        <strong>maiqai.com</strong> là một dự án cá nhân, phi lợi nhuận — nơi mình
-        chia sẻ cách ứng dụng AI vào <strong>công việc kiểm thử (QA)</strong> cho
-        người Việt. Không bán khóa học, không bán tool, không quảng cáo trá hình.
+        <strong>maiqai.com</strong> là một dự án cá nhân — nơi mình chia sẻ cách
+        ứng dụng AI vào <strong>công việc kiểm thử (QA)</strong> cho người Việt.
+        Phần lớn nội dung — bài hướng dẫn, prompt, template — đều{" "}
+        <strong>miễn phí</strong>; không quảng cáo trá hình, không affiliate,
+        không tô hồng. Bên cạnh đó có một số tài liệu chuyên sâu ở dạng trả phí
+        (ví dụ{" "}
+        <Link href="/sach-sql">Cẩm nang 50 câu lệnh SQL cho QA</Link>) để mình có
+        nguồn duy trì và phát triển dự án.
       </p>
 
       <h2>Dành cho ai?</h2>
