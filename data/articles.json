@@ -475,7 +475,7 @@
         "title": "Prompt 1 — AI soát test case theo checklist (reviewer phụ)",
         "goal": "Dùng Claude Code soát NHANH vòng đầu — đọc thẳng các file test case theo màn hình, bắt case trùng / mơ hồ / thiếu kết quả mong đợi, rồi ghi findings ra file.",
         "prompt": "Đọc tất cả file test case trong thư mục test-cases/ (mỗi file là một màn hình). Đóng vai reviewer QA, soát TỪNG file theo checklist 7 nhóm: Độ phủ, Đúng đắn, Rõ ràng, Nhất quán, Không trùng, Truy vết, Dữ liệu/Môi trường.\n\nVới mỗi vấn đề tìm thấy, ghi một dòng: Case ID | Màn hình (tên file) | Vấn đề | Nhóm | Mức độ | Đề xuất sửa.\nChỉ rõ: case trùng nội dung, case mơ hồ (\"kiểm tra chức năng đúng\"), case thiếu kết quả mong đợi, thiếu tiền điều kiện. Chỉ dựa trên nội dung file; không bịa.",
-        "result": "AI trả về (soát file test-cases/dang-nhap.md ở trên):",
+        "result": "AI trả về (soát file test-cases/dang-nhap.md ở trên) — bảng dưới ẩn cột 'Màn hình' vì cùng một file dang-nhap.md:",
         "resultGroups": [
           {
             "group": "",
@@ -655,7 +655,7 @@
         "title": "Prompt 1 — Sinh test case theo màn hình + kỹ thuật thiết kế test",
         "goal": "Biến 1 màn hình/story thành MỘT bảng test case đầy đủ (phủ mọi khía cạnh, đã gán ưu tiên) — đổ thẳng vào 1 file Excel.",
         "prompt": "Bạn là QA giàu kinh nghiệm, thiết kế test case bài bản. Từ mô tả màn hình / user story + tiêu chí nghiệm thu dưới đây, sinh bộ test case ĐẦY ĐỦ.\n\nPhải phủ đủ các khía cạnh (để không sót): UI/Hiển thị, Validate từng trường nhập, Logic nghiệp vụ, Luồng & trạng thái, Phân quyền, Tích hợp & ngoại lệ (API lỗi/timeout/dữ liệu rỗng), Bảo mật (XSS/SQLi, truy cập trái phép).\nÁp dụng kỹ thuật thiết kế test để không sót case: phân vùng tương đương, giá trị biên (min/max/dưới/trên), bảng quyết định cho tổ hợp điều kiện — nhưng KHÔNG cần ghi tên kỹ thuật vào bảng.\n\nTrả về MỘT BẢNG DUY NHẤT (không tách thành nhiều bảng), gồm các cột: ID | Tiêu đề | Loại | Tiền điều kiện | Các bước | Dữ liệu test | Kết quả mong đợi | Độ ưu tiên.\n- Cột 'Loại': UI / Validate / Logic / Trạng thái / Phân quyền / Tích hợp / Bảo mật (để lọc trong Excel).\n- Cột 'Độ ưu tiên' (Cao/Trung bình/Thấp) theo rủi ro: ảnh hưởng TIỀN, BẢO MẬT, LUỒNG CHÍNH → Cao.\n- CHỈ dựa trên thông tin có; chỗ chưa rõ ghi 'cần xác nhận', KHÔNG tự suy đoán.\n- Trả về dạng bảng để tôi copy / tải thẳng vào 1 file Excel.\n\n[DÁN MÔ TẢ MÀN HÌNH / USER STORY + TIÊU CHÍ NGHIỆM THU]\n\nLưu bảng test case của màn hình này thành một file riêng (vd test-cases/<ten-man-hinh>.md hoặc .xlsx), gom cả bộ vào thư mục test-cases/ — để dễ lưu lại và review từng màn hình sau.",
-        "result": "AI trả về (ví dụ Màn hình Đăng nhập — rút gọn): MỘT bảng duy nhất, tải thẳng vào 1 file Excel.",
+        "result": "AI trả về MỘT bảng duy nhất ĐỦ 8 cột như prompt yêu cầu (ID · Tiêu đề · Loại · Tiền điều kiện · Các bước · Dữ liệu test · Kết quả mong đợi · Độ ưu tiên), tải thẳng vào 1 file Excel. Bảng minh họa dưới đây rút gọn còn 5 cột chính cho dễ đọc trên web (ẩn bớt Tiền điều kiện · Các bước · Dữ liệu test):",
         "testerNote": "AI phủ nhanh nhiều khía cạnh, nhưng: (1) phần LOGIC nhiều điều kiện dễ thiếu tổ hợp — tự liệt kê ma trận điều kiện để đối chiếu đủ chưa; (2) hay BỊA 'kết quả mong đợi' hoặc giá trị biên khi story không nói rõ → để 'cần xác nhận' rồi hỏi BA, đừng tin số AI tự bịa. Coi là bản nháp, rà rồi mới dùng.",
         "resultGroups": [
           {
@@ -761,7 +761,7 @@
         "title": "Prompt 2 — Viết test case luồng tích hợp end-to-end (E2E)",
         "goal": "Kiểm thử sự PHỐI HỢP giữa nhiều màn hình/module/hệ thống — không chỉ từng màn hình lẻ.",
         "prompt": "Bạn là QA giàu kinh nghiệm. Từ mô tả LUỒNG NGHIỆP VỤ end-to-end dưới đây (đi qua nhiều màn hình / module / hệ thống), viết bộ test case kiểm thử TÍCH HỢP — tập trung sự PHỐI HỢP giữa các bước, không phải từng màn hình lẻ.\n\nPhải phủ:\n- Luồng chính chạy thông suốt từ đầu đến cuối (happy path E2E).\n- Bàn giao dữ liệu giữa các bước: dữ liệu tạo ở bước trước hiển thị/dùng ĐÚNG ở bước sau.\n- Điểm tích hợp với dịch vụ ngoài (thanh toán, gửi mail, kho, API...): thành công, thất bại, timeout.\n- Tính nhất quán dữ liệu: một bước lỗi giữa chừng → trạng thái các bên có đồng bộ không (rollback?).\n- Luồng thay thế & ngoại lệ: hủy giữa chừng, quay lại bước trước, làm lại.\n\nTrả về MỘT BẢNG DUY NHẤT, cùng cột với bộ test case chức năng: ID | Tiêu đề | Loại | Tiền điều kiện | Các bước | Dữ liệu test | Kết quả mong đợi | Độ ưu tiên. Đặt ID dạng E2E-01... và cột 'Loại' ghi 'E2E' hoặc 'Tích hợp'. Chỗ chưa rõ ghi 'cần xác nhận'.\n\n[DÁN MÔ TẢ LUỒNG END-TO-END / SƠ ĐỒ NGHIỆP VỤ]",
-        "result": "AI trả về (ví dụ luồng Đặt hàng end-to-end: chọn SP → áp voucher → thanh toán → trừ kho → gửi mail):",
+        "result": "AI trả về MỘT bảng ĐỦ 8 cột như bộ test case chức năng (ví dụ luồng Đặt hàng end-to-end: chọn SP → áp voucher → thanh toán → trừ kho → gửi mail). Bảng minh họa dưới đây rút gọn còn 5 cột chính cho dễ đọc trên web:",
         "resultGroups": [
           {
             "group": "",
@@ -1058,7 +1058,7 @@
         "title": "Prompt 4 — Trích business rules từ code (đối chiếu BA)",
         "goal": "Đọc ngược các quy tắc nghiệp vụ ẩn trong code thành bảng — phân biệt rule thật vs bug, làm đầu vào hỏi BA.",
         "prompt": "Với góc nhìn QA, đọc codebase và TRÍCH các quy tắc nghiệp vụ (business rules) đang cài trong code. Trả về bảng các cột: ID | Quy tắc nghiệp vụ | Vị trí trong code (file:dòng) | Loại (Tính toán/Ngưỡng-điều kiện/Validate/Phân quyền/Trạng thái) | Nguồn (Code/Config/DB/Flag) | Trạng thái (mặc định 'Cần hỏi BA') | Câu hỏi cho BA.\n\nBắt buộc:\n- Tách riêng mỗi con số 'magic' (ngưỡng, phí, số ngày) thành 1 rule cần hỏi vì sao.\n- Đánh dấu 'Nghi là bug' cho chỗ trông sai (thiếu kiểm phân quyền, validate hở).\n- Chỉ mô tả hành vi code thực có; 'vì sao' không chắc thì ghi 'cần xác nhận', đừng bịa.",
-        "result": "Claude Code trả về (ví dụ minh họa). Đổ bảng này vào template Business Rules Catalog (Kho Template QA) để theo dõi và mang đi clarify với BA:",
+        "result": "Claude Code trả về (ví dụ minh họa; bảng dưới rút gọn, ẩn cột 'Nguồn' cho gọn). Đổ bảng này vào template Business Rules Catalog (Kho Template QA) để theo dõi và mang đi clarify với BA:",
         "testerNote": "AI mô tả ĐÚNG hành vi code (kiểm được qua file:dòng) nhưng dễ BỊA 'lý do nghiệp vụ'. Coi mọi rule là 'Cần hỏi BA' đến khi business xác nhận — vì code có thể đang chứa bug trông như rule. Nhớ đối chiếu thêm config/DB/feature flag: nhiều rule KHÔNG nằm trong code mà ở dữ liệu/cấu hình.",
         "exampleInput": "auth.service.js:55      if (failedCount >= 5) lockAccount()\norder.service.js:80     shippingFee = base[region] + surcharge - discount\norder.controller.js:95  deleteOrder(): chỉ requireLogin()\ncart.config.js:8        CART_TTL_DAYS = 30",
         "resultGroups": [
