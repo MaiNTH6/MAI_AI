@@ -15,14 +15,20 @@ export function normalize(s: string): string {
 
 /**
  * Trả về điểm match cho query vs text. Càng cao càng khớp.
- * - Match nguyên cụm: 100 điểm
- * - Match từng từ: 10 điểm mỗi từ
+ * - Match nguyên cụm: 100 điểm.
+ * - Match từng TỪ (nguyên từ, không tính chuỗi con — để "ai" không dính vào "tài liệu"):
+ *   cộng điểm theo độ dài từ (tối đa 12) → từ đặc thù như "requirement" (11)
+ *   được ưu tiên hơn từ ngắn/phổ biến như "ai" (2), "đọc" (3).
  */
 export function matchScore(query: string, text: string): number {
   const q = normalize(query);
   const t = normalize(text);
   if (!q) return 0;
   if (t.includes(q)) return 100;
-  const words = q.split(" ").filter(Boolean);
-  return words.reduce((acc, w) => acc + (t.includes(w) ? 10 : 0), 0);
+  const textWords = new Set(t.split(" ").filter(Boolean));
+  const qWords = q.split(" ").filter(Boolean);
+  return qWords.reduce(
+    (acc, w) => acc + (textWords.has(w) ? Math.min(w.length, 12) : 0),
+    0
+  );
 }
