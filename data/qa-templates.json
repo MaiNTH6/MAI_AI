@@ -112,7 +112,7 @@
           ],
           "note": "Trạng thái: Chưa chạy · Pass · Fail · Blocked"
         },
-        "aiPrompt": "Từ Test Scenario [MÃ, vd SC-02] (hoặc user story dưới đây), viết test case chi tiết theo đúng các cột: Test Case ID | Tiêu đề | Module | Tiền điều kiện | Các bước | Dữ liệu test | Kết quả mong đợi | Ưu tiên. Viết các bước cụ thể để người khác chạy lại được. Trả về dạng bảng để copy sang Excel. Chỉ dựa vào requirement, không bịa dữ liệu nghiệp vụ.\n\n[DÁN SCENARIO / USER STORY]"
+        "aiPrompt": "Từ Test Scenario [MÃ, vd SC-02] (hoặc user story dưới đây), viết test case chi tiết theo đúng các cột: Test Case ID | Tiêu đề | Module | Tiền điều kiện | Các bước | Dữ liệu test | Kết quả mong đợi | Kết quả thực tế (để trống) | Trạng thái (để trống) | Ưu tiên. Viết các bước cụ thể để người khác chạy lại được. Trả về dạng bảng để copy sang Excel. Chỉ dựa vào requirement, không bịa dữ liệu nghiệp vụ.\n\n[DÁN SCENARIO / USER STORY]"
       },
       {
         "slug": "tc-bdd",
@@ -838,7 +838,7 @@
           ],
           "note": "Đánh giá: Đạt / Không đạt / Cần sửa / N/A. Mọi mục 'Không đạt' hoặc 'Cần sửa' → ghi finding cho author sửa rồi review lại."
         },
-        "aiPrompt": "Đóng vai reviewer, soát bộ test case dưới đây theo checklist 7 nhóm: Độ phủ, Đúng đắn, Rõ ràng, Nhất quán, Không trùng, Truy vết, Dữ liệu/Môi trường. Với mỗi vấn đề tìm thấy, trả về bảng: Case ID | Vấn đề | Nhóm | Mức độ | Đề xuất sửa. Chỉ rõ case nào trùng, mơ hồ, thiếu kết quả mong đợi; và requirement nào CHƯA có case.\n\n[DÁN BỘ TEST CASE + (nếu có) DANH SÁCH REQUIREMENT/RTM]"
+        "aiPrompt": "Đóng vai reviewer, soát bộ test case dưới đây theo checklist 7 nhóm (Độ phủ, Đúng đắn, Rõ ràng, Nhất quán, Không trùng, Truy vết, Dữ liệu/Môi trường). Trả về ĐÚNG bảng của template gồm các cột: Nhóm | Hạng mục cần soát | Đánh giá (Đạt / Không đạt / Cần sửa) | Ghi chú. Ở cột Ghi chú nêu case cụ thể bị trùng, mơ hồ, thiếu kết quả mong đợi, hoặc requirement chưa có case. Trả về dạng bảng để copy sang Excel.\n\n[DÁN BỘ TEST CASE + (nếu có) DANH SÁCH REQUIREMENT/RTM]"
       }
     ]
   },
