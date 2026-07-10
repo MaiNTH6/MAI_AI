@@ -454,7 +454,7 @@
       {
         "title": "Review theo checklist 7 nhóm",
         "body": "Soát từng tiêu chí thay vì đọc cảm tính — để không phụ thuộc trí nhớ:\n① Độ phủ — mỗi requirement có ≥1 case; đủ happy/negative/biên/bảo mật; có E2E nếu cần; đối chiếu RTM.\n② Đúng đắn — kết quả mong đợi đúng nghiệp vụ (không bịa); dữ liệu test hợp lệ; tiền điều kiện khả thi.\n③ Rõ ràng — bước cụ thể, chạy lại được; tiêu đề rõ mục tiêu, không mơ hồ.\n④ Nhất quán — đúng format/cột chuẩn; quy ước ID; ưu tiên hợp lý.\n⑤ Không trùng — không case trùng; mỗi case 1 mục tiêu (atomic).\n⑥ Truy vết — mỗi case map tới Req ID.\n⑦ Dữ liệu/Môi trường — dữ liệu đủ; nêu rõ môi trường cần.\nTải bản checklist Excel (có cột Đánh giá: Đạt/Không đạt/Cần sửa) để tick khi soát:",
-        "linkSlug": "/kho-template-qa",
+        "linkSlug": "/kho-template-qa#checklist-review-testcase",
         "linkLabel": "Tải Review Checklist (Excel) ở Kho Template QA"
       },
       {
@@ -640,7 +640,7 @@
       {
         "title": "Rà, cắt & format theo template",
         "body": "AI ra nhiều và đôi khi sai — đây là bước QUAN TRỌNG NHẤT: cắt case trùng/chung chung, sửa 'kết quả mong đợi' cho đúng nghiệp vụ, đối chiếu tiêu chí nghiệm thu. Dùng cấu trúc bảng chuẩn ở Kho Template QA để thống nhất với team.",
-        "linkSlug": "/kho-template-qa",
+        "linkSlug": "/kho-template-qa#tc-step-based",
         "linkLabel": "Lấy mẫu Test Case ở Kho Template QA"
       },
       {

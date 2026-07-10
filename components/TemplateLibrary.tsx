@@ -160,7 +160,10 @@ function TemplateCard({
   const { copied, copy } = useCopy();
 
   return (
-    <div className="rounded-2xl bg-white ring-1 ring-white/10 shadow-lg shadow-black/20 overflow-hidden">
+    <div
+      id={slug}
+      className="scroll-mt-24 rounded-2xl bg-white ring-1 ring-white/10 shadow-lg shadow-black/20 overflow-hidden"
+    >
       <HeaderActions
         slug={slug}
         title={title}
