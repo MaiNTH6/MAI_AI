@@ -313,9 +313,9 @@
       {
         "title": "Prompt 1 — Tách dữ kiện có căn cứ với dữ kiện AI tự thêm",
         "goal": "Nhờ AI tự soi lại output của nó: dữ kiện nào lấy từ đầu vào, cái nào nó tự suy diễn — để bạn biết chỗ nào cần xác minh.",
-        "prompt": "Dưới đây là đầu vào và một output bạn vừa tạo. Hãy rà lại chính output đó và lập bảng: Dữ kiện | Lấy từ đâu trong đầu vào (trích dòng) | Hay do bạn tự suy diễn/giả định. Đánh dấu rõ những dữ kiện KHÔNG có trong đầu vào để tôi xác minh. Không bào chữa, không thêm dữ kiện mới.\n\n[DÁN ĐẦU VÀO + OUTPUT CẦN SOI VÀO ĐÂY]",
+        "prompt": "Dưới đây là đầu vào và một output cần review. Hãy rà lại chính output đó và lập bảng: Dữ kiện | Lấy từ đâu trong đầu vào (trích dòng) | Hay do bạn tự suy diễn/giả định. Đánh dấu rõ những dữ kiện KHÔNG có trong đầu vào để tôi xác minh. Không bào chữa, không thêm dữ kiện mới.\n\n[DÁN ĐẦU VÀO + OUTPUT CẦN SOI VÀO ĐÂY]",
         "exampleInput": "Đầu vào (requirement): \"Khóa tài khoản sau 5 lần đăng nhập sai.\"\nOutput AI cần soi (1 test case): \"Sai mật khẩu 5 lần → khóa tài khoản 30 phút, gửi email cảnh báo.\"",
-        "result": "AI trả về (soi đầu vào ở trên) — 2/3 dữ kiện là AI tự thêm, cần xác nhận với BA. Bảng truy nguồn:",
+        "result": "AI trả về (soi đầu vào ở trên) — chỉ điều kiện \"khóa sau 5 lần sai\" là có căn cứ; phần còn lại AI tự thêm hoặc tự thu hẹp, đều cần xác nhận với BA. Bảng truy nguồn:",
         "resultGroups": [
           {
             "group": "",
@@ -329,6 +329,11 @@
                 "Khóa sau 5 lần sai",
                 "requirement (có)",
                 "OK"
+              ],
+              [
+                "Khóa vì \"sai mật khẩu\"",
+                "Thu hẹp từ \"đăng nhập sai\"",
+                "⚠️ AI tự diễn giải — \"đăng nhập sai\" rộng hơn (gồm cả sai tài khoản)"
               ],
               [
                 "Khóa 30 phút",
@@ -348,7 +353,7 @@
       {
         "title": "Prompt 2 — Bắt AI chỉ ra chỗ dễ sai nhất để tập trung kiểm",
         "goal": "Nhờ AI tự chỉ những chỗ trong output dễ sai/rủi ro nhất + vì sao, để bạn dồn sức kiểm đúng chỗ thay vì rà đều.",
-        "prompt": "Dưới đây là một output bạn vừa tạo. Giả sử bạn là một QA khó tính review lại nó: chỉ ra 3-5 chỗ dễ sai hoặc rủi ro nhất, mỗi chỗ nói rõ vì sao đáng nghi và tôi nên kiểm gì để xác nhận. Xếp theo mức rủi ro giảm dần.\n\n[DÁN OUTPUT CẦN SOI VÀO ĐÂY]",
+        "prompt": "Dưới đây là một output cần review. Giả sử bạn là một QA khó tính soi lại nó: chỉ ra 3-5 chỗ dễ sai hoặc rủi ro nhất, mỗi chỗ nói rõ vì sao đáng nghi và tôi nên kiểm gì để xác nhận. Xếp theo mức rủi ro giảm dần.\n\n[DÁN OUTPUT CẦN SOI VÀO ĐÂY]",
         "exampleInput": "Output cần soi: file test Playwright cho màn đăng nhập (Page Object + 3 test), dùng get_by_label(\"Mật khẩu\"), get_by_role(\"link\", name=\"Tài khoản\"), mật khẩu mẫu \"MatKhau@123\".",
         "result": "AI trả về (soi file test đăng nhập ở trên):\n\n1) (Cao) Selector get_by_label(\"Mật khẩu\") — nếu ô nhập không gắn <label> đúng chữ này, test sẽ đỏ ngay. Kiểm: mở trang xem nhãn thật của ô mật khẩu.\n2) (Cao) Assertion TC-01 chỉ kiểm \"thấy link Tài khoản\" — chưa chắc đã thật sự vào trang chủ (link đó có thể hiện ở nơi khác). Kiểm: xác nhận thêm URL hoặc một nội dung đặc trưng của trang chủ.\n3) (Trung bình) Mật khẩu mẫu \"MatKhau@123\" — có thể không thỏa policy thật của hệ thống. Kiểm: đối chiếu quy tắc mật khẩu trong requirement.\n\n→ Tập trung kiểm 2 chỗ \"Cao\" trước; chỗ \"Trung bình\" xử lý sau.",
         "testerNote": "Prompt này giúp khoanh vùng nhưng không thay việc kiểm — AI chỉ đoán chỗ rủi ro dựa trên văn bản, không chạy thật. Dùng nó để biết nên kiểm ĐÂU trước, rồi tự kiểm / chạy thật để biết ĐÚNG hay SAI."
