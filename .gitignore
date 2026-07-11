@@ -22,3 +22,6 @@ demo-review/
 # Dữ liệu người mua sách — KHÔNG commit (chứa PII)
 book/scripts/don.txt
 book/dist/ban-giao/
+
+# Sách #2 — PDF build ra, không commit
+book2/dist/
