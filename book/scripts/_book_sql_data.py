@@ -631,14 +631,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: có giá trị NULL trong cột số:",
  "before_cols": ["product_id","product_name","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "30.000.000","50"],
-   ["PROD_002","Ban phim co Logitech",     "2.000.000", "100"],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "8.000.000", "-5"],
-   ["PROD_004","Sac du phong Anker",       "1.000.000", "20"],
-   ["PROD_005","Ban phim co Logitech",     "2.000.000", "30"],
-   ["PROD_006","Loa Bluetooth JBL",        "(NULL)",    "10"],
-   ["PROD_007","Chuot gaming Razer",       "1.500.000", "(NULL)"],
-   ["PROD_008","ban phim co logitech",     "2.000.000", "25"],
+   ["PROD_001","Phone IP15",        "30.000.000","50"],
+   ["PROD_002","Key Logi",     "2.000.000", "100"],
+   ["PROD_003","Headphone SN5", "8.000.000", "-5"],
+   ["PROD_004","Powerbank AK",       "1.000.000", "20"],
+   ["PROD_005","Key Logi",     "2.000.000", "30"],
+   ["PROD_006","Speaker JB",        "(NULL)",    "10"],
+   ["PROD_007","Mouse RZ",       "1.500.000", "(NULL)"],
+   ["PROD_008","key logi",     "2.000.000", "25"],
  ],
  "before_bugs": [5, 6],
  "before_col_widths": [65, 220, 108, 100],
@@ -690,14 +690,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: cùng tên và giá với dòng khác:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "Dien thoai","30.000.000","50"],
-   ["PROD_002","Ban phim co Logitech",     "Phu kien",  "2.000.000", "100"],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "Phu kien",  "8.000.000", "-5"],
-   ["PROD_004","Sac du phong Anker",       "Phu kien",  "1.000.000", "20"],
-   ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000", "30"],
-   ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",    "10"],
-   ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000", "(NULL)"],
-   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", "25"],
+   ["PROD_001","Phone IP15",        "Dien thoai","30.000.000","50"],
+   ["PROD_002","Key Logi",     "Phu kien",  "2.000.000", "100"],
+   ["PROD_003","Headphone SN5", "Phu kien",  "8.000.000", "-5"],
+   ["PROD_004","Powerbank AK",       "Phu kien",  "1.000.000", "20"],
+   ["PROD_005","Key Logi",     "Phu kien",  "2.000.000", "30"],
+   ["PROD_006","Speaker JB",        "Phu kien",  "(NULL)",    "10"],
+   ["PROD_007","Mouse RZ",       "Phu kien",  "1.500.000", "(NULL)"],
+   ["PROD_008","key logi",     "Phu kien",  "2.000.000", "25"],
  ],
  "before_bugs": [4],
  "before_col_widths": [58, 175, 75, 95, 90],
@@ -726,7 +726,7 @@ ENTRIES = [
    "chỉ đưa vào những cột đại diện cho giá trị nghiệp vụ, không phải ID tự sinh.",
  "result_table": (
    ["product_name","price","so_lan"],
-   [["Ban phim co Logitech","2.000.000",2]],
+   [["Key Logi","2.000.000",2]],
  ),
  "result_note":
    "PROD_002 và PROD_005 trùng tên + giá nhưng có product_id khác nhau — "
@@ -960,14 +960,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: stock âm (Bug-C) và stock NULL:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000",50],
-   ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000",100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000",-5],
-   ["PROD_004","Sac du phong Anker","Phu kien","1.000.000",20],
-   ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
-   ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
-   ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech","Phu kien","2.000.000",25],
+   ["PROD_001","Phone IP15","Dien thoai","30.000.000",50],
+   ["PROD_002","Key Logi","Phu kien","2.000.000",100],
+   ["PROD_003","Headphone SN5","Phu kien","8.000.000",-5],
+   ["PROD_004","Powerbank AK","Phu kien","1.000.000",20],
+   ["PROD_005","Key Logi","Phu kien","2.000.000",30],
+   ["PROD_006","Speaker JB","Phu kien","(NULL)",10],
+   ["PROD_007","Mouse RZ","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","key logi","Phu kien","2.000.000",25],
  ],
  "before_bugs": [2, 6],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -997,8 +997,8 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","stock"],
    [
-     ["PROD_003","Tai nghe Sony WH-1000XM5",-5],
-     ["PROD_007","Chuot gaming Razer","(NULL)"],
+     ["PROD_003","Headphone SN5",-5],
+     ["PROD_007","Mouse RZ","(NULL)"],
    ]
  ),
  "result_note":
@@ -1071,7 +1071,7 @@ ENTRIES = [
    "(đặt chỗ tồn kho) ngay lúc tạo đơn.",
  "result_table": (
    ["order_id","customer_id","product_id","product_name","ton_kho","so_luong_dat"],
-   [["ORD_006","C003","PROD_003","Tai nghe Sony WH-1000XM5","-5","1"]],
+   [["ORD_006","C003","PROD_003","Headphone SN5","-5","1"]],
  ),
  "result_note":
    "ORD_006 đang PENDING nhưng PROD_003 có stock = −5. "
@@ -1151,14 +1151,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: chưa có trong Order_Items:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000","50"],
-   ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000","100"],
-   ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000","-5"],
-   ["PROD_004","Sac du phong Anker","Phu kien","1.000.000","20"],
-   ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000","30"],
-   ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)","10"],
-   ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech","Phu kien","2.000.000","25"],
+   ["PROD_001","Phone IP15","Dien thoai","30.000.000","50"],
+   ["PROD_002","Key Logi","Phu kien","2.000.000","100"],
+   ["PROD_003","Headphone SN5","Phu kien","8.000.000","-5"],
+   ["PROD_004","Powerbank AK","Phu kien","1.000.000","20"],
+   ["PROD_005","Key Logi","Phu kien","2.000.000","30"],
+   ["PROD_006","Speaker JB","Phu kien","(NULL)","10"],
+   ["PROD_007","Mouse RZ","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","key logi","Phu kien","2.000.000","25"],
  ],
  "before_bugs": [4, 5, 6, 7],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1189,16 +1189,16 @@ ENTRIES = [
    "(1) PROD_005: trùng tên PROD_002 — sản phẩm bị nhân đôi.<br/>"
    "(2) PROD_006: price = NULL — chưa định giá.<br/>"
    "(3) PROD_007: stock = NULL — chưa nhập kho.<br/>"
-   "(4) PROD_008: cũng là bản trùng của 'Ban phim co Logitech' nhưng gõ sai (chữ thường + dư "
+   "(4) PROD_008: cũng là bản trùng của 'Key Logi' nhưng gõ sai (chữ thường + dư "
    "khoảng trắng, xem Câu 35) — bản thừa nên chẳng có đơn nào.<br/>"
    "Kết hợp với Câu 9, Câu 10, Câu 14 và Câu 35 để phân tích từng trường hợp.",
  "result_table": (
    ["product_id","product_name","price","stock"],
    [
-     ["PROD_005","Ban phim co Logitech","2.000.000",30],
-     ["PROD_006","Loa Bluetooth JBL","(NULL)",10],
-     ["PROD_007","Chuot gaming Razer","1.500.000","(NULL)"],
-     ["PROD_008","ban phim co logitech","2.000.000",25],
+     ["PROD_005","Key Logi","2.000.000",30],
+     ["PROD_006","Speaker JB","(NULL)",10],
+     ["PROD_007","Mouse RZ","1.500.000","(NULL)"],
+     ["PROD_008","key logi","2.000.000",25],
    ]
  ),
  "result_note":
@@ -1369,14 +1369,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: tồn kho có thể bị vượt quá:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000",50],
-   ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000",100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000",-5],
-   ["PROD_004","Sac du phong Anker","Phu kien","1.000.000",20],
-   ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000",30],
-   ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)",10],
-   ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech","Phu kien","2.000.000",25],
+   ["PROD_001","Phone IP15","Dien thoai","30.000.000",50],
+   ["PROD_002","Key Logi","Phu kien","2.000.000",100],
+   ["PROD_003","Headphone SN5","Phu kien","8.000.000",-5],
+   ["PROD_004","Powerbank AK","Phu kien","1.000.000",20],
+   ["PROD_005","Key Logi","Phu kien","2.000.000",30],
+   ["PROD_006","Speaker JB","Phu kien","(NULL)",10],
+   ["PROD_007","Mouse RZ","Phu kien","1.500.000","(NULL)"],
+   ["PROD_008","key logi","Phu kien","2.000.000",25],
  ],
  "before_bugs": [2],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1415,8 +1415,8 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","stock","tong_da_ban"],
    [
-     ["PROD_004","Sac du phong Anker",        20,22],
-     ["PROD_003","Tai nghe Sony WH-1000XM5", -5, 2],
+     ["PROD_004","Powerbank AK",        20,22],
+     ["PROD_003","Headphone SN5", -5, 2],
    ]
  ),
  "result_note":
@@ -1566,10 +1566,10 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","tong_so_luong","tong_doanh_so"],
    [
-     ["PROD_001","iPhone 15 Pro Max",        3, "90.000.000"],
-     ["PROD_004","Sac du phong Anker",       22,"22.000.000"],
-     ["PROD_003","Tai nghe Sony WH-1000XM5", 2, "16.000.000"],
-     ["PROD_002","Ban phim co Logitech",     2,  "4.000.000"],
+     ["PROD_001","Phone IP15",        3, "90.000.000"],
+     ["PROD_004","Powerbank AK",       22,"22.000.000"],
+     ["PROD_003","Headphone SN5", 2, "16.000.000"],
+     ["PROD_002","Key Logi",     2,  "4.000.000"],
    ]
  ),
  "result_note":
@@ -1594,14 +1594,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: stock âm hoặc NULL sẽ cho gia_tri_kho sai:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "Dien thoai","30.000.000", 50],
-   ["PROD_002","Ban phim co Logitech",     "Phu kien",  "2.000.000", 100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "Phu kien",  "8.000.000",  -5],
-   ["PROD_004","Sac du phong Anker",       "Phu kien",  "1.000.000",  20],
-   ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
-   ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
-   ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
+   ["PROD_001","Phone IP15",        "Dien thoai","30.000.000", 50],
+   ["PROD_002","Key Logi",     "Phu kien",  "2.000.000", 100],
+   ["PROD_003","Headphone SN5", "Phu kien",  "8.000.000",  -5],
+   ["PROD_004","Powerbank AK",       "Phu kien",  "1.000.000",  20],
+   ["PROD_005","Key Logi",     "Phu kien",  "2.000.000",  30],
+   ["PROD_006","Speaker JB",        "Phu kien",  "(NULL)",     10],
+   ["PROD_007","Mouse RZ",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","key logi",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [2, 5, 6],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1632,14 +1632,14 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","price","stock","gia_tri_kho"],
    [
-     ["PROD_006","Loa Bluetooth JBL",   "(NULL)","10",       "(NULL)"],
-     ["PROD_007","Chuot gaming Razer","1.500.000","(NULL)",  "(NULL)"],
-      ["PROD_003","Tai nghe Sony WH-1000XM5",       "8.000.000","-5","-40.000.000"],
-     ["PROD_004","Sac du phong Anker",  "1.000.000","20", "20.000.000"],
-     ["PROD_008","ban phim co logitech","2.000.000","25", "50.000.000"],
-     ["PROD_005","Ban phim co Logitech","2.000.000","30", "60.000.000"],
-     ["PROD_002","Ban phim co Logitech","2.000.000","100","200.000.000"],
-     ["PROD_001","iPhone 15 Pro Max","30.000.000","50","1.500.000.000"],
+     ["PROD_006","Speaker JB",   "(NULL)","10",       "(NULL)"],
+     ["PROD_007","Mouse RZ","1.500.000","(NULL)",  "(NULL)"],
+      ["PROD_003","Headphone SN5",       "8.000.000","-5","-40.000.000"],
+     ["PROD_004","Powerbank AK",  "1.000.000","20", "20.000.000"],
+     ["PROD_008","key logi","2.000.000","25", "50.000.000"],
+     ["PROD_005","Key Logi","2.000.000","30", "60.000.000"],
+     ["PROD_002","Key Logi","2.000.000","100","200.000.000"],
+     ["PROD_001","Phone IP15","30.000.000","50","1.500.000.000"],
    ]
  ),
  "result_note":
@@ -1939,14 +1939,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: PROD_003 stock âm sẽ cho uoc_tinh_ban_dau bất thường:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "Dien thoai","30.000.000", 50],
-   ["PROD_002","Ban phim co Logitech",     "Phu kien",  "2.000.000", 100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "Phu kien",  "8.000.000",  -5],
-   ["PROD_004","Sac du phong Anker",       "Phu kien",  "1.000.000",  20],
-   ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
-   ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
-   ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
+   ["PROD_001","Phone IP15",        "Dien thoai","30.000.000", 50],
+   ["PROD_002","Key Logi",     "Phu kien",  "2.000.000", 100],
+   ["PROD_003","Headphone SN5", "Phu kien",  "8.000.000",  -5],
+   ["PROD_004","Powerbank AK",       "Phu kien",  "1.000.000",  20],
+   ["PROD_005","Key Logi",     "Phu kien",  "2.000.000",  30],
+   ["PROD_006","Speaker JB",        "Phu kien",  "(NULL)",     10],
+   ["PROD_007","Mouse RZ",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","key logi",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [2],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -1988,14 +1988,14 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","ton_kho_hien_tai","tong_da_ban","uoc_tinh_ban_dau"],
    [
-     ["PROD_001","iPhone 15 Pro Max",         50,  3,  53],
-     ["PROD_002","Ban phim co Logitech",      100,  2, 102],
-     ["PROD_003","Tai nghe Sony WH-1000XM5",  -5,  2,  -3],
-     ["PROD_004","Sac du phong Anker",         20, 22,  42],
-     ["PROD_005","Ban phim co Logitech",       30,  0,  30],
-     ["PROD_006","Loa Bluetooth JBL",          10,  0,  10],
-     ["PROD_007","Chuot gaming Razer",    "(NULL)", 0,"(NULL)"],
-     ["PROD_008","ban phim co logitech",      25,  0,  25],
+     ["PROD_001","Phone IP15",         50,  3,  53],
+     ["PROD_002","Key Logi",      100,  2, 102],
+     ["PROD_003","Headphone SN5",  -5,  2,  -3],
+     ["PROD_004","Powerbank AK",         20, 22,  42],
+     ["PROD_005","Key Logi",       30,  0,  30],
+     ["PROD_006","Speaker JB",          10,  0,  10],
+     ["PROD_007","Mouse RZ",    "(NULL)", 0,"(NULL)"],
+     ["PROD_008","key logi",      25,  0,  25],
    ]
  ),
  "result_note":
@@ -2428,14 +2428,14 @@ ENTRIES = [
  "before_label": "Bảng Products — dòng đỏ: tên trùng sau khi LOWER + TRIM:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "Dien thoai","30.000.000", 50],
-   ["PROD_002","Ban phim co Logitech",     "Phu kien",  "2.000.000", 100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "Phu kien",  "8.000.000",  -5],
-   ["PROD_004","Sac du phong Anker",       "Phu kien",  "1.000.000",  20],
-   ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
-   ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
-   ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
+   ["PROD_001","Phone IP15",        "Dien thoai","30.000.000", 50],
+   ["PROD_002","Key Logi",     "Phu kien",  "2.000.000", 100],
+   ["PROD_003","Headphone SN5", "Phu kien",  "8.000.000",  -5],
+   ["PROD_004","Powerbank AK",       "Phu kien",  "1.000.000",  20],
+   ["PROD_005","Key Logi",     "Phu kien",  "2.000.000",  30],
+   ["PROD_006","Speaker JB",        "Phu kien",  "(NULL)",     10],
+   ["PROD_007","Mouse RZ",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","key logi",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [1, 4, 7],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -2451,14 +2451,14 @@ ENTRIES = [
     "MySQL tải toàn bộ bảng Products — 8 sản phẩm."),
    ("GROUP BY LOWER(TRIM(product_name))",
     "Điểm mấu chốt: gom nhóm theo tên <b>đã chuẩn hóa</b>, không phải tên thô.<br/>"
-    "• <b>LOWER</b> hạ hết về chữ thường — 'Ban phim co Logitech' và 'ban phim co logitech' "
+    "• <b>LOWER</b> hạ hết về chữ thường — 'Key Logi' và 'key logi' "
     "thành một.<br/>"
-    "• <b>TRIM</b> cắt khoảng trắng thừa hai đầu — '  ban phim co logitech  ' cũng gộp vào.<br/>"
+    "• <b>TRIM</b> cắt khoảng trắng thừa hai đầu — '  key logi  ' cũng gộp vào.<br/>"
     "Nhờ vậy PROD_002, PROD_005 (viết hệt nhau) và PROD_008 (viết thường + dư khoảng trắng) đều "
-    "rơi vào cùng một nhóm 'ban phim co logitech'."),
+    "rơi vào cùng một nhóm 'key logi'."),
    ("HAVING COUNT(*) > 1",
     "Chỉ giữ nhóm có nhiều hơn 1 bản ghi — tức tên bị trùng sau khi chuẩn hóa. Ở đây nhóm "
-    "'ban phim co logitech' có 3 bản ghi nên bị bắt."),
+    "'key logi' có 3 bản ghi nên bị bắt."),
  ],
  "explain":
    "Câu 10 so tên <b>thô</b> nên chỉ bắt được các bản ghi gõ y hệt nhau. Nhưng trùng trong "
@@ -2470,10 +2470,10 @@ ENTRIES = [
    "Đây cũng là kỹ thuật chuẩn hóa đã dùng cho email ở Câu 8, nay áp cho tên sản phẩm.",
  "result_table": (
    ["ten_chuan","so_ban_ghi"],
-   [["ban phim co logitech", 3]],
+   [["key logi", 3]],
  ),
  "result_note":
-   "'ban phim co logitech' xuất hiện 3 lần: PROD_002, PROD_005 (viết hệt nhau) và PROD_008 "
+   "'key logi' xuất hiện 3 lần: PROD_002, PROD_005 (viết hệt nhau) và PROD_008 "
    "(viết thường + dư khoảng trắng). Câu 10 so tên thô chỉ bắt được PROD_002/005; riêng PROD_008 "
    "chỉ lộ ra sau khi LOWER+TRIM — đó chính là giá trị của bước chuẩn hóa.",
  "note":
@@ -3412,14 +3412,14 @@ ENTRIES = [
  "before_label": "Bảng Products — PROD_001 xếp hạng 1 nhưng doanh số bị thổi phồng do item trùng:",
  "before_cols": ["product_id","product_name","category","price","stock"],
  "before_rows": [
-   ["PROD_001","iPhone 15 Pro Max",        "Dien thoai","30.000.000", 50],
-   ["PROD_002","Ban phim co Logitech",     "Phu kien",  "2.000.000", 100],
-   ["PROD_003","Tai nghe Sony WH-1000XM5", "Phu kien",  "8.000.000",  -5],
-   ["PROD_004","Sac du phong Anker",       "Phu kien",  "1.000.000",  20],
-   ["PROD_005","Ban phim co Logitech",     "Phu kien",  "2.000.000",  30],
-   ["PROD_006","Loa Bluetooth JBL",        "Phu kien",  "(NULL)",     10],
-   ["PROD_007","Chuot gaming Razer",       "Phu kien",  "1.500.000","(NULL)"],
-   ["PROD_008","ban phim co logitech",     "Phu kien",  "2.000.000", 25],
+   ["PROD_001","Phone IP15",        "Dien thoai","30.000.000", 50],
+   ["PROD_002","Key Logi",     "Phu kien",  "2.000.000", 100],
+   ["PROD_003","Headphone SN5", "Phu kien",  "8.000.000",  -5],
+   ["PROD_004","Powerbank AK",       "Phu kien",  "1.000.000",  20],
+   ["PROD_005","Key Logi",     "Phu kien",  "2.000.000",  30],
+   ["PROD_006","Speaker JB",        "Phu kien",  "(NULL)",     10],
+   ["PROD_007","Mouse RZ",       "Phu kien",  "1.500.000","(NULL)"],
+   ["PROD_008","key logi",     "Phu kien",  "2.000.000", 25],
  ],
  "before_bugs": [0],
  "before_col_widths": [65, 178, 65, 90, 95],
@@ -3461,10 +3461,10 @@ ENTRIES = [
  "result_table": (
    ["product_id","product_name","tong_doanh_so","hang"],
    [
-     ["PROD_001","iPhone 15 Pro Max",        "90.000.000", 1],
-     ["PROD_004","Sac du phong Anker",       "22.000.000", 2],
-     ["PROD_003","Tai nghe Sony WH-1000XM5","16.000.000", 3],
-     ["PROD_002","Ban phim co Logitech",     "4.000.000",  4],
+     ["PROD_001","Phone IP15",        "90.000.000", 1],
+     ["PROD_004","Powerbank AK",       "22.000.000", 2],
+     ["PROD_003","Headphone SN5","16.000.000", 3],
+     ["PROD_002","Key Logi",     "4.000.000",  4],
    ]
  ),
  "result_note":
@@ -3843,7 +3843,7 @@ EXERCISES = [
             "FROM   Products\n"
             "WHERE  price IS NULL\n"
             "    OR price <= 0;",
-     "answer": "Chỉ PROD_006 (Loa Bluetooth JBL, price = NULL) khớp; trong data mẫu không sản phẩm "
+     "answer": "Chỉ PROD_006 (Speaker JB, price = NULL) khớp; trong data mẫu không sản phẩm "
                "nào có price ≤ 0. Tương tự Câu 14 nhưng áp cho cột price thay vì stock: "
                "NULL = chưa nhập giá; ≤ 0 = giá âm hoặc miễn phí ngoài ý muốn."},
 
@@ -3922,7 +3922,7 @@ EXERCISES = [
             "FROM   Products\n"
             "GROUP  BY LOWER(TRIM(product_name))\n"
             "HAVING COUNT(*) > 1;",
-     "answer": "'ban phim co logitech' xuất hiện 3 lần (PROD_002, PROD_005, PROD_008). Chuẩn hóa "
+     "answer": "'key logi' xuất hiện 3 lần (PROD_002, PROD_005, PROD_008). Chuẩn hóa "
                "trước khi GROUP giúp bắt cả bản gõ sai (PROD_008: thường + dư khoảng trắng) mà so "
                "khớp thô bỏ sót (Câu 35)."},
 

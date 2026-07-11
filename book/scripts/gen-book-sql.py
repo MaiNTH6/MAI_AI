@@ -554,6 +554,43 @@ def _build_pass(out_path):
     story.append(NextPageTemplate("body"))
     story.append(PageBreak())
 
+    # ---- Trang Tuyên bố miễn trừ trách nhiệm & Chính sách ----
+    story.append(Paragraph("Tuyên bố miễn trừ trách nhiệm &amp; Chính sách", st_h1))
+    story.append(HRule(CONTENT_W, BLUE, 1.5))
+    story.append(Spacer(1, 8))
+    story.append(Paragraph(
+        "Vui lòng đọc kỹ trang này trước khi sử dụng cẩm nang.", st_lead))
+    story.append(Spacer(1, 6))
+    story.append(color_box("MIỄN TRỪ TRÁCH NHIỆM",
+        "Mọi câu lệnh và hướng dẫn trong tài liệu này chỉ phục vụ mục đích học tập và thực hành "
+        "trên môi trường thử nghiệm (Test/Staging). Tác giả hoàn toàn miễn trừ mọi trách nhiệm đối "
+        "với bất kỳ thiệt hại trực tiếp hoặc gián tiếp nào xảy ra đối với hệ thống dữ liệu, phần "
+        "mềm hoặc hoạt động kinh doanh của cá nhân/tổ chức phát sinh từ việc áp dụng các nội dung "
+        "trong cẩm nang này.",
+        LAMBER, AMBER, colors.HexColor("#b45309")))
+    story.append(Spacer(1, 10))
+    story.append(color_box("1. CHÍNH SÁCH HOÀN TIỀN (SẢN PHẨM SỐ)",
+        "Đây là sản phẩm kỹ thuật số, giao file ngay sau khi thanh toán. Hệ thống không áp dụng "
+        "chính sách hoàn tiền sau khi file đã được gửi thành công. Độc giả vui lòng đọc kỹ thông "
+        "tin và Bản đọc thử trước khi quyết định mua hàng.",
+        LBLUE, BLUE, BLUE))
+    story.append(Spacer(1, 6))
+    story.append(color_box("2. PHẠM VI HỖ TRỢ",
+        "Tác giả hỗ trợ giải đáp mọi thắc mắc liên quan trực tiếp đến nội dung sách và cơ sở dữ "
+        "liệu thực hành mẫu. Tác giả không hỗ trợ viết hoặc sửa lỗi câu lệnh SQL riêng trên hệ "
+        "thống dự án cá nhân của độc giả.",
+        LBLUE, BLUE, BLUE))
+    story.append(Spacer(1, 6))
+    story.append(color_box("3. BẢO MẬT THÔNG TIN (THEO NGHỊ ĐỊNH 13/2023/NĐ-CP)",
+        [Paragraph("Chúng tôi tôn trọng và bảo vệ dữ liệu cá nhân của độc giả:", st_box),
+         Spacer(1, 4),
+         li("Không chia sẻ, không bán danh sách khách hàng mua sách cho bất kỳ bên thứ ba nào."),
+         li("Ảnh chụp biên lai chuyển khoản chỉ dùng để đối soát giao dịch và được xóa định kỳ "
+            "để bảo mật."),
+        ],
+        LGREEN, GREEN, colors.HexColor("#047857")))
+    story.append(PageBreak())
+
     # ---- Intro: cách dùng cuốn cẩm nang ----
     story.append(Paragraph("Cách dùng cuốn cẩm nang này", st_h1))
     story.append(HRule(CONTENT_W, BLUE, 1.5))
@@ -660,7 +697,7 @@ def _build_pass(out_path):
         [
             Paragraph("Products", st_dn),
             Paragraph("Danh mục sản phẩm: tên, danh mục, giá niêm yết, số lượng tồn kho.", st_dd),
-            Paragraph("PROD_001 = iPhone 15 Pro Max, giá 30.000.000, tồn 50.", st_dd),
+            Paragraph("PROD_001 = Phone IP15, giá 30.000.000, tồn 50.", st_dd),
         ],
         [
             Paragraph("Orders", st_dn),
@@ -815,14 +852,14 @@ def _build_pass(out_path):
     # col widths: product_id=58 | product_name=175 | category=75 | price=95 | stock=90 = 493
     story.append(before_tbl(
         ["product_id","product_name","category","price","stock"],
-        [["PROD_001","iPhone 15 Pro Max","Dien thoai","30.000.000","50"],
-         ["PROD_002","Ban phim co Logitech","Phu kien","2.000.000","100"],
-         ["PROD_003","Tai nghe Sony WH-1000XM5","Phu kien","8.000.000","-5"],
-         ["PROD_004","Sac du phong Anker","Phu kien","1.000.000","20"],
-         ["PROD_005","Ban phim co Logitech","Phu kien","2.000.000","30"],
-         ["PROD_006","Loa Bluetooth JBL","Phu kien","(NULL)","10"],
-         ["PROD_007","Chuot gaming Razer","Phu kien","1.500.000","(NULL)"],
-         ["PROD_008","ban phim co logitech","Phu kien","2.000.000","25"]],
+        [["PROD_001","Phone IP15","Dien thoai","30.000.000","50"],
+         ["PROD_002","Key Logi","Phu kien","2.000.000","100"],
+         ["PROD_003","Headphone SN5","Phu kien","8.000.000","-5"],
+         ["PROD_004","Powerbank AK","Phu kien","1.000.000","20"],
+         ["PROD_005","Key Logi","Phu kien","2.000.000","30"],
+         ["PROD_006","Speaker JB","Phu kien","(NULL)","10"],
+         ["PROD_007","Mouse RZ","Phu kien","1.500.000","(NULL)"],
+         ["PROD_008","key logi","Phu kien","2.000.000","25"]],
         bugs=[2,4,5,6,7],
         col_widths=[58, 175, 75, 95, 90]))
     story.append(Spacer(1, 8))
@@ -1070,7 +1107,7 @@ def _build_pass(out_path):
     story.append(HRule(CONTENT_W, BLUE, 1.5))
     story.append(Spacer(1, 8))
     story.append(color_box("BỐI CẢNH",
-        "Sáng thứ Hai, dashboard báo doanh số iPhone 15 Pro Max (PROD_001) tháng này là "
+        "Sáng thứ Hai, dashboard báo doanh số Phone IP15 (PROD_001) tháng này là "
         "<b>90.000.000đ</b> — tương đương 3 máy. Nhưng bộ phận kho khẳng định chỉ xuất <b>2 máy</b> "
         "(60.000.000đ). Lệch 30 triệu. QA được nhờ soi xem dữ liệu sai ở đâu.",
         LAMBER, AMBER, colors.HexColor("#b45309")))
@@ -1094,12 +1131,12 @@ def _build_pass(out_path):
          "Đánh số các dòng trong cùng nhóm (order_id, product_id): dòng nào bị đánh số &gt; 1 là bản trùng.",
          "ROW_NUMBER() OVER (PARTITION BY order_id, product_id)",
          "Trong ORD_001/PROD_001: item 1 → 1, <b>item 7 → 2</b> — item 7 là bản sao của item 1. "
-         "Đây chính là chiếc iPhone thứ ba 'ảo'.",
+         "Đây chính là chiếc Phone IP15 thứ ba 'ảo'.",
          "Đã chỉ mặt thủ phạm (item 7), giờ đo thiệt hại bằng tiền — đối soát tổng đơn."),
         ("Bước 4 · Đo đúng phần lệch (Câu 13)",
          "Đối soát tổng ghi trên đơn với tổng cộng từ từng dòng items.",
          "HAVING total_amount &lt;&gt; SUM(quantity*price)",
-         "<b>ORD_001: ghi 32M nhưng items cộng 62M — lệch đúng 30 triệu</b>, khớp giá một iPhone đếm thừa.",
+         "<b>ORD_001: ghi 32M nhưng items cộng 62M — lệch đúng 30 triệu</b>, khớp giá một Phone IP15 đếm thừa.",
          "Biết một đơn lệch 30M, nhưng con số sai này đã lan tới báo cáo nào? — tổng theo danh mục xem phạm vi."),
         ("Bước 5 · Đánh giá phạm vi ảnh hưởng (Câu 27)",
          "Tổng doanh số theo danh mục để xem lỗi lan tới cấp báo cáo nào.",
@@ -1111,7 +1148,7 @@ def _build_pass(out_path):
          "thói quen tốt để không bỏ lỡ lỗi khác đang ẩn.",
          "SELECT 'Email trùng'... UNION ALL SELECT 'Tồn kho âm'... UNION ALL SELECT 'Khách mồ côi'...",
          "<b>6 dòng thuộc 3 loại lỗi</b>: 4 email trùng · 1 sản phẩm tồn kho âm · 1 đơn mồ côi "
-         "(ORD_004 trỏ khách C999 không tồn tại) — không liên quan vụ iPhone, nhưng ghi nhận để xử lý riêng.",
+         "(ORD_004 trỏ khách C999 không tồn tại) — không liên quan vụ Phone IP15, nhưng ghi nhận để xử lý riêng.",
          ""),
     ]
     for t, d, sql, kq, nxt in cs_steps:
@@ -1134,7 +1171,7 @@ def _build_pass(out_path):
          Spacer(1, 4),
          li("Báo dev thêm <b>UNIQUE(order_id, product_id)</b> (hoặc kiểm tra ở tầng ứng dụng) để chặn lặp."),
          li("Dọn dữ liệu: xóa item_id = 7 bị trùng, tính lại total_amount và các báo cáo liên quan."),
-         li("Báo kế toán con số đúng: doanh số iPhone là <b>60 triệu</b>, không phải 90 triệu."),
+         li("Báo kế toán con số đúng: doanh số Phone IP15 là <b>60 triệu</b>, không phải 90 triệu."),
         ],
         LGREEN, GREEN, colors.HexColor("#047857")))
     story.append(Spacer(1, 6))
@@ -1179,7 +1216,7 @@ def _build_pass(out_path):
             S("vh2b", parent=st_label, textColor=NAVY, fontSize=11, spaceBefore=4, spaceAfter=2)),
         Spacer(1, 4),
         color_box("HÀNH ĐỘNG",
-            "Trên giao diện, khách <b>C001</b> đặt mua <b>2</b> chiếc iPhone 15 Pro Max "
+            "Trên giao diện, khách <b>C001</b> đặt mua <b>2</b> chiếc Phone IP15 "
             "(PROD_001, giá 30.000.000). Hệ thống sinh đơn mới <b>ORD_100</b>. Tồn kho PROD_001 "
             "trước khi đặt là <b>50</b>. Sau thao tác, DB phải thể hiện đúng bốn điều dưới đây.",
             LAMBER, AMBER, colors.HexColor("#b45309"))))

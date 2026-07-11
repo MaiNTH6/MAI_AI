@@ -134,21 +134,21 @@ INSERT INTO Customers (customer_id, customer_name, email, membership_tier, statu
 -- ── Products ─────────────────────────────────────────────────
 INSERT INTO Products (product_id, product_name, category, price, stock) VALUES
   -- Dữ liệu chuẩn
-  ('PROD_001', 'iPhone 15 Pro Max',         'Dien thoai', 30000000,  50),
-  ('PROD_002', 'Ban phim co Logitech',      'Phu kien',    2000000, 100),
+  ('PROD_001', 'Phone IP15',         'Dien thoai', 30000000,  50),
+  ('PROD_002', 'Key Logi',      'Phu kien',    2000000, 100),
   -- Bug2: stock âm (Câu liên quan đến kiểm tra số âm)
-  ('PROD_003', 'Tai nghe Sony WH-1000XM5', 'Phu kien',    8000000,  -5),
-  ('PROD_004', 'Sac du phong Anker',        'Phu kien',    1000000,  20),
+  ('PROD_003', 'Headphone SN5', 'Phu kien',    8000000,  -5),
+  ('PROD_004', 'Powerbank AK',        'Phu kien',    1000000,  20),
   -- Câu 10: full duplicate (cùng tên + giá với PROD_002)
-  ('PROD_005', 'Ban phim co Logitech',      'Phu kien',    2000000,  30),
+  ('PROD_005', 'Key Logi',      'Phu kien',    2000000,  30),
   -- Câu 9: cột price bị NULL
-  ('PROD_006', 'Loa Bluetooth JBL',         'Phu kien',       NULL,  10),
+  ('PROD_006', 'Speaker JB',         'Phu kien',       NULL,  10),
   -- Câu 9: cột stock bị NULL
-  ('PROD_007', 'Chuot gaming Razer',        'Phu kien',   1500000, NULL),
-  -- Câu 35: bản trùng của "Ban phim co Logitech" nhưng gõ sai (chữ thường + dư
+  ('PROD_007', 'Mouse RZ',        'Phu kien',   1500000, NULL),
+  -- Câu 35: bản trùng của "Key Logi" nhưng gõ sai (chữ thường + dư
   --         khoảng trắng hai đầu). Chỉ LOWER(TRIM()) mới gom cùng nhóm; so khớp
   --         thô theo tên chính xác (Câu 10) bỏ sót dòng này.
-  ('PROD_008', '  ban phim co logitech  ',  'Phu kien',    2000000,  25);
+  ('PROD_008', '  key logi  ',  'Phu kien',    2000000,  25);
 
 -- ── Orders ───────────────────────────────────────────────────
 INSERT INTO Orders (order_id, customer_id, total_amount, status, order_date, deleted_at) VALUES
