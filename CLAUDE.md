@@ -50,11 +50,23 @@ Thứ tự khối (bật/tắt tùy bài, nhưng giữ đúng trình tự này):
 
 ## 5. Kiến trúc kỹ thuật (giữ nguyên tắc)
 
-- Nội dung bài: `data/articles.json` ⇄ CRUD qua `/admin` (`lib/db.ts`). Render qua `components/ArticleSections.tsx`. Schema ở `lib/types.ts`.
-- Tài nguyên (prompt/template): data ở `lib/prompts.ts` và `data/qa-templates.json` (**1 nguồn dùng chung** web + script).
-- File Excel sinh bằng `scripts/gen-templates.py` (đọc `data/qa-templates.json` → `public/templates/*.xlsx`). Sửa template → chạy lại script.
-- Chuyên mục ở `lib/categories.ts` — Header/Footer/Homepage tự đọc. Thêm chuyên mục = thêm vào đây + tạo folder `app/(site)/<slug>/page.tsx`.
-- Mỗi lần đổi: `npx tsc --noEmit` phải sạch trước khi coi là xong.
+**Bố cục repo** — mỗi phần một thư mục riêng:
+
+```
+web/      ← toàn bộ website Next.js (deploy từ đây)
+book/     ← Sách 1 (50 câu SQL săn bug)
+book2/    ← Sách 2 (SQL cho Data Tester ngân hàng)
+book3/    ← Sách 3 (Tự động hoá kiểm thử dữ liệu)
+brand/    ← ảnh thương hiệu dùng chung
+```
+
+> ⚠️ Trên Vercel, **Root Directory phải đặt là `web`**. Mọi đường dẫn dưới đây tính từ `web/`.
+
+- Nội dung bài: `web/data/articles.json` ⇄ CRUD qua `/admin` (`web/lib/db.ts`). Render qua `web/components/ArticleSections.tsx`. Schema ở `web/lib/types.ts`.
+- Tài nguyên (prompt/template): data ở `web/lib/prompts.ts` và `web/data/qa-templates.json` (**1 nguồn dùng chung** web + script).
+- File Excel sinh bằng `web/scripts/gen-templates.py` (đọc `web/data/qa-templates.json` → `web/public/templates/*.xlsx`). Sửa template → chạy lại script.
+- Chuyên mục ở `web/lib/categories.ts` — Header/Footer/Homepage tự đọc. Thêm chuyên mục = thêm vào đây + tạo folder `web/app/(site)/<slug>/page.tsx`.
+- Mỗi lần đổi: `cd web && npx tsc --noEmit` phải sạch trước khi coi là xong.
 
 ## 6. Khi thêm bài / tài nguyên mới — checklist nhanh
 
@@ -65,9 +77,10 @@ Thứ tự khối (bật/tắt tùy bài, nhưng giữ đúng trình tự này):
 - [ ] Prompt (nếu có) kèm Mục tiêu + Kết quả mẫu + Góc soi lỗi Tester.
 - [ ] Bảng render đúng (HTML table, gộp ô nhóm, copy TSV).
 - [ ] Không có rating/pricing/affiliate.
-- [ ] `npx tsc --noEmit` sạch + smoke test route 200.
+- [ ] `cd web && npx tsc --noEmit` sạch + smoke test route 200.
 
 ## 7. Vận hành dev
 
-- Chạy: `npm run dev` (port 3000). Admin: `/admin` (mật khẩu env `ADMIN_PASSWORD`, mặc định `admin123`).
-- ⚠️ Production: `data/articles.json` không ghi được trên Vercel (filesystem read-only) — cần migrate sang Turso/SQLite trước khi deploy.
+- Chạy: `cd web && npm run dev` (hoặc `npm --prefix web run dev`) — port 3000. Admin: `/admin` (mật khẩu env `ADMIN_PASSWORD`, mặc định `admin123`).
+- ⚠️ Vercel: **Root Directory = `web`** (Settings ▸ General). Đặt sai là build hỏng.
+- ⚠️ Production: `web/data/articles.json` không ghi được trên Vercel (filesystem read-only) — cần migrate sang Turso/SQLite trước khi deploy.
