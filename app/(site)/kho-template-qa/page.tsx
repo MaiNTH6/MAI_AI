@@ -17,7 +17,7 @@ export default function Page() {
         <div className="absolute -top-20 left-1/3 -z-10 h-72 w-72 rounded-full bg-brand-600/30 blur-3xl" />
         <div className="absolute -bottom-20 right-1/3 -z-10 h-64 w-64 rounded-full bg-cta-500/20 blur-3xl" />
         <div className="container-content py-12 md:py-16">
-          <nav className="text-sm text-slate-400 mb-4">
+          <nav className="text-sm text-[color:var(--faint)] mb-4">
             <Link href="/ai-qa" className="hover:text-brand-300">
               AI cho QA / Kiểm thử
             </Link>

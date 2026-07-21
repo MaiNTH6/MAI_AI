@@ -387,7 +387,7 @@ export function ArticleForm({ mode, action, article }: Props) {
 /* ---------- helpers ---------- */
 
 const inputCls =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
+  "w-full rounded-lg border border-[color:var(--line2)] bg-[color:var(--bg2)] px-3 py-2 text-[color:var(--ink)] outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 function Section({
   title,
@@ -399,10 +399,10 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl bg-white p-6 ring-1 ring-white/10 shadow-xl shadow-black/30 space-y-4">
+    <section className="rounded-2xl bg-[color:var(--bg2)] p-6 ring-1 ring-white/10 shadow-xl shadow-black/30 space-y-4">
       <div>
-        <h2 className="text-lg font-bold text-slate-900">{title}</h2>
-        {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
+        <h2 className="text-lg font-bold text-[color:var(--ink)]">{title}</h2>
+        {subtitle && <p className="text-sm text-[color:var(--faint)] mt-0.5">{subtitle}</p>}
       </div>
       {children}
     </section>
@@ -420,8 +420,8 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="text-sm font-semibold text-slate-700 mb-1">{label}</div>
-      {hint && <div className="text-xs text-slate-500 mb-1.5">{hint}</div>}
+      <div className="text-sm font-semibold text-[color:var(--muted)] mb-1">{label}</div>
+      {hint && <div className="text-xs text-[color:var(--faint)] mb-1.5">{hint}</div>}
       {children}
     </label>
   );

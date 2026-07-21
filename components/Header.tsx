@@ -9,26 +9,29 @@ const nav = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-[color:var(--line2)] bg-[#0e131c]/85 backdrop-blur-md">
       <div className="container-content flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-white">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/30">
+        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg text-[color:var(--ink)]">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#fbefcb] via-[#e6ce93] to-[#c6a25c] text-[#1b1608] font-extrabold shadow-[0_5px_16px_-5px_rgba(230,206,147,0.6)]">
             M
           </span>
           <span>
-            maiqai<span className="text-brand-400">.com</span>
+            maiqai<span className="metal-text">.com</span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
-          <Link href="/" className="rounded-md px-3 py-2 hover:bg-white/5 hover:text-white">
+        <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-[color:var(--muted)]">
+          <Link
+            href="/"
+            className="rounded-md px-3 py-2 text-[color:var(--metal)] hover:bg-white/5"
+          >
             Trang chủ
           </Link>
           {nav.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="rounded-md px-3 py-2 hover:bg-white/5 hover:text-white"
+              className="rounded-md px-3 py-2 hover:bg-white/5 hover:text-[color:var(--ink)]"
             >
               {n.label}
             </Link>
@@ -41,13 +44,13 @@ export function Header() {
       </div>
 
       {/* mobile nav */}
-      <nav className="md:hidden border-t border-white/10 overflow-x-auto">
-        <div className="container-content flex gap-1 py-2 text-sm font-medium text-slate-300 whitespace-nowrap">
+      <nav className="md:hidden border-t border-[color:var(--line)] overflow-x-auto">
+        <div className="container-content flex gap-1 py-2 text-sm font-medium text-[color:var(--muted)] whitespace-nowrap">
           {nav.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white"
+              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-[color:var(--ink)]"
             >
               {n.short}
             </Link>

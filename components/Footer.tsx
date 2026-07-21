@@ -9,18 +9,18 @@ const footerNav = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-white/10 bg-slate-950/60 backdrop-blur">
+    <footer className="mt-20 border-t border-[color:var(--line)] bg-[#0e131c]/60 backdrop-blur">
       <div className="container-content py-12 grid gap-10 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 font-bold text-lg text-white">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/30">
+          <div className="flex items-center gap-2.5 font-bold text-lg text-[color:var(--ink)]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#fbefcb] via-[#e6ce93] to-[#c6a25c] text-[#1b1608] font-extrabold shadow-[0_5px_16px_-5px_rgba(230,206,147,0.6)]">
               M
             </span>
             <span>
-              MAI<span className="text-brand-400">.tools</span>
+              maiqai<span className="metal-text">.com</span>
             </span>
           </div>
-          <p className="mt-3 text-sm text-slate-400 leading-relaxed">
+          <p className="mt-3 text-sm text-[color:var(--muted)] leading-relaxed">
             Ứng dụng AI vào công việc kiểm thử (QA) cho người Việt: thực chiến,
             từng bước, có template &amp; prompt sẵn.
           </p>

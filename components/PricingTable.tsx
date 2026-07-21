@@ -8,8 +8,8 @@ export function PricingTable({ plans }: { plans: PricingPlan[] }) {
           key={p.name}
           className={`relative rounded-2xl border-2 p-6 ${
             p.recommended
-              ? "border-brand-600 bg-brand-50/40 shadow-lg shadow-brand-200/40"
-              : "border-slate-200 bg-slate-50/60"
+              ? "border-brand-600 bg-brand-500/10 shadow-lg shadow-brand-200/40"
+              : "border-[color:var(--line)] bg-white/[0.04]"
           }`}
         >
           {p.recommended && (
@@ -17,16 +17,16 @@ export function PricingTable({ plans }: { plans: PricingPlan[] }) {
               Khuyên mua
             </div>
           )}
-          <div className="font-bold text-lg text-slate-900">{p.name}</div>
-          <div className="mt-2 text-3xl font-extrabold text-brand-700">
+          <div className="font-bold text-lg text-[color:var(--ink)]">{p.name}</div>
+          <div className="mt-2 text-3xl font-extrabold text-brand-300">
             {p.price}
           </div>
-          <div className="mt-2 text-sm text-slate-600">{p.forWho}</div>
+          <div className="mt-2 text-sm text-[color:var(--muted)]">{p.forWho}</div>
           <ul className="mt-4 space-y-2 text-sm">
             {p.features.map((f) => (
               <li key={f} className="flex gap-2">
-                <span className="text-emerald-600 font-bold">✓</span>
-                <span className="text-slate-700">{f}</span>
+                <span className="text-emerald-400 font-bold">✓</span>
+                <span className="text-[color:var(--muted)]">{f}</span>
               </li>
             ))}
           </ul>

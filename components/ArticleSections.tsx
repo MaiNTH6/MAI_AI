@@ -19,34 +19,34 @@ export function IntroBox({ intro }: { intro: ArticleIntro }) {
   return (
     <section className="not-prose my-8 space-y-6">
       {intro.problem && (
-        <div className="rounded-2xl border-l-4 border-amber-500 bg-amber-50/60 p-6">
+        <div className="rounded-2xl border-l-4 border-amber-500 bg-amber-500/10 p-6">
           <div className="flex items-center gap-2 mb-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-amber-500 text-white text-sm font-bold">
               📌
             </span>
-            <h2 className="font-bold text-lg text-slate-900 m-0">
+            <h2 className="font-bold text-lg text-[color:var(--ink)] m-0">
               Đặt vấn đề
             </h2>
           </div>
-          <p className="text-slate-700 leading-relaxed m-0">{intro.problem}</p>
+          <p className="text-[color:var(--muted)] leading-relaxed m-0">{intro.problem}</p>
         </div>
       )}
       {(intro.whatIs || intro.whyThis) && (
-        <div className="rounded-2xl border-l-4 border-brand-500 bg-brand-50/40 p-6 space-y-3">
+        <div className="rounded-2xl border-l-4 border-brand-500 bg-brand-500/10 p-6 space-y-3">
           <div className="flex items-center gap-2 mb-1">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 text-white text-sm font-bold">
               🤖
             </span>
-            <h2 className="font-bold text-lg text-slate-900 m-0">
+            <h2 className="font-bold text-lg text-[color:var(--ink)] m-0">
               Giới thiệu &ldquo;Trợ lý&rdquo;
             </h2>
           </div>
           {intro.whatIs && (
-            <p className="text-slate-700 leading-relaxed m-0">{intro.whatIs}</p>
+            <p className="text-[color:var(--muted)] leading-relaxed m-0">{intro.whatIs}</p>
           )}
           {intro.whyThis && (
-            <p className="text-slate-700 leading-relaxed m-0">
-              <strong className="text-brand-700">Vì sao chọn nó?</strong>{" "}
+            <p className="text-[color:var(--muted)] leading-relaxed m-0">
+              <strong className="text-brand-300">Vì sao chọn nó?</strong>{" "}
               {intro.whyThis}
             </p>
           )}
@@ -61,7 +61,7 @@ export function IntroBox({ intro }: { intro: ArticleIntro }) {
 export function LeadBox({ text }: { text: string }) {
   if (!text) return null;
   return (
-    <div className="not-prose my-6 space-y-3 text-lg leading-relaxed text-slate-700">
+    <div className="not-prose my-6 space-y-3 text-lg leading-relaxed text-[color:var(--muted)]">
       {text.split("\n\n").map((p, i) => (
         <p key={i} className="m-0">
           {p}
@@ -76,17 +76,17 @@ export function LeadBox({ text }: { text: string }) {
 export function TldrBox({ items }: { items: string[] }) {
   if (!items?.length) return null;
   return (
-    <aside className="not-prose my-8 rounded-2xl border-2 border-brand-200 bg-brand-50/40 p-6">
+    <aside className="not-prose my-8 rounded-2xl border-2 border-brand-500/40 bg-brand-500/10 p-6">
       <div className="flex items-center gap-2 mb-3">
         <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 text-white text-sm font-bold">
           ⚡
         </span>
-        <h3 className="font-bold text-lg text-slate-900">Đọc 30 giây — Bài này nói gì?</h3>
+        <h3 className="font-bold text-lg text-[color:var(--ink)]">Đọc 30 giây — Bài này nói gì?</h3>
       </div>
-      <ul className="space-y-2 text-slate-800">
+      <ul className="space-y-2 text-[color:var(--ink)]">
         {items.map((it, i) => (
           <li key={i} className="flex gap-2">
-            <span className="text-brand-600 font-bold">→</span>
+            <span className="text-brand-300 font-bold">→</span>
             <span>{it}</span>
           </li>
         ))}
@@ -101,33 +101,33 @@ export function ComparisonTableBox({ rows }: { rows: ComparisonRow[] }) {
   if (!rows?.length) return null;
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         📊 So sánh trước & sau
       </h2>
-      <p className="text-slate-600 mb-5 text-sm">
+      <p className="text-[color:var(--muted)] mb-5 text-sm">
         Đặt 2 cách cạnh nhau để bạn tự so sánh.
       </p>
-      <div className="overflow-hidden rounded-2xl ring-1 ring-slate-200 shadow-sm">
+      <div className="overflow-hidden rounded-2xl ring-1 ring-[color:var(--line)] shadow-sm">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-slate-700">
+          <thead className="bg-[color:var(--bg3)] text-[color:var(--muted)]">
             <tr>
               <th className="px-4 py-3 text-left font-semibold w-2/5">Tiêu chí</th>
               <th className="px-4 py-3 text-left font-semibold">
-                <span className="text-rose-700">Trước</span>
+                <span className="text-rose-300">Trước</span>
               </th>
               <th className="px-4 py-3 text-left font-semibold">
-                <span className="text-emerald-700">Sau</span>
+                <span className="text-emerald-300">Sau</span>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 bg-white">
+          <tbody className="divide-y divide-[color:var(--line)] bg-[color:var(--bg2)]">
             {rows.map((r, i) => (
-              <tr key={i} className="hover:bg-slate-50">
-                <td className="px-4 py-3 font-semibold text-slate-900">
+              <tr key={i} className="hover:bg-[color:var(--bg3)]">
+                <td className="px-4 py-3 font-semibold text-[color:var(--ink)]">
                   {r.label}
                 </td>
-                <td className="px-4 py-3 text-slate-700">{r.before}</td>
-                <td className="px-4 py-3 text-slate-900 font-medium">
+                <td className="px-4 py-3 text-[color:var(--muted)]">{r.before}</td>
+                <td className="px-4 py-3 text-[color:var(--ink)] font-medium">
                   {r.after}
                 </td>
               </tr>
@@ -155,11 +155,11 @@ export function VideoBox({ url, title }: { url: string; title?: string }) {
   const embedUrl = toEmbedUrl(url);
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         🎬 Video hướng dẫn (3 phút)
       </h2>
-      {title && <p className="text-slate-600 mb-4 text-sm">{title}</p>}
-      <div className="relative aspect-video w-full overflow-hidden rounded-2xl ring-1 ring-slate-200 shadow-sm bg-slate-100">
+      {title && <p className="text-[color:var(--muted)] mb-4 text-sm">{title}</p>}
+      <div className="relative aspect-video w-full overflow-hidden rounded-2xl ring-1 ring-[color:var(--line)] shadow-sm bg-[color:var(--bg3)]">
         <iframe
           src={embedUrl}
           title={title || "Video hướng dẫn"}
@@ -188,31 +188,31 @@ export function StepsBox({
     subtitle ?? "Mất khoảng 10-15 phút lần đầu, sau đó chỉ việc dùng.";
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         {title || `🚀 Thiết lập trong ${steps.length} bước`}
       </h2>
-      {sub && <p className="text-slate-600 mb-5 text-sm">{sub}</p>}
+      {sub && <p className="text-[color:var(--muted)] mb-5 text-sm">{sub}</p>}
       <ol className="space-y-3">
         {steps.map((s, i) => (
           <li
             key={i}
-            className="flex gap-4 rounded-xl border border-slate-200 bg-white p-4"
+            className="flex gap-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--bg2)] p-4"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-white font-bold">
               {i + 1}
             </span>
             <div className="min-w-0 flex-1">
-              <div className="font-bold text-slate-900">{s.title}</div>
-              <div className="mt-1 text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+              <div className="font-bold text-[color:var(--ink)]">{s.title}</div>
+              <div className="mt-1 text-[color:var(--muted)] text-sm leading-relaxed whitespace-pre-line">
                 {s.body}
               </div>
               {s.code && (
-                <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-900 px-4 py-3 text-xs leading-relaxed text-slate-100 font-mono">
+                <pre className="mt-3 overflow-x-auto rounded-lg bg-[#0a0e15] px-4 py-3 text-xs leading-relaxed text-slate-100 font-mono">
                   {s.code}
                 </pre>
               )}
               {s.tip && (
-                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 leading-relaxed">
+                <div className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200 leading-relaxed">
                   {s.tip}
                 </div>
               )}
@@ -223,10 +223,10 @@ export function StepsBox({
                     src={s.image}
                     alt={s.imageAlt || s.title}
                     loading="lazy"
-                    className="rounded-lg ring-1 ring-slate-200 max-w-full h-auto"
+                    className="rounded-lg ring-1 ring-[color:var(--line)] max-w-full h-auto"
                   />
                   {s.imageAlt && (
-                    <figcaption className="mt-1.5 text-xs text-slate-500">
+                    <figcaption className="mt-1.5 text-xs text-[color:var(--faint)]">
                       {s.imageAlt}
                     </figcaption>
                   )}
@@ -269,54 +269,54 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
   }
 
   return (
-    <div className="rounded-2xl ring-1 ring-slate-200 bg-white overflow-hidden shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-3">
+    <div className="rounded-2xl ring-1 ring-[color:var(--line)] bg-[color:var(--bg2)] overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between border-b border-[color:var(--line)] bg-[color:var(--bg3)] px-5 py-3">
         <div className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center rounded-md bg-brand-600 text-white text-xs font-bold">
             {index + 1}
           </span>
-          <div className="font-semibold text-slate-900">{p.title}</div>
+          <div className="font-semibold text-[color:var(--ink)]">{p.title}</div>
         </div>
         <button
           type="button"
           onClick={copy}
-          className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:ring-brand-400 hover:text-brand-700"
+          className="rounded-md bg-[color:var(--bg2)] px-3 py-1.5 text-xs font-semibold text-[color:var(--muted)] ring-1 ring-[color:var(--line2)] hover:ring-brand-400 hover:text-brand-300"
         >
           {copied ? "✓ Đã copy" : "📋 Copy prompt"}
         </button>
       </div>
 
       {p.goal && (
-        <div className="px-5 py-3 border-b border-slate-100 bg-brand-50/30">
-          <span className="text-xs font-semibold uppercase tracking-wider text-brand-700">
+        <div className="px-5 py-3 border-b border-[color:var(--line)] bg-brand-500/10">
+          <span className="text-xs font-semibold uppercase tracking-wider text-brand-300">
             Mục tiêu
           </span>
-          <p className="mt-1 text-sm text-slate-700 m-0">{p.goal}</p>
+          <p className="mt-1 text-sm text-[color:var(--muted)] m-0">{p.goal}</p>
         </div>
       )}
 
-      <pre className="px-5 py-4 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap font-mono bg-white border-l-4 border-brand-400 my-0">
+      <pre className="px-5 py-4 text-sm text-[color:var(--ink)] leading-relaxed whitespace-pre-wrap font-mono bg-[color:var(--bg2)] border-l-4 border-brand-400 my-0">
         {p.prompt}
       </pre>
 
-      <div className="border-t border-slate-200 bg-slate-50/60">
+      <div className="border-t border-[color:var(--line)] bg-white/[0.04]">
         <button
           type="button"
           onClick={() => setShowResult((v) => !v)}
-          className="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 flex items-center justify-between"
+          className="w-full text-left px-5 py-3 text-sm font-semibold text-[color:var(--muted)] hover:bg-[color:var(--bg3)] flex items-center justify-between"
         >
           <span>
             {showResult ? "▼" : "▶"} Kết quả AI trả ra (ví dụ minh họa)
           </span>
         </button>
         {showResult && (
-          <div className="px-5 pb-5 border-t border-slate-200 bg-white pt-4">
+          <div className="px-5 pb-5 border-t border-[color:var(--line)] bg-[color:var(--bg2)] pt-4">
             {p.exampleInput && (
               <div className="mb-4">
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                <div className="text-xs font-bold uppercase tracking-wider text-[color:var(--faint)] mb-1.5">
                   📥 Đầu vào dùng cho ví dụ
                 </div>
-                <pre className="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap font-mono bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 m-0">
+                <pre className="text-xs text-[color:var(--muted)] leading-relaxed whitespace-pre-wrap font-mono bg-[color:var(--bg3)] border border-[color:var(--line)] rounded-lg px-3 py-2.5 m-0">
                   {p.exampleInput}
                 </pre>
               </div>
@@ -324,12 +324,12 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
             {p.resultGroups ? (
               <div className="space-y-5">
                 {p.result && (
-                  <p className="text-sm text-slate-600 m-0">{p.result}</p>
+                  <p className="text-sm text-[color:var(--muted)] m-0">{p.result}</p>
                 )}
                 {p.resultGroups.map((g, gi) => (
                   <div key={gi}>
                     {g.group && (
-                      <div className="text-sm font-semibold text-slate-900 mb-1.5 flex items-center gap-2">
+                      <div className="text-sm font-semibold text-[color:var(--ink)] mb-1.5 flex items-center gap-2">
                         <span className="inline-block h-3 w-1 rounded bg-brand-500" />
                         {g.group}
                       </div>
@@ -337,11 +337,11 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
                     <div className="overflow-x-auto">
                       <table className="w-full text-xs border-collapse">
                         <thead>
-                          <tr className="bg-slate-100">
+                          <tr className="bg-[color:var(--bg3)]">
                             {g.columns.map((c, ci) => (
                               <th
                                 key={ci}
-                                className="border border-slate-300 px-2.5 py-1.5 text-left font-semibold text-slate-900 whitespace-nowrap"
+                                className="border border-[color:var(--line2)] px-2.5 py-1.5 text-left font-semibold text-[color:var(--ink)] whitespace-nowrap"
                               >
                                 {c}
                               </th>
@@ -350,11 +350,11 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
                         </thead>
                         <tbody>
                           {g.rows.map((r, ri) => (
-                            <tr key={ri} className="even:bg-slate-50/60">
+                            <tr key={ri} className="even:bg-white/[0.04]">
                               {r.map((cell, ci) => (
                                 <td
                                   key={ci}
-                                  className="border border-slate-200 px-2.5 py-1.5 align-top text-slate-700"
+                                  className="border border-[color:var(--line)] px-2.5 py-1.5 align-top text-[color:var(--muted)]"
                                 >
                                   {cell || (
                                     <span className="text-slate-300">—</span>
@@ -370,7 +370,7 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
                 ))}
               </div>
             ) : (
-              <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+              <div className="text-sm text-[color:var(--muted)] leading-relaxed whitespace-pre-wrap">
                 {p.result}
               </div>
             )}
@@ -379,16 +379,16 @@ function PromptCard({ p, index }: { p: PromptExample; index: number }) {
       </div>
 
       {p.testerNote && (
-        <div className="border-t border-amber-200 bg-amber-50/60 px-5 py-4">
+        <div className="border-t border-amber-500/30 bg-amber-500/10 px-5 py-4">
           <div className="flex items-start gap-3">
             <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-amber-500 text-white text-sm font-bold">
               🔍
             </span>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
+              <div className="text-xs font-bold uppercase tracking-wider text-amber-300">
                 Góc soi lỗi của Tester
               </div>
-              <p className="mt-1 text-sm text-slate-800 leading-relaxed m-0">
+              <p className="mt-1 text-sm text-[color:var(--ink)] leading-relaxed m-0">
                 {p.testerNote}
               </p>
             </div>
@@ -403,10 +403,10 @@ export function PromptsBox({ prompts }: { prompts: PromptExample[] }) {
   if (!prompts?.length) return null;
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         🔍 {prompts.length} prompt — kèm chỗ AI hay sai cần bắt
       </h2>
-      <p className="text-slate-600 mb-5 text-sm">
+      <p className="text-[color:var(--muted)] mb-5 text-sm">
         AI sinh kết quả chỉ trong vài giây — việc của bạn là <strong>kiểm lại</strong>.
         Mỗi prompt kèm ví dụ kết quả và <strong>🔍 Góc soi lỗi của Tester</strong> (chỗ
         AI hay sai, nên xem trước khi dùng). Bấm <strong>Copy</strong> → dán vào Claude
@@ -431,10 +431,10 @@ export function VisualFeaturesBox({
   if (!features?.length) return null;
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         🎨 Bonus — {features.length} tính năng Visual của NotebookLM
       </h2>
-      <p className="text-slate-600 mb-5 text-sm">
+      <p className="text-[color:var(--muted)] mb-5 text-sm">
         Ngoài 3 prompt văn bản, NotebookLM còn 4 nút tạo output trực quan
         (sơ đồ, infographic, podcast, video). Hướng dẫn dùng từng cái.
       </p>
@@ -442,29 +442,29 @@ export function VisualFeaturesBox({
         {features.map((f, i) => (
           <div
             key={i}
-            className="rounded-2xl ring-1 ring-slate-200 bg-white overflow-hidden shadow-sm"
+            className="rounded-2xl ring-1 ring-[color:var(--line)] bg-[color:var(--bg2)] overflow-hidden shadow-sm"
           >
             {/* Header */}
-            <div className="flex items-start gap-4 border-b border-slate-200 bg-gradient-to-r from-brand-50 to-amber-50 px-5 py-4">
+            <div className="flex items-start gap-4 border-b border-[color:var(--line)] bg-gradient-to-r from-brand-50 to-amber-50 px-5 py-4">
               <span className="text-3xl shrink-0" aria-hidden>
                 {f.emoji || "✨"}
               </span>
               <div>
-                <div className="font-bold text-lg text-slate-900">{f.name}</div>
-                <p className="mt-1 text-sm text-slate-700 m-0">
+                <div className="font-bold text-lg text-[color:var(--ink)]">{f.name}</div>
+                <p className="mt-1 text-sm text-[color:var(--muted)] m-0">
                   {f.description}
                 </p>
               </div>
             </div>
 
             {/* HowTo */}
-            <div className="px-5 py-4 border-b border-slate-100">
-              <div className="text-xs font-bold uppercase tracking-wider text-brand-700 mb-3">
+            <div className="px-5 py-4 border-b border-[color:var(--line)]">
+              <div className="text-xs font-bold uppercase tracking-wider text-brand-300 mb-3">
                 Cách tạo (bấm theo thứ tự)
               </div>
               <ol className="space-y-2">
                 {f.howTo.map((step, si) => (
-                  <li key={si} className="flex gap-3 text-sm text-slate-700">
+                  <li key={si} className="flex gap-3 text-sm text-[color:var(--muted)]">
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-600 text-white text-xs font-bold">
                       {si + 1}
                     </span>
@@ -475,23 +475,23 @@ export function VisualFeaturesBox({
             </div>
 
             {/* UseCase */}
-            <div className="px-5 py-4 bg-emerald-50/40 border-b border-emerald-100">
+            <div className="px-5 py-4 bg-emerald-500/10 border-b border-emerald-500/25">
               <div className="flex items-start gap-2">
-                <span className="text-emerald-700 font-bold text-sm shrink-0">
+                <span className="text-emerald-300 font-bold text-sm shrink-0">
                   ✓ Khi nào dùng:
                 </span>
-                <span className="text-sm text-slate-800">{f.useCase}</span>
+                <span className="text-sm text-[color:var(--ink)]">{f.useCase}</span>
               </div>
             </div>
 
             {/* Tip */}
             {f.tip && (
-              <div className="px-5 py-4 bg-amber-50/60">
+              <div className="px-5 py-4 bg-amber-500/10">
                 <div className="flex items-start gap-2">
-                  <span className="text-amber-700 font-bold text-sm shrink-0">
+                  <span className="text-amber-300 font-bold text-sm shrink-0">
                     💡 Mẹo:
                   </span>
-                  <span className="text-sm text-slate-800">{f.tip}</span>
+                  <span className="text-sm text-[color:var(--ink)]">{f.tip}</span>
                 </div>
               </div>
             )}
@@ -507,17 +507,17 @@ export function VisualFeaturesBox({
 function FaqItem({ q, index }: { q: FAQItem; index: number }) {
   const [open, setOpen] = useState(index === 0); // mở câu đầu sẵn
   return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+    <div className="rounded-xl border border-[color:var(--line)] bg-[color:var(--bg2)] overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-slate-50"
+        className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-[color:var(--bg3)]"
       >
-        <span className="font-semibold text-slate-900">{q.question}</span>
-        <span className="text-slate-400 shrink-0">{open ? "−" : "+"}</span>
+        <span className="font-semibold text-[color:var(--ink)]">{q.question}</span>
+        <span className="text-[color:var(--faint)] shrink-0">{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <div className="px-5 pb-4 text-slate-700 leading-relaxed border-t border-slate-100 pt-3">
+        <div className="px-5 pb-4 text-[color:var(--muted)] leading-relaxed border-t border-[color:var(--line)] pt-3">
           {q.answer}
         </div>
       )}
@@ -529,10 +529,10 @@ export function FaqBox({ items }: { items: FAQItem[] }) {
   if (!items?.length) return null;
   return (
     <section className="not-prose my-10">
-      <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">
         ❓ Câu hỏi thường gặp
       </h2>
-      <p className="text-slate-600 mb-5 text-sm">
+      <p className="text-[color:var(--muted)] mb-5 text-sm">
         Câu trả lời thẳng, không vòng vo.
       </p>
       <div className="space-y-3">
@@ -553,17 +553,17 @@ export function ContentTablesBox({ tables }: { tables: ContentTable[] }) {
       {tables.map((t, ti) => (
         <div key={ti}>
           {t.title && (
-            <h2 className="text-2xl font-bold text-slate-900 mb-1">{t.title}</h2>
+            <h2 className="text-2xl font-bold text-[color:var(--ink)] mb-1">{t.title}</h2>
           )}
-          {t.intro && <p className="text-slate-600 mb-4 text-sm">{t.intro}</p>}
-          <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200">
-            <table className="w-full text-sm border-collapse bg-white">
+          {t.intro && <p className="text-[color:var(--muted)] mb-4 text-sm">{t.intro}</p>}
+          <div className="overflow-x-auto rounded-xl ring-1 ring-[color:var(--line)]">
+            <table className="w-full text-sm border-collapse bg-[color:var(--bg2)]">
               <thead>
-                <tr className="bg-slate-100">
+                <tr className="bg-[color:var(--bg3)]">
                   {t.columns.map((c, ci) => (
                     <th
                       key={ci}
-                      className="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-900"
+                      className="border border-[color:var(--line)] px-3 py-2 text-left font-semibold text-[color:var(--ink)]"
                     >
                       {c}
                     </th>
@@ -572,11 +572,11 @@ export function ContentTablesBox({ tables }: { tables: ContentTable[] }) {
               </thead>
               <tbody>
                 {t.rows.map((r, ri) => (
-                  <tr key={ri} className="even:bg-slate-50/60">
+                  <tr key={ri} className="even:bg-white/[0.04]">
                     {r.map((cell, ci) => (
                       <td
                         key={ci}
-                        className="border border-slate-200 px-3 py-2 align-top text-slate-700"
+                        className="border border-[color:var(--line)] px-3 py-2 align-top text-[color:var(--muted)]"
                       >
                         {cell || <span className="text-slate-300">—</span>}
                       </td>
@@ -587,7 +587,7 @@ export function ContentTablesBox({ tables }: { tables: ContentTable[] }) {
             </table>
           </div>
           {t.note && (
-            <div className="mt-3 rounded-lg bg-brand-50 ring-1 ring-brand-100 px-4 py-3 text-sm text-slate-700">
+            <div className="mt-3 rounded-lg bg-brand-500/10 ring-1 ring-brand-100 px-4 py-3 text-sm text-[color:var(--muted)]">
               {t.note}
             </div>
           )}
@@ -602,20 +602,20 @@ export function ContentTablesBox({ tables }: { tables: ContentTable[] }) {
 export function ReferencesBox({ items }: { items: ArticleReference[] }) {
   if (!items?.length) return null;
   return (
-    <section className="not-prose my-10 rounded-2xl border border-slate-200 bg-slate-50/60 p-6">
-      <h2 className="text-lg font-bold text-slate-900 mb-3">
+    <section className="not-prose my-10 rounded-2xl border border-[color:var(--line)] bg-white/[0.04] p-6">
+      <h2 className="text-lg font-bold text-[color:var(--ink)] mb-3">
         📚 Tài liệu tham khảo
       </h2>
-      <ul className="space-y-2 text-sm text-slate-700">
+      <ul className="space-y-2 text-sm text-[color:var(--muted)]">
         {items.map((r, i) => (
           <li key={i} className="flex gap-2">
-            <span className="text-slate-400">•</span>
+            <span className="text-[color:var(--faint)]">•</span>
             {r.url ? (
               <a
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-700 hover:underline"
+                className="text-brand-300 hover:underline"
               >
                 {r.label}
               </a>

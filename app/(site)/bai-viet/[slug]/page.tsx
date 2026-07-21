@@ -43,7 +43,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
   return (
     <div className="container-content py-10 md:py-14">
-      <nav className="text-sm text-slate-400 mb-4 max-w-4xl mx-auto">
+      <nav className="text-sm text-[color:var(--faint)] mb-4 max-w-4xl mx-auto">
         <Link href="/" className="hover:text-brand-300">
           Trang chủ
         </Link>
@@ -55,16 +55,16 @@ export default async function ArticlePage({ params }: PageProps) {
         <span className="text-slate-200">Bài viết</span>
       </nav>
 
-      <article className="mx-auto max-w-4xl rounded-3xl bg-white text-slate-900 px-6 py-10 md:px-12 md:py-14 ring-1 ring-white/10 shadow-2xl shadow-black/40">
-        <div className="badge !bg-brand-100 !text-brand-700 !ring-brand-200">
+      <article className="mx-auto max-w-4xl rounded-3xl bg-[color:var(--bg2)] text-[color:var(--ink)] px-6 py-10 md:px-12 md:py-14 ring-1 ring-white/10 shadow-2xl shadow-black/40">
+        <div className="badge">
           {cat.emoji} {cat.shortTitle}
         </div>
 
-        <h1 className="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight leading-snug text-slate-900">
+        <h1 className="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight leading-snug text-[color:var(--ink)]">
           {article.title}
         </h1>
 
-        <div className="mt-4 flex items-center gap-4 text-sm text-slate-500">
+        <div className="mt-4 flex items-center gap-4 text-sm text-[color:var(--faint)]">
           <time>{article.publishedAt}</time>
           <span>•</span>
           <span>{article.readingTime} phút đọc</span>
@@ -73,7 +73,7 @@ export default async function ArticlePage({ params }: PageProps) {
         </div>
 
         {article.excerpt && (
-          <p className="mt-6 text-xl text-slate-700 leading-relaxed">
+          <p className="mt-6 text-xl text-[color:var(--muted)] leading-relaxed">
             {article.excerpt}
           </p>
         )}
@@ -121,11 +121,11 @@ export default async function ArticlePage({ params }: PageProps) {
             <h2 className="text-2xl md:text-3xl font-bold">
               🧪 Quá trình test thực tế
             </h2>
-            <h3 className="text-lg md:text-xl text-slate-700">
+            <h3 className="text-lg md:text-xl text-[color:var(--muted)]">
               {article.useCase.title}
             </h3>
             {article.useCase.paragraphs.map((p, i) => (
-              <p key={i} className="text-slate-700 leading-relaxed">
+              <p key={i} className="text-[color:var(--muted)] leading-relaxed">
                 {p}
               </p>
             ))}
@@ -136,14 +136,14 @@ export default async function ArticlePage({ params }: PageProps) {
         {(article.pros || article.cons) && (
           <section className="mt-10 grid gap-5 md:grid-cols-2">
             {article.pros && (
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6">
-                <h3 className="font-bold text-lg text-emerald-800 flex items-center gap-2">
+              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6">
+                <h3 className="font-bold text-lg text-emerald-300 flex items-center gap-2">
                   <span>✓</span> Ưu điểm
                 </h3>
-                <ul className="mt-3 space-y-2 text-slate-700">
+                <ul className="mt-3 space-y-2 text-[color:var(--muted)]">
                   {article.pros.map((p, i) => (
                     <li key={i} className="flex gap-2">
-                      <span className="text-emerald-600 font-bold">+</span>
+                      <span className="text-emerald-400 font-bold">+</span>
                       <span>{p}</span>
                     </li>
                   ))}
@@ -151,14 +151,14 @@ export default async function ArticlePage({ params }: PageProps) {
               </div>
             )}
             {article.cons && (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50/50 p-6">
-                <h3 className="font-bold text-lg text-rose-800 flex items-center gap-2">
+              <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6">
+                <h3 className="font-bold text-lg text-rose-300 flex items-center gap-2">
                   <span>!</span> Nhược điểm
                 </h3>
-                <ul className="mt-3 space-y-2 text-slate-700">
+                <ul className="mt-3 space-y-2 text-[color:var(--muted)]">
                   {article.cons.map((p, i) => (
                     <li key={i} className="flex gap-2">
-                      <span className="text-rose-600 font-bold">-</span>
+                      <span className="text-rose-400 font-bold">-</span>
                       <span>{p}</span>
                     </li>
                   ))}
@@ -170,17 +170,17 @@ export default async function ArticlePage({ params }: PageProps) {
 
         {/* Bugs */}
         {article.bugs && (
-          <section className="mt-10 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/40 p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-amber-900 flex items-center gap-2">
+          <section className="mt-10 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6 md:p-8">
+            <h2 className="text-2xl font-bold text-amber-200 flex items-center gap-2">
               🐞 Góc nhìn Tester — Hạn chế & lỗi thường gặp
             </h2>
-            <p className="mt-2 text-slate-700">
+            <p className="mt-2 text-[color:var(--muted)]">
               Các hạn chế thường gặp khi dùng — biết trước để chủ động kiểm lại,
               đừng tin kết quả AI 100%.
             </p>
             <ul className="mt-4 space-y-3">
               {article.bugs.map((b, i) => (
-                <li key={i} className="flex gap-3 text-slate-800">
+                <li key={i} className="flex gap-3 text-[color:var(--ink)]">
                   <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-amber-500 text-xs font-bold text-white">
                     {i + 1}
                   </span>
@@ -197,7 +197,7 @@ export default async function ArticlePage({ params }: PageProps) {
             <h2 className="text-2xl md:text-3xl font-bold">
               💰 Bảng giá & Ai nên dùng gói nào
             </h2>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-[color:var(--muted)]">
               Phân tích trung thực — không phải bản nào đắt nhất cũng đáng.
             </p>
             <PricingTable plans={article.pricing} />
@@ -212,11 +212,11 @@ export default async function ArticlePage({ params }: PageProps) {
 
         {/* Final thought — H2 đổi theo có/không affiliate */}
         {article.finalThought && (
-          <section className="mt-12 rounded-3xl bg-slate-900 text-white p-8 md:p-10">
-            <h2 className="text-2xl font-bold">
+          <section className="mt-12 rounded-3xl card-surface text-[color:var(--ink)] p-8 md:p-10">
+            <h2 className="text-2xl font-bold text-[color:var(--metal)]">
               {article.affiliateUrl ? "🎯 Tôi khuyên gì?" : "📌 Tóm lại"}
             </h2>
-            <p className="mt-3 text-lg text-slate-200 leading-relaxed">
+            <p className="mt-3 text-lg text-[color:var(--muted)] leading-relaxed">
               {article.finalThought}
             </p>
             {article.affiliateUrl && (
@@ -226,7 +226,7 @@ export default async function ArticlePage({ params }: PageProps) {
                   size="lg"
                   label="Dùng thử miễn phí"
                 />
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-[color:var(--faint)]">
                   Bạn dùng qua link này → chúng tôi nhận hoa hồng (nếu có), giá
                   bạn trả không đổi.
                 </div>
@@ -249,13 +249,13 @@ export default async function ArticlePage({ params }: PageProps) {
               <Link
                 key={a.slug}
                 href={`/bai-viet/${a.slug}`}
-                className="rounded-2xl bg-white p-5 ring-1 ring-white/10 shadow-lg shadow-black/20 hover:shadow-xl hover:ring-brand-400/40 transition"
+                className="rounded-2xl bg-[color:var(--bg2)] p-5 ring-1 ring-white/10 shadow-lg shadow-black/20 hover:shadow-xl hover:ring-brand-400/40 transition"
               >
                 <div className="text-2xl">{a.cover}</div>
-                <div className="mt-2 font-bold leading-snug text-slate-900">
+                <div className="mt-2 font-bold leading-snug text-[color:var(--ink)]">
                   {a.title}
                 </div>
-                <div className="mt-2 text-sm text-slate-500">
+                <div className="mt-2 text-sm text-[color:var(--faint)]">
                   {a.readingTime} phút đọc
                 </div>
               </Link>

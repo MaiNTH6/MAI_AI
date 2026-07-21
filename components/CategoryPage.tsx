@@ -37,7 +37,7 @@ export function CategoryPage({
       <section className="container-content py-12">
         <h2 className="text-2xl font-bold mb-5 text-white">Bài hướng dẫn mới nhất</h2>
         {articles.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-slate-400">
+          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-[color:var(--faint)]">
             Chưa có bài viết trong chuyên mục này. Đăng ký nhận thông báo khi có
             bài mới.
           </div>

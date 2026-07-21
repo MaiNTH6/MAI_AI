@@ -3,45 +3,60 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Ánh kim — điểm nhấn (hợp mệnh Kim) */
+    --g1: #fbefcb;
+    --g2: #e6ce93;
+    --g3: #c6a25c;
+    --metal: #e6ce93;
+    --on-metal: #1b1608;
+
+    /* Nền: xanh đá phiến (xám ngả xanh) — xám thuộc Kim, tương trợ bản mệnh */
+    --bg: #0e131c;
+    --bg2: #182030;
+    --bg3: #212b3d;
+    --line: #2b364a;
+    --line2: #3d4a63;
+    --ink: #e9edf5;
+    --muted: #99a3b6;
+    --faint: #616b80;
+    --base1: #263041;
+    --base2: #1a2130;
+    --base3: #0e131c;
+    --glow-a: rgba(140, 165, 205, 0.16);
+    --glow-b: rgba(90, 115, 155, 0.1);
+    --glow-warm: rgba(232, 206, 146, 0.08);
+    --grid: rgba(170, 190, 220, 0.05);
+  }
+
   html {
     scroll-behavior: smooth;
   }
+
   body {
-    @apply text-slate-900 antialiased;
-    background-color: #232a52;
-    font-feature-settings: "ss01", "cv11";
-    position: relative;
+    @apply antialiased;
+    color: var(--ink);
+    background-color: var(--bg);
     min-height: 100vh;
+    position: relative;
+    font-feature-settings: "ss01", "cv11";
   }
 
-  /* Tech grid pattern + glow orbs — fixed so it doesn't scroll with content */
+  /* Nền cố định: trường màu đá phiến + quầng sáng + chút ánh vàng ấm + lưới ô vuông. */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: -2;
-    background-image:
-      radial-gradient(circle at 15% 20%, rgba(167, 139, 250, 0.38) 0%, transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(251, 191, 36, 0.22) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.16) 0%, transparent 55%),
-      linear-gradient(rgba(203, 213, 225, 0.09) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(203, 213, 225, 0.09) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
-    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
-    pointer-events: none;
-  }
-
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
     z-index: -1;
-    background: radial-gradient(
-      ellipse at center top,
-      transparent 0%,
-      rgba(19, 26, 48, 0.55) 80%
-    );
     pointer-events: none;
+    background:
+      radial-gradient(74% 58% at 50% -8%, var(--glow-a), transparent 62%),
+      radial-gradient(46% 44% at 50% -4%, var(--glow-warm), transparent 60%),
+      radial-gradient(58% 54% at 88% 106%, var(--glow-b), transparent 60%),
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(150% 106% at 50% -12%, var(--base1) 0%, var(--base2) 46%, var(--base3) 100%);
+    background-size: auto, auto, auto, 46px 46px, 46px 46px, auto;
   }
 }
 
@@ -49,19 +64,67 @@
   .container-content {
     @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
   }
+
+  /* Chữ ánh kim (tên thương hiệu, từ nhấn) */
+  .metal-text {
+    background: linear-gradient(96deg, var(--g1), var(--g2) 45%, var(--g3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Nút kim loại (CTA) */
   .btn-cta {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-cta-500 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-cta-600 focus:outline-none focus:ring-2 focus:ring-cta-400 focus:ring-offset-2 focus:ring-offset-slate-950;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 font-bold transition;
+    color: var(--on-metal);
+    background: linear-gradient(180deg, var(--g1), var(--g2) 55%, var(--g3));
+    box-shadow: 0 6px 18px -8px rgba(230, 206, 147, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   }
+  .btn-cta:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+
   .btn-cta-lg {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-cta-500 px-7 py-4 text-lg font-bold text-white shadow-lg shadow-cta-500/20 transition hover:bg-cta-600 focus:outline-none focus:ring-2 focus:ring-cta-400 focus:ring-offset-2 focus:ring-offset-slate-950;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-7 py-4 text-lg font-bold transition;
+    color: var(--on-metal);
+    background: linear-gradient(180deg, var(--g1), var(--g2) 55%, var(--g3));
+    box-shadow: 0 10px 30px -10px rgba(230, 206, 147, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   }
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700;
+  .btn-cta-lg:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
   }
+
+  /* Nút viền (ghost) trên nền tối */
+  .btn-outline,
   .btn-outline-dark {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900/50 px-5 py-3 font-semibold text-slate-200 backdrop-blur transition hover:border-brand-400 hover:text-white hover:bg-slate-800/70;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 font-semibold transition;
+    color: var(--ink);
+    border: 1px solid var(--line2);
+    background: var(--bg2);
   }
+  .btn-outline:hover,
+  .btn-outline-dark:hover {
+    border-color: var(--metal);
+    color: var(--metal);
+  }
+
+  /* Huy hiệu nhỏ (badge) tông vàng */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full bg-brand-500/15 px-3 py-1 text-xs font-semibold text-brand-200 ring-1 ring-brand-400/30;
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold;
+    color: var(--metal);
+    background: color-mix(in srgb, var(--metal) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--metal) 35%, var(--line));
+  }
+
+  /* Khung/thẻ nền tối, viền ngả vàng */
+  .card-surface {
+    background: var(--bg2);
+    border: 1px solid color-mix(in srgb, var(--metal) 20%, var(--line));
+    border-radius: 0.75rem;
+  }
+  .card-surface:hover {
+    border-color: color-mix(in srgb, var(--metal) 55%, var(--line2));
   }
 }

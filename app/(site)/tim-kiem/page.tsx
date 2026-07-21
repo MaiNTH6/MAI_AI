@@ -75,9 +75,9 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
           <form
             action="/tim-kiem"
-            className="mt-6 max-w-xl flex items-center gap-2 rounded-2xl bg-slate-950/70 p-2 ring-1 ring-white/15 backdrop-blur"
+            className="mt-6 max-w-xl flex items-center gap-2 rounded-2xl bg-[color:var(--bg2)]/70 p-2 ring-1 ring-white/15 backdrop-blur"
           >
-            <span className="pl-3 text-slate-400" aria-hidden>
+            <span className="pl-3 text-[color:var(--faint)]" aria-hidden>
               🔍
             </span>
             <input
@@ -85,7 +85,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
               type="text"
               defaultValue={q}
               placeholder='Ví dụ: "test case", "bug report", "SQL"...'
-              className="flex-1 bg-transparent px-2 py-3 text-base text-white outline-none placeholder:text-slate-500"
+              className="flex-1 bg-transparent px-2 py-3 text-base text-white outline-none placeholder:text-[color:var(--faint)]"
             />
             <button type="submit" className="btn-cta !py-2.5 !px-5 text-sm">
               Tìm
@@ -96,12 +96,12 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
       <section className="container-content py-12 space-y-12">
         {!q ? (
-          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-slate-400">
+          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-[color:var(--faint)]">
             Gõ từ khóa vào ô trên để bắt đầu. Vd: <em>&ldquo;test case&rdquo;</em>,{" "}
             <em>&ldquo;bug report&rdquo;</em>, <em>&ldquo;SQL&rdquo;</em>.
           </div>
         ) : total === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-slate-400">
+          <div className="rounded-2xl border-2 border-dashed border-white/15 p-10 text-center text-[color:var(--faint)]">
             Không tìm thấy nội dung nào khớp với &ldquo;{q}&rdquo;. Thử từ khóa
             ngắn hơn hoặc bỏ dấu.
           </div>
@@ -109,7 +109,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
           <>
             {articleResults.length > 0 && (
               <div>
-                <div className="mb-5 text-sm text-slate-400">
+                <div className="mb-5 text-sm text-[color:var(--faint)]">
                   📄 Bài hướng dẫn —{" "}
                   <strong className="text-white">{articleResults.length}</strong>{" "}
                   bài khớp
@@ -124,7 +124,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
             {templateResults.length > 0 && (
               <div>
-                <div className="mb-5 text-sm text-slate-400">
+                <div className="mb-5 text-sm text-[color:var(--faint)]">
                   🧩 Template —{" "}
                   <strong className="text-white">{templateResults.length}</strong>{" "}
                   mẫu khớp
@@ -140,7 +140,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                       <div className="mt-2 font-semibold text-white">
                         {t.title}
                       </div>
-                      <div className="mt-1 text-sm text-slate-400 line-clamp-2">
+                      <div className="mt-1 text-sm text-[color:var(--faint)] line-clamp-2">
                         {t.whenToUse}
                       </div>
                       <div className="mt-3 text-sm font-semibold text-brand-300 group-hover:text-brand-200">

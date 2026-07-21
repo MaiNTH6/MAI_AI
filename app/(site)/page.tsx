@@ -71,16 +71,16 @@ export default function HomePage() {
             <Link
               key={e.href}
               href={e.href}
-              className="group rounded-2xl bg-white p-6 ring-1 ring-white/10 shadow-lg shadow-black/20 transition hover:ring-brand-400/50 hover:shadow-xl hover:shadow-brand-900/30 hover:-translate-y-0.5"
+              className="group card-surface p-6 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/40"
             >
               <div className="text-3xl">{e.emoji}</div>
-              <div className="mt-3 font-bold text-lg text-slate-900 group-hover:text-brand-700">
+              <div className="mt-3 font-bold text-lg text-[color:var(--ink)] group-hover:text-[color:var(--metal)]">
                 {e.title}
               </div>
-              <p className="mt-1 text-sm text-slate-600 line-clamp-3">
+              <p className="mt-1 text-sm text-[color:var(--muted)] line-clamp-3">
                 {e.desc}
               </p>
-              <div className="mt-3 text-sm font-semibold text-brand-700">
+              <div className="mt-3 text-sm font-semibold text-[color:var(--metal)] font-mono">
                 {e.cta}
               </div>
             </Link>
@@ -90,7 +90,7 @@ export default function HomePage() {
 
       {/* Lộ trình cho người mới */}
       <section className="container-content pb-4">
-        <div className="rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 md:p-8">
+        <div className="rounded-3xl bg-white/[0.03] ring-1 ring-[color:var(--line)] p-6 md:p-8">
           <div className="mb-5">
             <div className="badge">🧭 Mới bắt đầu? Đi theo thứ tự này</div>
             <h2 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-white">
@@ -105,15 +105,15 @@ export default function HomePage() {
               <Link
                 key={r.href}
                 href={r.href}
-                className="group relative rounded-2xl bg-white p-5 ring-1 ring-white/10 shadow-lg shadow-black/20 transition hover:ring-brand-400/50 hover:-translate-y-0.5"
+                className="group relative card-surface p-5 transition hover:-translate-y-0.5"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
+                <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#fbefcb] via-[#e6ce93] to-[#c6a25c] text-sm font-extrabold text-[#1b1608]">
                   {r.step}
                 </div>
-                <div className="mt-3 font-bold text-slate-900 group-hover:text-brand-700">
+                <div className="mt-3 font-bold text-[color:var(--ink)] group-hover:text-[color:var(--metal)]">
                   {r.title}
                 </div>
-                <p className="mt-1 text-sm text-slate-600">{r.desc}</p>
+                <p className="mt-1 text-sm text-[color:var(--muted)]">{r.desc}</p>
               </Link>
             ))}
           </div>

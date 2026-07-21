@@ -5,22 +5,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Bảng màu ánh kim (champagne/vàng) — hợp mệnh Kim
         brand: {
-          50: "#f5f3ff",
-          100: "#ede9fe",
-          200: "#ddd6fe",
-          300: "#c4b5fd",
-          400: "#a78bfa",
-          500: "#8b5cf6",
-          600: "#7c3aed",
-          700: "#6d28d9",
-          800: "#5b21b6",
-          900: "#4c1d95",
+          50: "#fbf6e6",
+          100: "#f6ead0",
+          200: "#eed9a8",
+          300: "#e6ce93",
+          400: "#dcc07a",
+          500: "#c6a25c",
+          600: "#a9843f",
+          700: "#87672f",
+          800: "#5f4a24",
+          900: "#3f3119",
         },
         cta: {
-          400: "#fbbf24",
-          500: "#f59e0b",
-          600: "#d97706",
+          400: "#fbefcb",
+          500: "#e6ce93",
+          600: "#c6a25c",
         },
       },
       fontFamily: {

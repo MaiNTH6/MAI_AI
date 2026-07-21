@@ -28,7 +28,7 @@ function CopyTextButton({
     <button
       type="button"
       onClick={() => copy(text)}
-      className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:ring-brand-400 hover:text-brand-700"
+      className="rounded-md bg-[color:var(--bg2)] px-3 py-1.5 text-xs font-semibold text-[color:var(--muted)] ring-1 ring-[color:var(--line2)] hover:ring-brand-400 hover:text-brand-300"
     >
       {copied ? "✓ Đã copy" : label}
     </button>
@@ -59,11 +59,11 @@ function TableView({
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="bg-slate-100">
+          <tr className="bg-[color:var(--bg3)]">
             {columns.map((c, i) => (
               <th
                 key={i}
-                className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-900 whitespace-nowrap"
+                className="border border-[color:var(--line2)] px-3 py-2 text-left font-semibold text-[color:var(--ink)] whitespace-nowrap"
               >
                 {c}
               </th>
@@ -72,7 +72,7 @@ function TableView({
         </thead>
         <tbody>
           {rows.map((r, ri) => (
-            <tr key={ri} className="hover:bg-slate-50">
+            <tr key={ri} className="hover:bg-[color:var(--bg3)]">
               {r.map((cell, ci) => {
                 if (ci === 0) {
                   if (firstColSpan[ri] === 0) return null; // ô đã gộp
@@ -80,7 +80,7 @@ function TableView({
                     <td
                       key={ci}
                       rowSpan={firstColSpan[ri]}
-                      className="border border-slate-200 px-3 py-2 align-top text-slate-800 font-medium bg-slate-50/70 whitespace-nowrap"
+                      className="border border-[color:var(--line)] px-3 py-2 align-top text-[color:var(--ink)] font-medium bg-white/[0.04] whitespace-nowrap"
                     >
                       {cell || <span className="text-slate-300">—</span>}
                     </td>
@@ -89,7 +89,7 @@ function TableView({
                 return (
                   <td
                     key={ci}
-                    className="border border-slate-200 px-3 py-2 align-top text-slate-700"
+                    className="border border-[color:var(--line)] px-3 py-2 align-top text-[color:var(--muted)]"
                   >
                     {cell || <span className="text-slate-300">—</span>}
                   </td>
@@ -115,10 +115,10 @@ function HeaderActions({
   content: TemplateContent;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-3">
+    <div className="flex items-start justify-between gap-3 border-b border-[color:var(--line)] bg-[color:var(--bg3)] px-5 py-3">
       <div>
-        <div className="font-semibold text-slate-900">{title}</div>
-        <div className="mt-0.5 text-xs text-slate-500">{whenToUse}</div>
+        <div className="font-semibold text-[color:var(--ink)]">{title}</div>
+        <div className="mt-0.5 text-xs text-[color:var(--faint)]">{whenToUse}</div>
       </div>
       <div className="shrink-0 flex flex-wrap gap-2 justify-end">
         {content.kind === "table" ? (
@@ -162,7 +162,7 @@ function TemplateCard({
   return (
     <div
       id={slug}
-      className="scroll-mt-24 rounded-2xl bg-white ring-1 ring-white/10 shadow-lg shadow-black/20 overflow-hidden"
+      className="scroll-mt-24 rounded-2xl bg-[color:var(--bg2)] ring-1 ring-white/10 shadow-lg shadow-black/20 overflow-hidden"
     >
       <HeaderActions
         slug={slug}
@@ -175,35 +175,35 @@ function TemplateCard({
         {content.kind === "table" ? (
           <>
             {content.context && (
-              <div className="mb-3 text-xs text-slate-600">
+              <div className="mb-3 text-xs text-[color:var(--muted)]">
                 {content.context}
               </div>
             )}
             <TableView columns={content.columns} rows={content.rows} />
             {content.note && (
-              <div className="mt-3 text-xs text-slate-500">{content.note}</div>
+              <div className="mt-3 text-xs text-[color:var(--faint)]">{content.note}</div>
             )}
           </>
         ) : (
-          <pre className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap font-mono overflow-x-auto">
+          <pre className="text-xs text-[color:var(--ink)] leading-relaxed whitespace-pre-wrap font-mono overflow-x-auto">
             {content.body}
           </pre>
         )}
       </div>
 
       {aiPrompt && (
-        <div className="border-t border-slate-200 bg-slate-50/60">
+        <div className="border-t border-[color:var(--line)] bg-white/[0.04]">
           <button
             type="button"
             onClick={() => setShowPrompt((v) => !v)}
-            className="w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 flex items-center justify-between"
+            className="w-full text-left px-5 py-3 text-sm font-semibold text-[color:var(--muted)] hover:bg-[color:var(--bg3)] flex items-center justify-between"
           >
             <span>
               {showPrompt ? "▼" : "▶"} Prompt để AI tự điền template từ tài liệu
             </span>
           </button>
           {showPrompt && (
-            <div className="px-5 pb-5 border-t border-slate-200 bg-white pt-3">
+            <div className="px-5 pb-5 border-t border-[color:var(--line)] bg-[color:var(--bg2)] pt-3">
               <div className="mb-2 flex justify-end">
                 <button
                   type="button"
@@ -213,7 +213,7 @@ function TemplateCard({
                   {copied ? "✓ Đã copy" : "📋 Copy prompt"}
                 </button>
               </div>
-              <pre className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap font-mono">
+              <pre className="text-xs text-[color:var(--ink)] leading-relaxed whitespace-pre-wrap font-mono">
                 {aiPrompt}
               </pre>
             </div>
@@ -230,7 +230,7 @@ export function TemplateLibrary({ groups }: { groups: TemplateGroup[] }) {
   return (
     <div className="container-content py-10">
       <div className="mb-8 flex flex-wrap gap-2">
-        <span className="text-sm text-slate-400 py-1.5">
+        <span className="text-sm text-[color:var(--faint)] py-1.5">
           {total} template · nhảy tới:
         </span>
         {groups.map((g) => (
@@ -261,7 +261,7 @@ export function TemplateLibrary({ groups }: { groups: TemplateGroup[] }) {
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                 <span>{g.emoji}</span> {g.title}
               </h2>
-              <p className="mt-1 text-slate-400 text-sm">{g.description}</p>
+              <p className="mt-1 text-[color:var(--faint)] text-sm">{g.description}</p>
             </div>
             <div className="grid gap-4 lg:grid-cols-2">
               {g.templates.map((t) => (
