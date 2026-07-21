@@ -1,5 +1,95 @@
 [
   {
+    "slug": "kiem-tra-du-lieu-truoc-sau-thao-tac",
+    "title": "Kiểm tra dữ liệu sau thao tác: 5 bước cần soi trong DB testing",
+    "excerpt": "Năm bước kiểm ở tầng cơ sở dữ liệu: bản ghi chính, dữ liệu liên quan, dấu vết, thay đổi ngoài ý muốn và ràng buộc toàn vẹn — mỗi bước kèm câu SQL mẫu.",
+    "category": "db-testing",
+    "readingTime": 5,
+    "publishedAt": "2026-07-21",
+    "cover": "🧾",
+    "tldr": [
+      "Giao diện báo thao tác thành công không có nghĩa dữ liệu ghi xuống cơ sở dữ liệu đã đúng.",
+      "Sau mỗi thao tác có ghi hoặc cập nhật dữ liệu, có 5 bước cần kiểm — bản ghi chính chỉ là bước đầu tiên.",
+      "Lỗi thường nằm ở dữ liệu liên quan (bảng con, tồn kho, số dư) và ở dấu vết (cột đánh dấu xoá, thời điểm cập nhật).",
+      "Hai bước gần như không ai làm: kiểm dữ liệu bị đổi ngoài ý muốn, và kiểm ràng buộc toàn vẹn sau thao tác."
+    ],
+    "tables": [
+      {
+        "title": "5 bước kiểm dữ liệu sau một thao tác",
+        "intro": "Áp dụng cho mọi thao tác có hệ quả. Cột cuối lấy thao tác \"huỷ đơn hàng\" làm ví dụ cho dễ hình dung.",
+        "columns": [
+          "Bước",
+          "Câu hỏi cần trả lời",
+          "Ví dụ: thao tác huỷ đơn"
+        ],
+        "rows": [
+          [
+            "1. Bản ghi chính",
+            "Đúng bản ghi đó đã đổi đúng giá trị chưa?",
+            "Trạng thái đơn đã chuyển sang huỷ chưa"
+          ],
+          [
+            "2. Dữ liệu liên quan",
+            "Bảng con và các số liệu phụ thuộc có đổi theo không?",
+            "Dòng hàng trong đơn, tồn kho có được hoàn lại"
+          ],
+          [
+            "3. Dấu vết",
+            "Hệ thống có ghi lại rằng việc đó đã xảy ra không?",
+            "Cột đánh dấu xoá, thời điểm cập nhật, bản ghi lịch sử"
+          ],
+          [
+            "4. Dữ liệu KHÔNG liên quan",
+            "Có gì bị đổi ngoài ý muốn không?",
+            "Đơn của khách khác có bị đụng vào không"
+          ],
+          [
+            "5. Ràng buộc toàn vẹn",
+            "Sau thao tác, dữ liệu còn nhất quán không?",
+            "Không còn dòng con mồ côi; tổng tiền vẫn khớp chi tiết"
+          ]
+        ],
+        "note": "💡 Bước 1 thì ai cũng làm. Bước 4 và 5 gần như không ai làm — và đó chính là nơi lỗi ngầm sống sót qua nhiều đợt test."
+      }
+    ],
+    "stepsTitle": "🔧 Năm bước, làm lần lượt",
+    "stepsSubtitle": "Thực hiện thao tác qua giao diện như người dùng thật — đừng sửa thẳng bằng SQL, vì thứ đang được kiểm chính là việc ứng dụng làm gì với dữ liệu.",
+    "steps": [
+      {
+        "title": "Bước 1 — Bản ghi chính",
+        "body": "Kiểm đúng bản ghi vừa bị tác động: giá trị đã đổi chưa, đổi thành đúng cái cần đổi chưa. Điểm mấu chốt là đọc thẳng từ cơ sở dữ liệu, thay vì tin vào thông báo trên màn hình.",
+        "code": "SELECT * FROM <bang_chinh> WHERE <khoa> = ?;\n\n-- Ví dụ với thao tác huỷ đơn:\nSELECT order_id, status FROM Orders WHERE order_id = 'ORD_003';"
+      },
+      {
+        "title": "Bước 2 — Dữ liệu liên quan",
+        "body": "Thao tác nào cũng kéo theo dữ liệu khác: bảng con, tồn kho, số dư, tổng tiền. Đây là chỗ hay hỏng nhất vì nó nằm ngoài màn hình bạn đang đứng.",
+        "code": "SELECT * FROM <bang_con> WHERE <khoa_ngoai> = ?;\n\n-- Ví dụ: tồn kho của sản phẩm nằm trong đơn\nSELECT p.product_id, p.stock\nFROM Products p\nJOIN Order_Items i ON i.product_id = p.product_id\nWHERE i.order_id = 'ORD_003';"
+      },
+      {
+        "title": "Bước 3 — Dấu vết",
+        "body": "Hệ thống có ghi lại rằng việc đó đã xảy ra không: cột đánh dấu xoá, thời điểm cập nhật, bản ghi lịch sử. Thiếu dấu vết thì báo cáo lọc sai, và về sau không truy được ai đã làm gì.",
+        "code": "-- Huỷ rồi mà chưa được đánh dấu xoá\nSELECT order_id, status, deleted_at\nFROM Orders\nWHERE status = 'CANCELLED'\n  AND deleted_at IS NULL;"
+      },
+      {
+        "title": "Bước 4 — Dữ liệu KHÔNG liên quan",
+        "body": "Bước ít người làm nhất. Để kiểm được, trước khi thao tác hãy chạy một câu lấy danh sách kèm cột quan trọng và giữ kết quả lại (copy ra Excel là đủ). Sau khi thao tác, chạy lại đúng câu đó rồi đặt cạnh nhau — thứ đổi mà lẽ ra không được đổi sẽ lộ ra.",
+        "code": "-- Chạy 2 lần: trước và sau thao tác, rồi so\nSELECT <khoa>, <cot_quan_trong>\nFROM <bang_chinh>\nORDER BY <khoa>;"
+      },
+      {
+        "title": "Bước 5 — Ràng buộc toàn vẹn",
+        "body": "Kiểm các quy tắc chung mà dữ liệu luôn phải giữ: không có dòng con mồ côi, tổng khớp chi tiết, không trùng khoá. Điểm hay của bước này là câu kiểm viết một lần dùng lại mãi, vì nó soi quy tắc chứ không gắn với bản ghi cụ thể.",
+        "code": "-- Đơn đã xoá mềm mà dòng hàng còn sót\nSELECT i.item_id, i.order_id, i.quantity\nFROM Order_Items i\nJOIN Orders o ON o.order_id = i.order_id\nWHERE o.deleted_at IS NOT NULL;"
+      }
+    ],
+    "bugs": [
+      "Năm bước chỉ soi được vùng bạn nghĩ ra. Bảng nào không nằm trong danh sách thì dù hỏng cũng không lộ — nên hỏi dev xem thao tác còn chạm bảng nào khác không.",
+      "Có hệ thống cập nhật muộn vì xử lý chạy nền. Kiểm ngay rồi kết luận \"chưa đổi là lỗi\" có thể oan — cần biết trước thao tác đó có phần chạy bất đồng bộ hay không.",
+      "Trên môi trường test dùng chung, người khác thao tác song song sẽ làm bước 4 báo sai. Chọn lúc vắng hoặc dùng dữ liệu riêng."
+    ],
+    "finalThought": "Giao diện cho bạn biết thao tác có chạy hay không. Dữ liệu mới cho biết nó đã thực sự làm những gì.\n\nLần tới khi test một thao tác, thay vì dừng ở bản ghi vừa đụng vào, hãy đi hết năm bước. Riêng bước 4 và bước 5 — hai bước ít người làm nhất — thường là nơi những lỗi sống dai nhất đang nằm.",
+    "coverImage": "https://images.unsplash.com/photo-1597138768744-9f97be8cdd64?w=800&q=80&auto=format&fit=crop"
+  },
+  {
     "slug": "claude-code-ket-noi-mysql-lab-qa",
     "title": "Kết nối Claude Code với MySQL: QA truy vấn dữ liệu bằng câu hỏi thường thay vì SQL thuần",
     "category": "db-testing",

@@ -72,11 +72,8 @@ export default async function ArticlePage({ params }: PageProps) {
           <span>Tác giả: maiqai.com</span>
         </div>
 
-        {article.excerpt && (
-          <p className="mt-6 text-xl text-[color:var(--muted)] leading-relaxed">
-            {article.excerpt}
-          </p>
-        )}
+        {/* Không render excerpt ở đây: bài vào thẳng khối mở đầu (intro / TLDR).
+            Excerpt chỉ dùng cho thẻ bài ngoài trang danh sách và cho mô tả SEO. */}
 
         {/* Quick Verdict — 10s value */}
         {article.rating !== undefined && <QuickVerdict article={article} />}
@@ -175,8 +172,7 @@ export default async function ArticlePage({ params }: PageProps) {
               🐞 Góc nhìn Tester — Hạn chế & lỗi thường gặp
             </h2>
             <p className="mt-2 text-[color:var(--muted)]">
-              Các hạn chế thường gặp khi dùng — biết trước để chủ động kiểm lại,
-              đừng tin kết quả AI 100%.
+              Các hạn chế thường gặp khi dùng — biết trước để chủ động kiểm lại.
             </p>
             <ul className="mt-4 space-y-3">
               {article.bugs.map((b, i) => (
