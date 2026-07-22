@@ -11,8 +11,7 @@
     "tldr": [
       "Kiểm thử cơ sở dữ liệu không phải một kỹ thuật duy nhất — mỗi phương pháp giải quyết một loại rủi ro khác nhau.",
       "Sáu phương pháp QA hay dùng nhất: ràng buộc dữ liệu, toàn vẹn tham chiếu, CRUD theo nghiệp vụ, Migration/đồng bộ dữ liệu, hiệu năng truy vấn, stored procedure/trigger.",
-      "Mỗi phương pháp có ví dụ SQL riêng — không dự án nào cần làm đủ cả 6, chọn theo loại rủi ro hệ thống đang có.",
-      "Ưu tiên hệ thống có nghiệp vụ tiền, kho, quyền trước; dữ liệu chỉ hiển thị đơn thuần thì có thể bỏ bớt."
+      "Mỗi phương pháp có ví dụ SQL riêng — không dự án nào cần làm đủ cả 6, chọn theo loại rủi ro hệ thống đang có."
     ],
     "tables": [
       {
