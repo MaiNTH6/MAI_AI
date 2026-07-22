@@ -10,7 +10,7 @@
     "coverImage": "https://images.unsplash.com/photo-1597138768744-9f97be8cdd64?w=800&q=80&auto=format&fit=crop",
     "tldr": [
       "Kiểm thử cơ sở dữ liệu không phải một kỹ thuật duy nhất — mỗi phương pháp giải quyết một loại rủi ro khác nhau.",
-      "Sáu phương pháp QA hay dùng nhất: ràng buộc dữ liệu, toàn vẹn tham chiếu, CRUD theo nghiệp vụ, di trú/đồng bộ dữ liệu, hiệu năng truy vấn, stored procedure/trigger.",
+      "Sáu phương pháp QA hay dùng nhất: ràng buộc dữ liệu, toàn vẹn tham chiếu, CRUD theo nghiệp vụ, Migration/đồng bộ dữ liệu, hiệu năng truy vấn, stored procedure/trigger.",
       "Mỗi phương pháp có ví dụ SQL riêng — không dự án nào cần làm đủ cả 6, chọn theo loại rủi ro hệ thống đang có.",
       "Ưu tiên hệ thống có nghiệp vụ tiền, kho, quyền trước; dữ liệu chỉ hiển thị đơn thuần thì có thể bỏ bớt."
     ],
@@ -40,7 +40,7 @@
             "Test tính năng hàng ngày theo từng nghiệp vụ"
           ],
           [
-            "4. Di trú / đồng bộ dữ liệu",
+            "4. Migration / đồng bộ dữ liệu",
             "Dữ liệu ở nguồn và đích có khớp nhau sau khi chuyển đổi không",
             "Khi đổi hệ thống, gộp dữ liệu, đồng bộ giữa các cơ sở dữ liệu"
           ],
@@ -81,7 +81,7 @@
         "linkLabel": "Đọc: 5 bước kiểm dữ liệu sau thao tác"
       },
       {
-        "title": "4. Di trú và đồng bộ dữ liệu (Migration / ETL testing)",
+        "title": "4. Migration và đồng bộ dữ liệu (ETL testing)",
         "body": "Là gì: Khi dữ liệu được chuyển từ hệ thống này sang hệ thống khác — đổi phần mềm, gộp dữ liệu hai công ty, đồng bộ định kỳ giữa các cơ sở dữ liệu — cần xác nhận dữ liệu ở đích khớp với nguồn: không mất, không sai lệch, không bị nhân đôi. Đây là phép kiểm \"đối chiếu nguồn và đích\" sau khi chuyển.\n\nKhi nào dùng: Khi dự án đổi sang phần mềm mới, gộp dữ liệu sau sáp nhập, hoặc có luồng đồng bộ định kỳ giữa hai hệ thống. Ví dụ: công ty chuyển từ phần mềm kế toán cũ sang mới — cần đối chiếu toàn bộ số dư công nợ trước và sau khi chuyển để chắc chắn không khách nào bị lệch tiền.",
         "code": "-- Chạy trên hệ thống CŨ\nSELECT COUNT(*) AS so_dong, SUM(total_amount) AS tong_tien FROM Orders_Old;\n\n-- Chạy trên hệ thống MỚI\nSELECT COUNT(*) AS so_dong, SUM(total_amount) AS tong_tien FROM Orders_New;",
         "tip": "👉 Cách làm & đọc kết quả: Chạy câu đếm ở cả hệ thống cũ và mới, đặt hai kết quả cạnh nhau. Số dòng và tổng tiền bằng nhau → khớp ở mức tổng thể (đạt bước đầu). Lệch nhau → có dữ liệu bị mất, thừa hoặc sai, cần truy tiếp xem bản ghi nào. Sau đó lấy ngẫu nhiên vài bản ghi ở hai bên so từng cột, vì tổng khớp chưa chắc từng dòng đã đúng."
@@ -100,7 +100,7 @@
       }
     ],
     "bugs": [
-      "So dữ liệu di trú (mục 4) chỉ dựa vào đếm số dòng dễ bỏ sót lỗi — hai bảng có thể trùng số dòng nhưng lệch dữ liệu bên trong, nên luôn so thêm tổng theo cột quan trọng (tiền, số lượng).",
+      "So dữ liệu ở bước Migration (mục 4) chỉ dựa vào đếm số dòng dễ bỏ sót lỗi — hai bảng có thể trùng số dòng nhưng lệch dữ liệu bên trong, nên luôn so thêm tổng theo cột quan trọng (tiền, số lượng).",
       "Kiểm hiệu năng truy vấn (mục 5) trên môi trường test có ít dữ liệu sẽ không phản ánh đúng thực tế — cần bộ dữ liệu đủ lớn thì kết quả EXPLAIN mới có ý nghĩa tham khảo.",
       "Không phải hệ thống nào cũng cần đủ cả 6 phương pháp. Áp dụng máy móc toàn bộ cho một hệ thống nhỏ vừa tốn thời gian vừa loãng trọng tâm kiểm thử."
     ],
