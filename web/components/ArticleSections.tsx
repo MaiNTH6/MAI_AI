@@ -203,8 +203,31 @@ export function StepsBox({
             </span>
             <div className="min-w-0 flex-1">
               <div className="font-bold text-[color:var(--ink)]">{s.title}</div>
-              <div className="mt-1 text-[color:var(--muted)] text-sm leading-relaxed whitespace-pre-line">
-                {s.body}
+              <div className="mt-1 space-y-2">
+                {s.body.split("\n\n").map((para, pi) => {
+                  // Nhãn dẫn ("Là gì", "Khi nào dùng"...) được tô đậm + màu nhấn
+                  // để nổi bật khỏi phần diễn giải xám. Đoạn không có nhãn giữ nguyên.
+                  const m = para.match(
+                    /^(Là gì|Khi nào dùng|Cách làm|Lưu ý):\s*([\s\S]*)$/
+                  );
+                  return (
+                    <p
+                      key={pi}
+                      className="text-[color:var(--muted)] text-sm leading-relaxed whitespace-pre-line"
+                    >
+                      {m ? (
+                        <>
+                          <span className="font-bold text-[color:var(--metal)]">
+                            {m[1]}:{" "}
+                          </span>
+                          {m[2]}
+                        </>
+                      ) : (
+                        para
+                      )}
+                    </p>
+                  );
+                })}
               </div>
               {s.code && (
                 <pre className="mt-3 overflow-x-auto rounded-lg bg-[#0a0e15] px-4 py-3 text-xs leading-relaxed text-slate-100 font-mono">

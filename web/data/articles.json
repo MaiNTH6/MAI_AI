@@ -1,5 +1,112 @@
 [
   {
+    "slug": "phuong-phap-kiem-thu-du-lieu-pho-bien",
+    "title": "Kiểm thử cơ sở dữ liệu: 6 phương pháp QA hay dùng và khi nào nên chọn cách nào",
+    "excerpt": "Không phải lúc nào cũng cần kiểm hết mọi thứ trong cơ sở dữ liệu — mỗi loại rủi ro có một cách kiểm phù hợp riêng. Bài viết tổng hợp 6 phương pháp kiểm thử dữ liệu QA hay dùng nhất, kèm ví dụ SQL và gợi ý khi nào nên chọn phương pháp nào.",
+    "category": "db-testing",
+    "readingTime": 6,
+    "publishedAt": "2026-07-22",
+    "cover": "🧭",
+    "coverImage": "https://images.unsplash.com/photo-1597138768744-9f97be8cdd64?w=800&q=80&auto=format&fit=crop",
+    "tldr": [
+      "Kiểm thử cơ sở dữ liệu không phải một kỹ thuật duy nhất — mỗi phương pháp giải quyết một loại rủi ro khác nhau.",
+      "Sáu phương pháp QA hay dùng nhất: ràng buộc dữ liệu, toàn vẹn tham chiếu, CRUD theo nghiệp vụ, di trú/đồng bộ dữ liệu, hiệu năng truy vấn, stored procedure/trigger.",
+      "Mỗi phương pháp có ví dụ SQL riêng — không dự án nào cần làm đủ cả 6, chọn theo loại rủi ro hệ thống đang có.",
+      "Ưu tiên hệ thống có nghiệp vụ tiền, kho, quyền trước; dữ liệu chỉ hiển thị đơn thuần thì có thể bỏ bớt."
+    ],
+    "tables": [
+      {
+        "title": "6 phương pháp kiểm thử dữ liệu phổ biến",
+        "intro": "Tra theo cột \"Khi nên dùng\" để biết dự án của bạn cần ưu tiên phương pháp nào trước.",
+        "columns": [
+          "Phương pháp",
+          "Kiểm cái gì",
+          "Khi nên dùng"
+        ],
+        "rows": [
+          [
+            "1. Ràng buộc dữ liệu",
+            "NOT NULL, UNIQUE, FOREIGN KEY, CHECK có được enforce đúng không",
+            "Sau khi tạo/đổi schema, khi nghi ngờ dữ liệu bẩn lọt qua được ứng dụng"
+          ],
+          [
+            "2. Toàn vẹn tham chiếu",
+            "Dữ liệu đang có giữa các bảng còn khớp nhau không (không dòng con mồ côi)",
+            "Sau các thao tác xoá/cập nhật liên bảng, trước khi bàn giao dữ liệu cho báo cáo"
+          ],
+          [
+            "3. CRUD theo nghiệp vụ",
+            "Một thao tác cụ thể (tạo, sửa, xoá, đổi trạng thái) có để lại đúng dữ liệu không",
+            "Test tính năng hàng ngày theo từng nghiệp vụ"
+          ],
+          [
+            "4. Di trú / đồng bộ dữ liệu",
+            "Dữ liệu ở nguồn và đích có khớp nhau sau khi chuyển đổi không",
+            "Khi đổi hệ thống, gộp dữ liệu, đồng bộ giữa các cơ sở dữ liệu"
+          ],
+          [
+            "5. Hiệu năng truy vấn",
+            "Câu truy vấn có chạy đủ nhanh khi dữ liệu lớn không",
+            "Trước khi lên production với bảng nhiều dữ liệu, sau khi đổi index/câu query"
+          ],
+          [
+            "6. Stored procedure / trigger",
+            "Logic xử lý nằm trong cơ sở dữ liệu có chạy đúng không",
+            "Hệ thống có nghiệp vụ xử lý bằng SP/trigger (thường gặp ở ngân hàng, kế toán)"
+          ]
+        ],
+        "note": "💡 Không hệ thống nào cần dùng đủ cả 6 phương pháp cùng lúc — bảng này dùng để tra khi nghi ngờ rủi ro thuộc loại nào."
+      }
+    ],
+    "stepsTitle": "🧭 Sáu phương pháp, chọn theo rủi ro",
+    "stepsSubtitle": "Tất cả câu SQL bên dưới được chạy trong một công cụ truy vấn cơ sở dữ liệu — như DBeaver, MySQL Workbench, hoặc dòng lệnh mysql. Bạn dán câu lệnh vào, bấm chạy, rồi đọc kết quả trả về. Hầu hết chỉ là câu đọc (SELECT) nên an toàn; riêng câu INSERT thử ở mục 1 nên chạy trên môi trường test.",
+    "steps": [
+      {
+        "title": "1. Ràng buộc dữ liệu (Constraint testing)",
+        "body": "Là gì: Ràng buộc là các quy tắc được khai báo ngay trên bảng để cơ sở dữ liệu tự chặn dữ liệu sai — NOT NULL (bắt buộc có giá trị), UNIQUE (không được trùng), FOREIGN KEY (phải trỏ tới bản ghi có thật), CHECK (giá trị nằm trong khoảng cho phép). Kiểm ràng buộc là xác nhận các quy tắc này thật sự có hiệu lực, vì không ít hệ thống ghi quy tắc trên tài liệu nhưng khi tạo bảng lại quên bật, khiến dữ liệu bẩn vẫn lọt vào.\n\nKhi nào dùng: Ngay sau khi đội phát triển tạo mới hoặc thay đổi cấu trúc bảng (thêm cột, đổi kiểu dữ liệu). Ví dụ: dự án vừa thêm cột email \"bắt buộc và không trùng\" cho bảng Customers — cần kiểm xem có thể tạo hai khách cùng một email hay bỏ trống email được không.",
+        "code": "-- Thử tạo một đơn hàng gắn với khách hàng KHÔNG có thật\nINSERT INTO Orders (order_id, customer_id, status)\nVALUES ('TEST_001', 'KHONG_TON_TAI', 'PENDING');",
+        "tip": "👉 Cách làm & đọc kết quả: Chạy câu INSERT trên trong công cụ SQL. Nếu cơ sở dữ liệu BÁO LỖI và từ chối chèn → ràng buộc hoạt động đúng (đạt). Nếu chèn vào thành công → đây là lỗi: ràng buộc chưa được bật, dữ liệu rác lọt được vào. Làm lại tương tự với từng quy tắc khác: bỏ trống cột bắt buộc, nhập trùng email, nhập giá trị ngoài khoảng cho phép."
+      },
+      {
+        "title": "2. Toàn vẹn tham chiếu (Referential integrity)",
+        "body": "Là gì: Dữ liệu trong cơ sở dữ liệu liên kết với nhau qua khoá (đơn hàng ↔ dòng hàng ↔ sản phẩm). Toàn vẹn tham chiếu nghĩa là các liên kết này luôn khớp: không có bản ghi \"con\" nào trỏ tới \"cha\" đã biến mất. Khác với mục 1 (thử vi phạm để xem có bị chặn không), mục này soi dữ liệu ĐANG CÓ trong hệ thống để tìm liên kết đã gãy từ trước — thường do xoá cứng bản ghi cha hoặc nạp dữ liệu vòng qua ứng dụng.\n\nKhi nào dùng: Sau các đợt xoá hoặc cập nhật liên quan nhiều bảng, sau khi nạp dữ liệu từ file, hoặc trước khi bàn giao dữ liệu cho bộ phận báo cáo. Ví dụ: sau một đợt dọn dữ liệu xoá bớt khách hàng cũ — cần kiểm xem đơn hàng của những khách đó có bị bỏ lại trơ trọi, không còn khách để đối chiếu không.",
+        "code": "-- Liệt kê các dòng hàng đang trỏ tới đơn hàng không còn tồn tại\nSELECT i.item_id, i.order_id\nFROM Order_Items i\nLEFT JOIN Orders o ON o.order_id = i.order_id\nWHERE o.order_id IS NULL;",
+        "tip": "👉 Cách làm & đọc kết quả: Chạy câu SELECT trên. Nó lọc ra những dòng hàng \"mồ côi\" — không tìm thấy đơn hàng cha. Trả về 0 dòng → dữ liệu sạch (đạt). Trả về từ 1 dòng trở lên → có dữ liệu mồ côi, ghi nhận lỗi kèm danh sách order_id đó. Làm lại cho từng cặp bảng cha–con quan trọng khác trong hệ thống."
+      },
+      {
+        "title": "3. CRUD theo nghiệp vụ",
+        "body": "Là gì: Kiểm một thao tác cụ thể của người dùng — Tạo (Create), Đọc (Read), Sửa (Update), Xoá (Delete) — có để lại đúng dữ liệu trong cơ sở dữ liệu không. Đây là phương pháp gắn trực tiếp với test case chức năng và được dùng nhiều nhất hằng ngày. Điểm mấu chốt: đừng tin thông báo trên màn hình, hãy đọc thẳng dữ liệu để xác nhận thao tác đã thực sự làm đúng.\n\nKhi nào dùng: Trong test chức năng thường ngày, mỗi khi kiểm một tính năng có ghi, sửa hoặc xoá dữ liệu. Ví dụ: test tính năng \"hủy đơn hàng\" — sau khi bấm hủy trên giao diện và màn hình báo thành công, cần mở cơ sở dữ liệu kiểm xem trạng thái đơn, tồn kho và dấu vết có đúng không.",
+        "tip": "👉 Cách làm & đọc kết quả: Sau khi thao tác trên giao diện, mở cơ sở dữ liệu chạy câu SELECT lấy bản ghi vừa tác động cùng các bảng liên quan, rồi đối chiếu giá trị thực tế với giá trị đáng lẽ phải có. Khớp → đạt; lệch hoặc thiếu → lỗi. Quy trình đầy đủ 5 bước (soi những gì, câu SQL cụ thể) đã có bài riêng bên dưới.",
+        "linkSlug": "kiem-tra-du-lieu-truoc-sau-thao-tac",
+        "linkLabel": "Đọc: 5 bước kiểm dữ liệu sau thao tác"
+      },
+      {
+        "title": "4. Di trú và đồng bộ dữ liệu (Migration / ETL testing)",
+        "body": "Là gì: Khi dữ liệu được chuyển từ hệ thống này sang hệ thống khác — đổi phần mềm, gộp dữ liệu hai công ty, đồng bộ định kỳ giữa các cơ sở dữ liệu — cần xác nhận dữ liệu ở đích khớp với nguồn: không mất, không sai lệch, không bị nhân đôi. Đây là phép kiểm \"đối chiếu nguồn và đích\" sau khi chuyển.\n\nKhi nào dùng: Khi dự án đổi sang phần mềm mới, gộp dữ liệu sau sáp nhập, hoặc có luồng đồng bộ định kỳ giữa hai hệ thống. Ví dụ: công ty chuyển từ phần mềm kế toán cũ sang mới — cần đối chiếu toàn bộ số dư công nợ trước và sau khi chuyển để chắc chắn không khách nào bị lệch tiền.",
+        "code": "-- Chạy trên hệ thống CŨ\nSELECT COUNT(*) AS so_dong, SUM(total_amount) AS tong_tien FROM Orders_Old;\n\n-- Chạy trên hệ thống MỚI\nSELECT COUNT(*) AS so_dong, SUM(total_amount) AS tong_tien FROM Orders_New;",
+        "tip": "👉 Cách làm & đọc kết quả: Chạy câu đếm ở cả hệ thống cũ và mới, đặt hai kết quả cạnh nhau. Số dòng và tổng tiền bằng nhau → khớp ở mức tổng thể (đạt bước đầu). Lệch nhau → có dữ liệu bị mất, thừa hoặc sai, cần truy tiếp xem bản ghi nào. Sau đó lấy ngẫu nhiên vài bản ghi ở hai bên so từng cột, vì tổng khớp chưa chắc từng dòng đã đúng."
+      },
+      {
+        "title": "5. Hiệu năng truy vấn (Query performance)",
+        "body": "Là gì: Một câu truy vấn chạy tốt trên vài chục dòng dữ liệu test có thể chậm nhiều giây khi bảng thật có hàng triệu dòng. Kiểm hiệu năng là xác nhận truy vấn — và các chức năng dựa trên nó như mở trang danh sách, xuất báo cáo — vẫn đủ nhanh ở quy mô dữ liệu thật, trước khi người dùng thật gặp cảnh chờ đợi.\n\nKhi nào dùng: Trước khi đưa tính năng lên production với bảng dự kiến lớn, sau khi đội phát triển đổi câu truy vấn hoặc thêm/bớt index, hoặc khi người dùng phản ánh trang tải chậm. Ví dụ: trang danh sách giao dịch chạy mượt trên môi trường test, nhưng một khách hàng lớn có hàng trăm nghìn giao dịch lại báo trang tải rất lâu.",
+        "code": "-- Thêm chữ EXPLAIN vào trước câu truy vấn cần kiểm\nEXPLAIN SELECT * FROM Orders\nWHERE customer_id = 'CUST_002' AND status = 'PENDING';",
+        "tip": "👉 Cách làm & đọc kết quả: Thêm chữ EXPLAIN vào đầu câu truy vấn rồi chạy — nó cho biết cơ sở dữ liệu sẽ tìm dữ liệu bằng cách nào. Nhìn cột \"type\": nếu là \"ALL\" (quét toàn bộ bảng) trên một bảng lớn → câu này sẽ chậm, cần báo dev thêm index. Song song, bấm giờ câu truy vấn chạy trên dữ liệu lớn; nếu vượt ngưỡng cho phép (ví dụ trên 2 giây) → ghi nhận vấn đề hiệu năng."
+      },
+      {
+        "title": "6. Stored procedure và trigger",
+        "body": "Là gì: Ở nhiều hệ thống (ngân hàng, kế toán, ERP), một phần nghiệp vụ không nằm ở mã ứng dụng mà được viết thẳng trong cơ sở dữ liệu: stored procedure là đoạn xử lý gọi bằng lệnh, còn trigger là đoạn tự chạy mỗi khi có thao tác thêm/sửa/xoá. Kiểm nhóm này là xác nhận các đoạn logic ẩn đó chạy đúng, vì lỗi ở đây không lộ ra trên giao diện.\n\nKhi nào dùng: Khi hệ thống có nghiệp vụ được xử lý trong cơ sở dữ liệu, hoặc khi kết quả một thao tác được sinh ra tự động mà không thấy màn hình nào làm việc đó. Ví dụ: mỗi lần tạo một giao dịch, số dư tài khoản tự động thay đổi theo — logic đó nằm ở trigger, cần kiểm riêng chứ không chỉ kiểm màn hình tạo giao dịch.",
+        "code": "-- Gọi thủ tục hủy đơn, rồi kiểm dữ liệu nó để lại\nCALL sp_huy_don_hang('ORD_003');\n\nSELECT status, deleted_at FROM Orders WHERE order_id = 'ORD_003';",
+        "tip": "👉 Cách làm & đọc kết quả: Chạy câu CALL để gọi thủ tục (hoặc thực hiện thao tác làm trigger tự chạy), rồi chạy câu SELECT kiểm dữ liệu để lại ở các bảng liên quan. Nếu dữ liệu đúng như nghiệp vụ mô tả (ví dụ đơn chuyển sang trạng thái đã hủy và có thời điểm xóa) → đạt; sai hoặc thiếu → lỗi. Nên thử thêm với các giá trị biên như số 0, để trống, số âm."
+      }
+    ],
+    "bugs": [
+      "So dữ liệu di trú (mục 4) chỉ dựa vào đếm số dòng dễ bỏ sót lỗi — hai bảng có thể trùng số dòng nhưng lệch dữ liệu bên trong, nên luôn so thêm tổng theo cột quan trọng (tiền, số lượng).",
+      "Kiểm hiệu năng truy vấn (mục 5) trên môi trường test có ít dữ liệu sẽ không phản ánh đúng thực tế — cần bộ dữ liệu đủ lớn thì kết quả EXPLAIN mới có ý nghĩa tham khảo.",
+      "Không phải hệ thống nào cũng cần đủ cả 6 phương pháp. Áp dụng máy móc toàn bộ cho một hệ thống nhỏ vừa tốn thời gian vừa loãng trọng tâm kiểm thử."
+    ],
+    "finalThought": "Không có phương pháp nào là \"chuẩn nhất\" cho mọi dự án — mỗi phương pháp chỉ giỏi phát hiện một loại lỗi.\n\nViệc của người test là nhận ra hệ thống mình đang giữ rủi ro gì — mất tiền, mất dữ liệu, sai nghiệp vụ — rồi chọn đúng phương pháp cho lớp rủi ro đó, thay vì áp dụng máy móc cả 6 phương pháp cho mọi tính năng."
+  },
+  {
     "slug": "kiem-tra-du-lieu-truoc-sau-thao-tac",
     "title": "Kiểm tra dữ liệu sau thao tác: 5 bước cần soi trong DB testing",
     "excerpt": "Năm bước kiểm ở tầng cơ sở dữ liệu: bản ghi chính, dữ liệu liên quan, dấu vết, thay đổi ngoài ý muốn và ràng buộc toàn vẹn — mỗi bước kèm câu SQL mẫu.",
