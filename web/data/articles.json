@@ -1,5 +1,212 @@
 [
   {
+    "slug": "sinh-test-data-bang-ai",
+    "title": "Sinh test data bằng AI: nhanh, đầy đủ, kèm 3 prompt dùng ngay",
+    "excerpt": "Ngồi nghĩ và gõ tay từng bộ dữ liệu test — hợp lệ, rỗng, biên, sai định dạng — vừa mất thời gian vừa dễ sót ca. Bài này chỉ cách nhờ AI sinh test data phủ đủ tình huống, kèm 3 prompt copy-paste và góc soi lỗi để bạn không tin AI 100%.",
+    "category": "ai-qa",
+    "readingTime": 6,
+    "publishedAt": "2026-07-24",
+    "cover": "🎲",
+    "coverImage": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80&auto=format&fit=crop",
+    "tldr": [
+      "AI sinh test data nhanh và đa dạng: hợp lệ, rỗng, biên, sai định dạng, ký tự đặc biệt — phủ những ca mà gõ tay hay sót.",
+      "Xuất được nhiều định dạng: bảng để dán Excel, CSV, hoặc câu SQL INSERT đổ thẳng vào DB test.",
+      "Bài kèm 3 prompt copy-paste: sinh data cho một trường, sinh dữ liệu mẫu số lượng lớn, và dựng dữ liệu theo tình huống nghiệp vụ.",
+      "AI vẫn bịa: sai định dạng Việt Nam (số điện thoại, CCCD), phá ràng buộc khóa ngoại/unique — luôn soi lại trước khi dùng."
+    ],
+    "tables": [
+      {
+        "title": "Chuẩn bị test data: gõ tay vs. nhờ AI",
+        "intro": "So sánh hai cách làm cùng một việc — chuẩn bị bộ dữ liệu để test một chức năng.",
+        "columns": [
+          "Tiêu chí",
+          "Gõ tay",
+          "Nhờ AI sinh"
+        ],
+        "rows": [
+          [
+            "Tốc độ",
+            "Chậm — từng dòng một",
+            "Vài phút cho vài chục dòng"
+          ],
+          [
+            "Độ phủ ca",
+            "Dễ sót ca biên, giá trị âm, ký tự đặc biệt",
+            "Liệt kê đa dạng, gợi cả ca ít ai nghĩ tới"
+          ],
+          [
+            "Định dạng đầu ra",
+            "Tự định dạng thủ công",
+            "Bảng / CSV / câu SQL INSERT tùy yêu cầu"
+          ],
+          [
+            "Rủi ro",
+            "Ít sai nhưng mệt và dễ nản",
+            "Nhanh nhưng có thể bịa — phải soi lại"
+          ]
+        ],
+        "note": "💡 AI làm khâu 'liệt kê và định dạng'; bạn giữ khâu 'soi lại và quyết' — nhanh hơn mà vẫn kiểm soát."
+      }
+    ],
+    "prompts": [
+      {
+        "title": "Prompt 1 — Sinh bộ test data cho một trường nhập liệu",
+        "goal": "Từ ràng buộc của một trường, để AI liệt kê bộ giá trị test phủ đủ các lớp: hợp lệ, rỗng, biên, sai định dạng, bảo mật.",
+        "prompt": "Tôi cần test trường [TÊN TRƯỜNG] với ràng buộc sau: [DÁN RÀNG BUỘC]. Hãy sinh bảng test data phủ đủ các lớp: hợp lệ, để trống/bắt buộc, sai định dạng, giá trị biên (ngắn nhất/dài nhất), ký tự đặc biệt, và 1-2 ca bảo mật (XSS / SQL injection). Trả về bảng gồm cột: # | Giá trị nhập | Lớp | Kết quả mong đợi. Dữ liệu bám ngữ cảnh Việt Nam.",
+        "exampleInput": "Trường: Số điện thoại. Ràng buộc: bắt buộc, đầu số Việt Nam (03/05/07/08/09), đúng 10 chữ số.",
+        "result": "AI trả về (minh họa) — bảng phủ các lớp giá trị:",
+        "resultGroups": [
+          {
+            "group": "",
+            "columns": [
+              "#",
+              "Giá trị nhập",
+              "Lớp",
+              "Kết quả mong đợi"
+            ],
+            "rows": [
+              [
+                "1",
+                "0912345678",
+                "Hợp lệ (đầu 09)",
+                "Chấp nhận"
+              ],
+              [
+                "2",
+                "0387654321",
+                "Hợp lệ (đầu 03)",
+                "Chấp nhận"
+              ],
+              [
+                "3",
+                "(để trống)",
+                "Bắt buộc",
+                "Báo 'không được để trống'"
+              ],
+              [
+                "4",
+                "0212345678",
+                "Sai đầu số (02 — số bàn)",
+                "Báo 'số điện thoại không hợp lệ'"
+              ],
+              [
+                "5",
+                "091234567",
+                "Thiếu số (9 chữ số)",
+                "Báo 'phải đủ 10 chữ số'"
+              ],
+              [
+                "6",
+                "09123456789",
+                "Thừa số (11 chữ số)",
+                "Báo 'phải đủ 10 chữ số'"
+              ],
+              [
+                "7",
+                "0912 345 678",
+                "Có khoảng trắng",
+                "Tùy quy định: tự bỏ khoảng trắng hoặc báo lỗi"
+              ],
+              [
+                "8",
+                "09abc45678",
+                "Chứa chữ cái",
+                "Báo 'chỉ được nhập số'"
+              ],
+              [
+                "9",
+                "+84912345678",
+                "Định dạng quốc tế (+84)",
+                "Tùy quy định — cần xác nhận với BA"
+              ],
+              [
+                "10",
+                "<script>alert(1)</script>",
+                "Bảo mật (XSS)",
+                "Không thực thi, escape an toàn"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Prompt 2 — Sinh dữ liệu mẫu số lượng lớn (SQL INSERT)",
+        "goal": "Sinh nhanh nhiều dòng dữ liệu thực tế để đổ vào bảng test — dưới dạng câu INSERT chạy được.",
+        "prompt": "Sinh [N] dòng dữ liệu mẫu cho bảng [TÊN BẢNG] với các cột và kiểu sau: [DÁN SCHEMA]. Dữ liệu thực tế, bám ngữ cảnh Việt Nam (tên, địa chỉ), đa dạng (không lặp mẫu) và tôn trọng ràng buộc (khóa chính duy nhất, giá trị hợp lệ theo từng cột). Trả về dưới dạng câu lệnh INSERT chuẩn SQL. Ghi rõ giả định nếu có.",
+        "exampleInput": "Bảng Customers (customer_id CHAR(7) khóa chính, full_name, email UNIQUE, phone, city). Cần 5 dòng.",
+        "result": "AI trả về (minh họa) — kèm dòng giả định (đúng như prompt yêu cầu) và câu INSERT sẵn để chạy trên môi trường test:\n\n-- Giả định: mã khách theo mẫu 'CUST_' + 2 chữ số (đủ 7 ký tự); email không trùng; số điện thoại đầu số di động VN, đúng 10 số.\nINSERT INTO Customers (customer_id, full_name, email, phone, city) VALUES\n('CUST_01', 'Nguyễn Văn An',   'an.nguyen@example.com',  '0912345678', 'Hà Nội'),\n('CUST_02', 'Trần Thị Bình',   'binh.tran@example.com',  '0987654321', 'TP. HCM'),\n('CUST_03', 'Lê Hoàng Cường',  'cuong.le@example.com',   '0905112233', 'Đà Nẵng'),\n('CUST_04', 'Phạm Thu Dung',   'dung.pham@example.com',  '0778899001', 'Hải Phòng'),\n('CUST_05', 'Vũ Minh Đức',     'duc.vu@example.com',     '0356677889', 'Cần Thơ');"
+      },
+      {
+        "title": "Prompt 3 — Dựng bộ dữ liệu theo tình huống nghiệp vụ",
+        "goal": "Sinh các bản ghi ở đúng những trạng thái/tình huống mà kịch bản test cần — ví dụ đơn ở mọi trạng thái, đơn treo lâu, khách VIP.",
+        "prompt": "Tôi cần dựng dữ liệu để test [CHỨC NĂNG]. Hãy liệt kê các bản ghi cần có để phủ mọi tình huống nghiệp vụ quan trọng, mỗi bản ghi kèm: giá trị các trường chính, và LÝ DO vì sao cần bản ghi này (tình huống nó đại diện). Nêu cả các tình huống biên dễ bị quên.",
+        "exampleInput": "Chức năng: danh sách và hủy đơn hàng. Bảng Orders có status (PENDING / PAID / SHIPPED / DELIVERED / CANCELLED), created_at, customer_id.",
+        "result": "AI trả về (minh họa) — danh sách bản ghi kèm lý do:",
+        "resultGroups": [
+          {
+            "group": "",
+            "columns": [
+              "Order ID",
+              "customer_id",
+              "status",
+              "Ghi chú tình huống"
+            ],
+            "rows": [
+              [
+                "ORD_01",
+                "CUST_01",
+                "PENDING",
+                "Đơn mới — được phép hủy"
+              ],
+              [
+                "ORD_02",
+                "CUST_01",
+                "PAID",
+                "Đã thanh toán — hủy có phát sinh hoàn tiền"
+              ],
+              [
+                "ORD_03",
+                "CUST_01",
+                "SHIPPED",
+                "Đang giao — kiểm có cho hủy không"
+              ],
+              [
+                "ORD_04",
+                "CUST_02",
+                "DELIVERED",
+                "Đã giao — không được hủy"
+              ],
+              [
+                "ORD_05",
+                "CUST_02",
+                "CANCELLED",
+                "Đã hủy — không hủy lại lần nữa"
+              ],
+              [
+                "ORD_06",
+                "CUST_01",
+                "PENDING (tạo 90 ngày trước)",
+                "Đơn treo lâu — ca biên dễ quên"
+              ],
+              [
+                "ORD_07",
+                "CUST_03",
+                "PENDING",
+                "Đơn của khách khác — kiểm hủy ORD_01 không đụng đơn này"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "bugs": [
+      "AI bịa định dạng đặc thù Việt Nam: đầu số điện thoại, CCCD 12 số, mã số thuế, định dạng ngày. Luôn đối chiếu với quy định thật của dự án.",
+      "Sinh số lượng lớn dễ vi phạm ràng buộc: trùng khóa chính/unique, giá trị không thỏa khóa ngoại. Chạy thử trên DB test và soi lỗi ràng buộc trước khi tin — cách kiểm toàn vẹn dữ liệu đã có bài riêng trong chuyên mục DB Testing.",
+      "Bảo mật dữ liệu: tuyệt đối không đưa dữ liệu thật của khách hàng cho AI để 'nhân bản'. Chỉ dùng dữ liệu giả; nếu cần giống thật thì mô tả đặc điểm, đừng dán dữ liệu thật."
+    ],
+    "finalThought": "AI không thay bạn quyết định cần test dữ liệu gì — nhưng nó gánh giúp phần tốn công nhất: liệt kê và định dạng từng bộ dữ liệu.\n\nHãy để AI lo khâu sinh và trình bày, còn bạn giữ vai trò soi lại: dữ liệu có đúng định dạng thật không, có thỏa ràng buộc không, có phủ đúng những ca mình cần không. Cách làm này nhanh hơn nhiều lần mà dữ liệu vẫn nằm trong tầm kiểm soát của bạn."
+  },
+  {
     "slug": "phuong-phap-kiem-thu-du-lieu-pho-bien",
     "title": "Kiểm thử cơ sở dữ liệu: 6 phương pháp QA hay dùng và khi nào nên chọn cách nào",
     "excerpt": "Không phải lúc nào cũng cần kiểm hết mọi thứ trong cơ sở dữ liệu — mỗi loại rủi ro có một cách kiểm phù hợp riêng. Bài viết tổng hợp 6 phương pháp kiểm thử dữ liệu QA hay dùng nhất, kèm ví dụ SQL và gợi ý khi nào nên chọn phương pháp nào.",
