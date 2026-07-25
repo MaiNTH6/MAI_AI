@@ -25,3 +25,9 @@ book/dist/ban-giao/
 
 # Sách #2 — PDF build ra, không commit
 book2/dist/
+
+.vercel
+.env*
+
+# Tài liệu bản quyền ISTQB CT-AI (chỉ dùng nội bộ, KHÔNG đẩy lên repo Public)
+web/ai_testing_istqb/
