@@ -7,7 +7,7 @@ export function SectionNarrowGeneralSuperAi() {
       <div className="badge">🧠 CT-AI · Chương 1 · Mục 1.1.2</div>
 
       <h1 className="mt-3 text-2xl md:text-4xl font-extrabold tracking-tight leading-snug">
-        Narrow, General, Super AI — hôm nay ta đang ở đâu?
+        3 cấp độ AI: Narrow, General, Super
       </h1>
 
       {/* Mục tiêu + ý cốt lõi */}
