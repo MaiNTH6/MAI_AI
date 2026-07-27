@@ -9,33 +9,35 @@ import { SpeakButton } from "@/components/SpeakButton";
  *  - Nút "Đọc tất cả": lần lượt đọc term (Anh) → chờ vài giây → đọc nghĩa (Việt) → từ kế tiếp.
  * Dùng Web Speech API của trình duyệt.
  */
+// Hằng số thuần — đặt ở module scope để không tạo lại mỗi lần render.
+// Các cụm viết tắt tiếng Anh cần đọc theo giọng Anh (dài đứng trước để khớp đúng).
+const EN_ABBR = [
+  "AIaaS", "LLM", "RAG", "GANs", "CNN", "RNN", "NLP", "ASIC", "SVM", "IoT",
+  "GAN", "GPU", "CPU", "SoC", "API", "AI", "ML", "DL",
+];
+const EN_SET = new Set(EN_ABBR);
+const EN_SPLIT = new RegExp("\\b(" + EN_ABBR.join("|") + ")\\b");
+
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Đọc một chuỗi bằng giọng ngôn ngữ chỉ định; resolve khi đọc xong (hoặc lỗi). */
+function speakOnce(text: string, lang: string): Promise<void> {
+  return new Promise((resolve) => {
+    const synth = window.speechSynthesis;
+    if (!synth) return resolve();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.9;
+    u.onend = () => resolve();
+    u.onerror = () => resolve();
+    synth.speak(u);
+  });
+}
+
 export function TermGlossary({ terms }: { terms: [string, string][] }) {
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(-1);
   const stopRef = useRef(false);
-
-  function speakOnce(text: string, lang: string): Promise<void> {
-    return new Promise((resolve) => {
-      const synth = window.speechSynthesis;
-      if (!synth) return resolve();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang;
-      u.rate = 0.9;
-      u.onend = () => resolve();
-      u.onerror = () => resolve();
-      synth.speak(u);
-    });
-  }
-
-  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-  // Các cụm viết tắt tiếng Anh cần đọc theo giọng Anh (dài đứng trước để khớp đúng)
-  const EN_ABBR = [
-    "AIaaS", "LLM", "RAG", "GANs", "CNN", "RNN", "NLP", "ASIC", "SVM", "IoT",
-    "GAN", "GPU", "CPU", "SoC", "API", "AI", "ML", "DL",
-  ];
-  const EN_SET = new Set(EN_ABBR);
-  const EN_SPLIT = new RegExp("\\b(" + EN_ABBR.join("|") + ")\\b");
 
   // Đọc chuỗi tiếng Việt nhưng viết tắt tiếng Anh (AI, ML...) đọc bằng giọng Anh
   async function speakMixed(text: string) {
