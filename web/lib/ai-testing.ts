@@ -30,7 +30,7 @@ export const aiChapters: AiChapter[] = [
     sections: [
       { slug: "he-ai-vs-truyen-thong", code: "1.1.1", title: "Hệ thống AI và hệ thống truyền thống", hasContent: true },
       { slug: "narrow-general-super-ai", code: "1.1.2", title: "Narrow AI, General AI, Super AI", hasContent: true },
-      { slug: "cac-loai-cong-nghe-ai", code: "1.1.3", title: "Các loại công nghệ AI" },
+      { slug: "cac-loai-cong-nghe-ai", code: "1.1.3", title: "Các loại công nghệ AI", hasContent: true },
       { slug: "generative-ai", code: "1.1.4", title: "Generative AI" },
       { slug: "phan-cung-ml", code: "1.1.5", title: "Phần cứng cho hệ thống ML" },
       { slug: "phat-trien-hosting-mo-hinh", code: "1.1.6", title: "Phát triển & lưu trữ mô hình AI" },

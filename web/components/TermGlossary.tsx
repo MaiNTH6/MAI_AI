@@ -12,8 +12,8 @@ import { SpeakButton } from "@/components/SpeakButton";
 // Hằng số thuần — đặt ở module scope để không tạo lại mỗi lần render.
 // Các cụm viết tắt tiếng Anh cần đọc theo giọng Anh (dài đứng trước để khớp đúng).
 const EN_ABBR = [
-  "AIaaS", "LLM", "RAG", "GANs", "CNN", "RNN", "NLP", "ASIC", "SVM", "IoT",
-  "GAN", "GPU", "CPU", "SoC", "API", "AI", "ML", "DL",
+  "AIaaS", "LLM", "RAG", "GANs", "CNN", "RNN", "DNN", "NLP", "ASIC", "SVM",
+  "IoT", "GAN", "GPU", "CPU", "SoC", "API", "AI", "ML", "DL",
 ];
 const EN_SET = new Set(EN_ABBR);
 const EN_SPLIT = new RegExp("\\b(" + EN_ABBR.join("|") + ")\\b");
