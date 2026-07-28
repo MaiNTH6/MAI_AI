@@ -236,43 +236,28 @@ export function SectionCacLoaiCongNgheAi() {
       {/* Chỗ dễ ra đề */}
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
-        <ul className="mt-2 mb-0 space-y-1.5 text-[color:var(--muted)]">
+        <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          gài sau:
+        </p>
+        <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
-            Nhớ đúng quan hệ bao hàm: <strong>DL là tập con của ML</strong>, ML là
-            nhánh của AI. Đề hay đảo ngược &quot;ML là tập con của Deep
-            Learning&quot; → <strong className="text-amber-200">SAI</strong>.
+            &quot;ML là tập con của Deep Learning&quot; →{" "}
+            <strong className="text-amber-200">SAI</strong>: ngược lại,{" "}
+            <strong>DL là tập con của ML</strong> (AI ⊃ ML ⊃ DL).
           </li>
           <li>
-            <span className="font-semibold text-amber-200">
-              Gắn đúng cặp <em>dạng học ↔ dữ liệu</em>:
-            </span>
-            <span className="mt-1.5 block space-y-1 border-l-2 border-amber-500/40 ml-1 pl-3">
-              <span className="block">
-                <strong>có nhãn ↔ supervised</strong>
-              </span>
-              <span className="block">
-                <strong>không nhãn ↔ unsupervised</strong>
-              </span>
-              <span className="block">
-                <strong>thử–sai / môi trường ↔ reinforcement</strong>
-              </span>
-            </span>
+            &quot;Supervised học từ dữ liệu không nhãn&quot; (hoặc
+            &quot;unsupervised cần dữ liệu có nhãn&quot;) →{" "}
+            <strong className="text-amber-200">SAI</strong>: đúng phải là{" "}
+            <strong>supervised = có nhãn</strong>,{" "}
+            <strong>unsupervised = không nhãn</strong>.
           </li>
           <li>
-            <span className="font-semibold text-amber-200">
-              Gắn đúng <em>kiến trúc Deep Learning</em>:
-            </span>
-            <span className="mt-1.5 block space-y-1 border-l-2 border-amber-500/40 ml-1 pl-3">
-              <span className="block">
-                <strong>CNN ↔ ảnh</strong>
-              </span>
-              <span className="block">
-                <strong>RNN ↔ chuỗi (văn bản, thời gian)</strong>
-              </span>
-              <span className="block">
-                <strong>Transformer ↔ LLM / NLP</strong>
-              </span>
-            </span>
+            Đảo kiến trúc — &quot;CNN chuyên xử lý chuỗi văn bản&quot; hoặc
+            &quot;RNN chuyên nhận diện ảnh&quot; →{" "}
+            <strong className="text-amber-200">SAI</strong>: đúng là{" "}
+            <strong>CNN ↔ ảnh</strong>, <strong>RNN ↔ chuỗi</strong>.
           </li>
         </ul>
       </div>
