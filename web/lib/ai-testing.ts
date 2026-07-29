@@ -47,9 +47,9 @@ export const aiChapters: AiChapter[] = [
     summary:
       "Các đặc tính chất lượng riêng của AI (theo ISO/IEC 25059), an toàn, và tiêu chí chấp nhận.",
     sections: [
-      { slug: "dac-tinh-chat-luong-ai", code: "2.1.1", title: "Đặc tính chất lượng riêng của AI" },
-      { slug: "ai-va-an-toan", code: "2.1.2", title: "AI và an toàn (safety)" },
-      { slug: "tieu-chi-chap-nhan", code: "2.2.1", title: "Tiêu chí chấp nhận cho hệ thống AI" },
+      { slug: "dac-tinh-chat-luong-ai", code: "2.1.1", title: "Đặc tính chất lượng riêng của AI", hasContent: true },
+      { slug: "ai-va-an-toan", code: "2.1.2", title: "AI và an toàn (safety)", hasContent: true },
+      { slug: "tieu-chi-chap-nhan", code: "2.2.1", title: "Tiêu chí chấp nhận cho hệ thống AI", hasContent: true },
     ],
   },
   {
