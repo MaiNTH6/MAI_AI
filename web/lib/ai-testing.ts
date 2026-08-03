@@ -61,13 +61,13 @@ export const aiChapters: AiChapter[] = [
     summary:
       "Nền tảng ML: các dạng học, quy trình, chuẩn bị dữ liệu, thước đo hiệu năng, mạng nơ-ron.",
     sections: [
-      { slug: "cac-dang-ml", code: "3.1.1", title: "Các dạng Machine Learning" },
-      { slug: "quy-trinh-ml", code: "3.1.2", title: "Quy trình ML (workflow)" },
-      { slug: "pretrained-finetuning-rag", code: "3.1.4", title: "Pretrained, Fine-tuning, RAG" },
-      { slug: "chuan-bi-du-lieu", code: "3.2.1", title: "Các hoạt động chuẩn bị dữ liệu" },
-      { slug: "tinh-metric-ml", code: "3.3.1", title: "Tính thước đo hiệu năng ML (phân loại)" },
-      { slug: "mang-no-ron-sau", code: "3.4.1", title: "Cấu trúc & hoạt động mạng nơ-ron sâu" },
-      { slug: "coverage-mang-no-ron", code: "3.4.3", title: "Coverage cho mạng nơ-ron" },
+      { slug: "cac-dang-ml", code: "3.1.1", title: "Các dạng Machine Learning", hasContent: true },
+      { slug: "quy-trinh-ml", code: "3.1.2", title: "Quy trình ML (workflow)", hasContent: true },
+      { slug: "pretrained-finetuning-rag", code: "3.1.4", title: "Pretrained, Fine-tuning, RAG", hasContent: true },
+      { slug: "chuan-bi-du-lieu", code: "3.2.1", title: "Các hoạt động chuẩn bị dữ liệu", hasContent: true },
+      { slug: "tinh-metric-ml", code: "3.3.1", title: "Tính thước đo hiệu năng ML (phân loại)", hasContent: true },
+      { slug: "mang-no-ron-sau", code: "3.4.1", title: "Cấu trúc & hoạt động mạng nơ-ron sâu", hasContent: true },
+      { slug: "coverage-mang-no-ron", code: "3.4.3", title: "Coverage cho mạng nơ-ron", hasContent: true },
     ],
   },
   {

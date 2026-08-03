@@ -10,6 +10,13 @@ import { SectionQuyDinhTieuChuan } from "./section-quy-dinh-tieu-chuan";
 import { SectionDacTinhChatLuongAi } from "./section-dac-tinh-chat-luong-ai";
 import { SectionAiVaAnToan } from "./section-ai-va-an-toan";
 import { SectionTieuChiChapNhan } from "./section-tieu-chi-chap-nhan";
+import { SectionCacDangMl } from "./section-cac-dang-ml";
+import { SectionQuyTrinhMl } from "./section-quy-trinh-ml";
+import { SectionPretrainedFinetuningRag } from "./section-pretrained-finetuning-rag";
+import { SectionChuanBiDuLieu } from "./section-chuan-bi-du-lieu";
+import { SectionTinhMetricMl } from "./section-tinh-metric-ml";
+import { SectionMangNoRonSau } from "./section-mang-no-ron-sau";
+import { SectionCoverageMangNoRon } from "./section-coverage-mang-no-ron";
 
 // Map "chapterSlug/sectionSlug" → component nội dung của mục đó.
 // Mục nào chưa có ở đây → trang mục hiển thị "đang biên soạn".
@@ -25,4 +32,11 @@ export const sectionContent: Record<string, () => ReactNode> = {
   "dac-tinh-chat-luong/dac-tinh-chat-luong-ai": SectionDacTinhChatLuongAi,
   "dac-tinh-chat-luong/ai-va-an-toan": SectionAiVaAnToan,
   "dac-tinh-chat-luong/tieu-chi-chap-nhan": SectionTieuChiChapNhan,
+  "machine-learning/cac-dang-ml": SectionCacDangMl,
+  "machine-learning/quy-trinh-ml": SectionQuyTrinhMl,
+  "machine-learning/pretrained-finetuning-rag": SectionPretrainedFinetuningRag,
+  "machine-learning/chuan-bi-du-lieu": SectionChuanBiDuLieu,
+  "machine-learning/tinh-metric-ml": SectionTinhMetricMl,
+  "machine-learning/mang-no-ron-sau": SectionMangNoRonSau,
+  "machine-learning/coverage-mang-no-ron": SectionCoverageMangNoRon,
 };
