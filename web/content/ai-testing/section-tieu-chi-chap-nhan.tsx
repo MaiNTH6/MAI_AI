@@ -14,18 +14,18 @@ export function SectionTieuChiChapNhan() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-2.2.1 · mức K2 – Hiểu): <em>nêu ví dụ</em> về tiêu chí chấp nhận
+          (LO AI-2.2.1 · mức K2 – Hiểu): <em>nêu ví dụ</em>{" "}về tiêu chí chấp nhận
           cho hệ AI.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> với
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}với
             hệ AI, tiêu chí chấp nhận thường phải mang tính{" "}
-            <strong>thống kê / xác suất / theo ngưỡng</strong> — không phải
+            <strong>thống kê / xác suất / theo ngưỡng</strong>{" "}— không phải
             &quot;đúng hay sai&quot; (binary) như phần mềm thường.
           </p>
           <p className="m-0 mt-1.5">
-            Xét cả <strong>chức năng</strong> lẫn <strong>phi chức năng</strong>,
+            Xét cả <strong>chức năng</strong>{" "}lẫn <strong>phi chức năng</strong>,
             gắn với các đặc tính chất lượng ISO/IEC 25059 (mục 2.1.1) và an toàn
             (mục 2.1.2).
           </p>
@@ -105,7 +105,7 @@ export function SectionTieuChiChapNhan() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -118,12 +118,12 @@ export function SectionTieuChiChapNhan() {
           <li>
             &quot;Chỉ cần xét đặc tính chức năng&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: xét cả{" "}
-            <strong>phi chức năng</strong> (robustness, transparency, an toàn...).
+            <strong>phi chức năng</strong>{" "}(robustness, transparency, an toàn...).
           </li>
           <li>
-            Một tiêu chí chấp nhận tốt phải <strong>đo được</strong> — &quot;hệ
+            Một tiêu chí chấp nhận tốt phải <strong>đo được</strong>{" "}— &quot;hệ
             phải đủ chính xác&quot; là <strong className="text-amber-200">chưa
-            đạt</strong> (thiếu con số/ngưỡng).
+            đạt</strong>{" "}(thiếu con số/ngưỡng).
           </li>
         </ul>
       </div>
@@ -144,7 +144,7 @@ export function SectionTieuChiChapNhan() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> đây là
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}đây là
           việc rất thực tế — tester phải biến yêu cầu mơ hồ thành{" "}
           <strong>tiêu chí đo được</strong>{" "}
           (accuracy ≥ 95%, phản hồi &lt; 1s, dừng trong 0,5s...). Có con số rõ thì
@@ -183,17 +183,17 @@ export function SectionTieuChiChapNhan() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> The system should be accurate enough.
+            <strong>a)</strong>{" "}The system should be accurate enough.
           </li>
           <li>
-            <strong>b)</strong> The system must never make a mistake.
+            <strong>b)</strong>{" "}The system must never make a mistake.
           </li>
           <li>
-            <strong>c)</strong> The system shall achieve an accuracy of at least
+            <strong>c)</strong>{" "}The system shall achieve an accuracy of at least
             95%.
           </li>
           <li>
-            <strong>d)</strong> The system should feel fast to users.
+            <strong>d)</strong>{" "}The system should feel fast to users.
           </li>
         </ul>
         <details className="mt-3">
@@ -202,20 +202,20 @@ export function SectionTieuChiChapNhan() {
           </summary>
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
-              Đâu là tiêu chí chấp nhận <strong>phù hợp nhất</strong> cho tính đúng
+              Đâu là tiêu chí chấp nhận <strong>phù hợp nhất</strong>{" "}cho tính đúng
               đắn chức năng AI của một hệ nhận diện ảnh?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Hệ nên đủ chính xác.
+              <strong>a)</strong>{" "}Hệ nên đủ chính xác.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Hệ không bao giờ được sai.
+              <strong>b)</strong>{" "}Hệ không bao giờ được sai.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Hệ phải đạt accuracy tối thiểu 95%.
+              <strong>c)</strong>{" "}Hệ phải đạt accuracy tối thiểu 95%.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Hệ nên tạo cảm giác nhanh với người dùng.
+              <strong>d)</strong>{" "}Hệ nên tạo cảm giác nhanh với người dùng.
             </p>
           </div>
         </details>
@@ -227,16 +227,16 @@ export function SectionTieuChiChapNhan() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>c</strong> — Có <strong>ngưỡng đo được</strong> (accuracy ≥
+              <strong>c</strong>{" "}— Có <strong>ngưỡng đo được</strong>{" "}(accuracy ≥
               95%) nên test được.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> và <strong>d</strong> sai — mơ hồ, không đo
+                <strong>a</strong>{" "}và <strong>d</strong>{" "}sai — mơ hồ, không đo
                 được (&quot;đủ chính xác&quot;, &quot;cảm giác nhanh&quot;).
               </p>
               <p className="m-0">
-                <strong>b</strong> sai — hệ AI xác suất không thể &quot;không bao
+                <strong>b</strong>{" "}sai — hệ AI xác suất không thể &quot;không bao
                 giờ sai&quot;.
               </p>
             </div>

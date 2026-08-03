@@ -14,14 +14,14 @@ export function SectionCacDangMl() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-3.1.1 · mức K2 – Hiểu): <em>phân biệt</em> supervised,
+          (LO AI-3.1.1 · mức K2 – Hiểu): <em>phân biệt</em>{" "}supervised,
           unsupervised và reinforcement learning cùng loại bài toán của chúng.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> chọn
-            dạng ML theo <strong>bản chất dữ liệu</strong> (có nhãn hay không) và{" "}
-            <strong>loại việc</strong> cần làm.
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}chọn
+            dạng ML theo <strong>bản chất dữ liệu</strong>{" "}(có nhãn hay không) và{" "}
+            <strong>loại việc</strong>{" "}cần làm.
           </p>
         </div>
       </div>
@@ -85,7 +85,7 @@ export function SectionCacDangMl() {
         <p className="m-0">
           ⚠️ <strong className="text-[color:var(--ink)]">Chú ý thuật ngữ:</strong>{" "}
           &quot;<strong>ML regression</strong>&quot; ở đây là{" "}
-          <strong>dự đoán giá trị số liên tục</strong> — khác hẳn{" "}
+          <strong>dự đoán giá trị số liên tục</strong>{" "}— khác hẳn{" "}
           &quot;regression testing&quot; (kiểm thử hồi quy) trong các syllabus
           ISTQB khác. Đừng nhầm hai khái niệm.
         </p>
@@ -95,25 +95,25 @@ export function SectionCacDangMl() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;Clustering là supervised learning&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: clustering &amp;
-            association thuộc <strong>unsupervised</strong> (dữ liệu không nhãn).
+            association thuộc <strong>unsupervised</strong>{" "}(dữ liệu không nhãn).
           </li>
           <li>
             &quot;Dự đoán giá cổ phiếu là bài toán classification&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: dự đoán{" "}
-            <strong>số liên tục</strong> là <strong>ML regression</strong>;
+            <strong>số liên tục</strong>{" "}là <strong>ML regression</strong>;
             classification là gán vào lớp rời rạc.
           </li>
           <li>
             &quot;Reinforcement học từ một tập dữ liệu có sẵn&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: nó học từ{" "}
-            <strong>tương tác + thưởng/phạt</strong> với môi trường.
+            <strong>tương tác + thưởng/phạt</strong>{" "}với môi trường.
           </li>
         </ul>
       </div>
@@ -125,22 +125,22 @@ export function SectionCacDangMl() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Supervised</strong> = có
+            <strong className="text-[color:var(--metal)]">Supervised</strong>{" "}= có
             nhãn → classification (lớp) · ML regression (số)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Unsupervised</strong> =
+            <strong className="text-[color:var(--metal)]">Unsupervised</strong>{" "}=
             không nhãn → clustering (gom) · association (quan hệ)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Reinforcement</strong> =
+            <strong className="text-[color:var(--metal)]">Reinforcement</strong>{" "}=
             agent + thưởng/phạt
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> biết
-          dạng ML để chọn đúng <strong>thước đo</strong> và cách test — hệ{" "}
-          <strong>classification</strong> dùng confusion matrix &amp;
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}biết
+          dạng ML để chọn đúng <strong>thước đo</strong>{" "}và cách test — hệ{" "}
+          <strong>classification</strong>{" "}dùng confusion matrix &amp;
           accuracy/precision/recall (mục 3.3.1); hệ <strong>ML regression</strong>{" "}
           dùng error rate.
         </p>
@@ -170,21 +170,21 @@ export function SectionCacDangMl() {
           🎯 Câu hỏi minh họa (phong cách đề CT-AI · K2)
         </h3>
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
-          A model must predict a person’s <strong>age</strong> (a continuous
+          A model must predict a person’s <strong>age</strong>{" "}(a continuous
           number) from lifestyle data. Which type of ML problem is this?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Classification (supervised).
+            <strong>a)</strong>{" "}Classification (supervised).
           </li>
           <li>
-            <strong>b)</strong> ML regression (supervised).
+            <strong>b)</strong>{" "}ML regression (supervised).
           </li>
           <li>
-            <strong>c)</strong> Clustering (unsupervised).
+            <strong>c)</strong>{" "}Clustering (unsupervised).
           </li>
           <li>
-            <strong>d)</strong> Reinforcement learning.
+            <strong>d)</strong>{" "}Reinforcement learning.
           </li>
         </ul>
         <details className="mt-3">
@@ -193,20 +193,20 @@ export function SectionCacDangMl() {
           </summary>
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
-              Một mô hình phải dự đoán <strong>tuổi</strong> (số liên tục) của một
+              Một mô hình phải dự đoán <strong>tuổi</strong>{" "}(số liên tục) của một
               người từ dữ liệu lối sống. Đây là loại bài toán ML nào?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Phân loại (supervised).
+              <strong>a)</strong>{" "}Phân loại (supervised).
             </p>
             <p className="m-0">
-              <strong>b)</strong> ML regression (supervised).
+              <strong>b)</strong>{" "}ML regression (supervised).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Gom cụm (unsupervised).
+              <strong>c)</strong>{" "}Gom cụm (unsupervised).
             </p>
             <p className="m-0">
-              <strong>d)</strong> Học tăng cường.
+              <strong>d)</strong>{" "}Học tăng cường.
             </p>
           </div>
         </details>
@@ -218,19 +218,19 @@ export function SectionCacDangMl() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Dự đoán số liên tục (tuổi) là ML regression.
+              <strong>b</strong>{" "}— Dự đoán số liên tục (tuổi) là ML regression.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — classification gán vào lớp rời rạc, không
+                <strong>a</strong>{" "}sai — classification gán vào lớp rời rạc, không
                 phải số liên tục.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — clustering là unsupervised, không dự đoán
+                <strong>c</strong>{" "}sai — clustering là unsupervised, không dự đoán
                 giá trị cụ thể.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — reinforcement học qua thưởng/phạt, không
+                <strong>d</strong>{" "}sai — reinforcement học qua thưởng/phạt, không
                 hợp bài toán này.
               </p>
             </div>

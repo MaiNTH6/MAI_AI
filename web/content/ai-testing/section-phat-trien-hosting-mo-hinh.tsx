@@ -14,13 +14,13 @@ export function SectionPhatTrienHostingMoHinh() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.6 · mức K2 – Hiểu): <em>so sánh</em> các lựa chọn phát triển
+          (LO AI-1.1.6 · mức K2 – Hiểu): <em>so sánh</em>{" "}các lựa chọn phát triển
           và lưu trữ (hosting) mô hình AI.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> có{" "}
-            <strong>2 quyết định tách biệt</strong> — (1) làm mô hình thế nào và
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}có{" "}
+            <strong>2 quyết định tách biệt</strong>{" "}— (1) làm mô hình thế nào và
             (2) lưu/chạy nó ở đâu.
           </p>
           <p className="m-0 mt-1.5">
@@ -30,7 +30,7 @@ export function SectionPhatTrienHostingMoHinh() {
           </p>
           <p className="m-0 mt-1">
             •{" "}
-            <strong className="text-[color:var(--ink)]">Nơi đặt:</strong> local
+            <strong className="text-[color:var(--ink)]">Nơi đặt:</strong>{" "}local
             (tại chỗ) ↔ đám mây (public / private) ↔ hybrid
           </p>
         </div>
@@ -148,7 +148,7 @@ export function SectionPhatTrienHostingMoHinh() {
       <p className="mt-3 text-sm text-[color:var(--muted)]">
         Chọn dựa trên: <strong>kích thước &amp; độ phức tạp mô hình</strong>, yêu
         cầu hiệu năng, ngân sách, bảo mật/riêng tư dữ liệu, nhu cầu triển khai và
-        yêu cầu pháp lý. Quyết định <em>phát triển</em> và <em>hosting</em> thường
+        yêu cầu pháp lý. Quyết định <em>phát triển</em>{" "}và <em>hosting</em>{" "}thường
         cân nhắc riêng.
       </p>
 
@@ -156,7 +156,7 @@ export function SectionPhatTrienHostingMoHinh() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -185,19 +185,19 @@ export function SectionPhatTrienHostingMoHinh() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Nguồn:</strong> mua sẵn
+            <strong className="text-[color:var(--metal)]">Nguồn:</strong>{" "}mua sẵn
             (nhanh) ↔ tự làm (tùy biến)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Nơi đặt:</strong> local ·
+            <strong className="text-[color:var(--metal)]">Nơi đặt:</strong>{" "}local ·
             public cloud · private cloud · hybrid
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> mua mô
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}mua mô
           hình ngoài → phải <strong>test như hộp đen</strong>, phụ thuộc bản cập
           nhật của nhà cung cấp; tự phát triển → kiểm soát và test sâu hơn. Nơi
-          hosting quyết định <strong>dữ liệu test đặt ở đâu</strong> — dữ liệu nhạy
+          hosting quyết định <strong>dữ liệu test đặt ở đâu</strong>{" "}— dữ liệu nhạy
           cảm nên giữ tại chỗ (bảo mật, tuân thủ).
         </p>
       </div>
@@ -230,19 +230,19 @@ export function SectionPhatTrienHostingMoHinh() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Build a custom model from scratch on on-premises
+            <strong>a)</strong>{" "}Build a custom model from scratch on on-premises
             server clusters.
           </li>
           <li>
-            <strong>b)</strong> Use a pretrained model / AIaaS from a third-party
+            <strong>b)</strong>{" "}Use a pretrained model / AIaaS from a third-party
             vendor.
           </li>
           <li>
-            <strong>c)</strong> Hire a large ML research team first, then train
+            <strong>c)</strong>{" "}Hire a large ML research team first, then train
             everything locally.
           </li>
           <li>
-            <strong>d)</strong> Avoid AI because there is no perfectly secure
+            <strong>d)</strong>{" "}Avoid AI because there is no perfectly secure
             option.
           </li>
         </ul>
@@ -257,17 +257,17 @@ export function SectionPhatTrienHostingMoHinh() {
               hợp nhất?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Tự xây mô hình từ đầu trên cụm server tại chỗ.
+              <strong>a)</strong>{" "}Tự xây mô hình từ đầu trên cụm server tại chỗ.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Dùng mô hình pretrained / AIaaS của bên thứ ba.
+              <strong>b)</strong>{" "}Dùng mô hình pretrained / AIaaS của bên thứ ba.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Tuyển đội nghiên cứu ML lớn trước rồi tự train
+              <strong>c)</strong>{" "}Tuyển đội nghiên cứu ML lớn trước rồi tự train
               tất cả tại chỗ.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Tránh AI vì không có lựa chọn nào an toàn tuyệt
+              <strong>d)</strong>{" "}Tránh AI vì không có lựa chọn nào an toàn tuyệt
               đối.
             </p>
           </div>
@@ -280,16 +280,16 @@ export function SectionPhatTrienHostingMoHinh() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Pretrained / AIaaS cho triển khai nhanh, không
+              <strong>b</strong>{" "}— Pretrained / AIaaS cho triển khai nhanh, không
               cần chuyên môn sâu.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> và <strong>c</strong> sai — tự phát triển cần
+                <strong>a</strong>{" "}và <strong>c</strong>{" "}sai — tự phát triển cần
                 kỹ năng chuyên sâu và thời gian, ngược mục tiêu &quot;nhanh&quot;.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — có nhiều lựa chọn bảo mật (private
+                <strong>d</strong>{" "}sai — có nhiều lựa chọn bảo mật (private
                 cloud/hybrid); không cần né tránh.
               </p>
             </div>

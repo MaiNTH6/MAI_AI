@@ -14,14 +14,14 @@ export function SectionMangNoRonSau() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-3.4.1 · mức K2 – Hiểu): <em>giải thích</em> cấu trúc và cách hoạt
+          (LO AI-3.4.1 · mức K2 – Hiểu): <em>giải thích</em>{" "}cấu trúc và cách hoạt
           động của một mạng nơ-ron sâu.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> mạng
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}mạng
             nơ-ron sâu = nhiều lớp nơ-ron nhân tạo; học bằng cách{" "}
-            <strong>điều chỉnh trọng số (weights) &amp; bias</strong> để giảm sai
+            <strong>điều chỉnh trọng số (weights) &amp; bias</strong>{" "}để giảm sai
             số qua từng <strong>epoch</strong>.
           </p>
         </div>
@@ -64,9 +64,9 @@ export function SectionMangNoRonSau() {
         </table>
       </div>
       <p className="mt-3 text-sm text-[color:var(--muted)]">
-        <strong>Single-layer perceptron</strong> (1 lớp) là ví dụ sớm nhất — phân
-        loại nhị phân cho bài toán <em>tách được bằng đường thẳng</em> (vd spam vs
-        không spam). Đa số mạng hiện nay là <strong>mạng sâu</strong> (nhiều lớp),
+        <strong>Single-layer perceptron</strong>{" "}(1 lớp) là ví dụ sớm nhất — phân
+        loại nhị phân cho bài toán <em>tách được bằng đường thẳng</em>{" "}(vd spam vs
+        không spam). Đa số mạng hiện nay là <strong>mạng sâu</strong>{" "}(nhiều lớp),
         có thể coi là multi-layer perceptron.
       </p>
 
@@ -77,18 +77,18 @@ export function SectionMangNoRonSau() {
       <div className="mt-4 space-y-4 text-[color:var(--muted)] leading-relaxed">
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">Giá trị kích hoạt
-          (activation value)</strong> của mỗi nơ-ron ={" "}
-          <strong>tổng có trọng số</strong> các giá trị kích hoạt từ nơ-ron lớp
-          trước (mỗi kết nối có <strong>weight</strong> riêng){" "}
-          <strong>+ bias</strong> của nơ-ron, rồi đưa qua một{" "}
+          (activation value)</strong>{" "}của mỗi nơ-ron ={" "}
+          <strong>tổng có trọng số</strong>{" "}các giá trị kích hoạt từ nơ-ron lớp
+          trước (mỗi kết nối có <strong>weight</strong>{" "}riêng){" "}
+          <strong>+ bias</strong>{" "}của nơ-ron, rồi đưa qua một{" "}
           <strong>hàm kích hoạt (activation function) phi tuyến</strong>. (Bias ở
           đây khác với &quot;bias&quot; thiên lệch dữ liệu ở mục 5.1.2.)
         </p>
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">Cách học:</strong>{" "}
           weights &amp; bias khởi tạo bằng số ngẫu nhiên nhỏ. Đưa dữ liệu qua mạng → ra
-          đầu ra → so với đáp án đúng → tính <strong>sai số (loss)</strong> → dội
-          ngược để <strong>điều chỉnh weights &amp; bias</strong> cho sai số nhỏ
+          đầu ra → so với đáp án đúng → tính <strong>sai số (loss)</strong>{" "}→ dội
+          ngược để <strong>điều chỉnh weights &amp; bias</strong>{" "}cho sai số nhỏ
           dần. Mỗi lần chạy hết tập huấn luyện là một{" "}
           <strong>epoch</strong>; qua nhiều epoch mạng học dần đến khi đầu ra đủ
           tốt thì dừng.
@@ -99,7 +99,7 @@ export function SectionMangNoRonSau() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -112,12 +112,12 @@ export function SectionMangNoRonSau() {
           <li>
             &quot;Hàm kích hoạt là tuyến tính&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: nó{" "}
-            <strong>phi tuyến</strong> — nhờ đó mạng học được quan hệ phức tạp.
+            <strong>phi tuyến</strong>{" "}— nhờ đó mạng học được quan hệ phức tạp.
           </li>
           <li>
             &quot;1 epoch = 1 mẫu dữ liệu&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: 1 epoch ={" "}
-            <strong>một lượt qua toàn bộ</strong> tập huấn luyện.
+            <strong>một lượt qua toàn bộ</strong>{" "}tập huấn luyện.
           </li>
         </ul>
       </div>
@@ -129,23 +129,23 @@ export function SectionMangNoRonSau() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 lớp:</strong> input ·
+            <strong className="text-[color:var(--metal)]">3 lớp:</strong>{" "}input ·
             hidden (nơ-ron) · output
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Nơ-ron:</strong> tổng có
+            <strong className="text-[color:var(--metal)]">Nơ-ron:</strong>{" "}tổng có
             trọng số + bias → hàm kích hoạt phi tuyến
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Học:</strong> loss dội
+            <strong className="text-[color:var(--metal)]">Học:</strong>{" "}loss dội
             ngược → chỉnh weights/bias qua từng epoch
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> mạng
-          nơ-ron <strong>không có đường code tường minh</strong> — hành vi nằm ở
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}mạng
+          nơ-ron <strong>không có đường code tường minh</strong>{" "}— hành vi nằm ở
           weights/bias/activation đã học. Đây là gốc rễ khiến phải có{" "}
-          <strong>coverage riêng cho mạng nơ-ron</strong> (mục 3.4.3) thay vì phủ
+          <strong>coverage riêng cho mạng nơ-ron</strong>{" "}(mục 3.4.3) thay vì phủ
           nhánh code như phần mềm thường.
         </p>
       </div>
@@ -181,18 +181,18 @@ export function SectionMangNoRonSau() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> By adjusting its weights and bias values to
+            <strong>a)</strong>{" "}By adjusting its weights and bias values to
             minimise the loss.
           </li>
           <li>
-            <strong>b)</strong> By adding new hidden layers automatically each
+            <strong>b)</strong>{" "}By adding new hidden layers automatically each
             epoch.
           </li>
           <li>
-            <strong>c)</strong> By rewriting explicit if-then rules.
+            <strong>c)</strong>{" "}By rewriting explicit if-then rules.
           </li>
           <li>
-            <strong>d)</strong> By changing the activation function to a linear
+            <strong>d)</strong>{" "}By changing the activation function to a linear
             one.
           </li>
         </ul>
@@ -202,20 +202,20 @@ export function SectionMangNoRonSau() {
           </summary>
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
-              Khi huấn luyện, mạng nơ-ron sâu <strong>học</strong> chủ yếu bằng
+              Khi huấn luyện, mạng nơ-ron sâu <strong>học</strong>{" "}chủ yếu bằng
               cách nào?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Điều chỉnh weights &amp; bias để giảm loss.
+              <strong>a)</strong>{" "}Điều chỉnh weights &amp; bias để giảm loss.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Tự thêm lớp ẩn mới mỗi epoch.
+              <strong>b)</strong>{" "}Tự thêm lớp ẩn mới mỗi epoch.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Viết lại các luật if-then tường minh.
+              <strong>c)</strong>{" "}Viết lại các luật if-then tường minh.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Đổi hàm kích hoạt sang tuyến tính.
+              <strong>d)</strong>{" "}Đổi hàm kích hoạt sang tuyến tính.
             </p>
           </div>
         </details>
@@ -227,20 +227,20 @@ export function SectionMangNoRonSau() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>a</strong> — Mạng điều chỉnh weights &amp; bias để giảm sai
+              <strong>a</strong>{" "}— Mạng điều chỉnh weights &amp; bias để giảm sai
               số (loss).
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>b</strong> sai — số lớp do hyperparameter định, không tự
+                <strong>b</strong>{" "}sai — số lớp do hyperparameter định, không tự
                 thêm mỗi epoch.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — mạng nơ-ron không dùng luật if-then tường
+                <strong>c</strong>{" "}sai — mạng nơ-ron không dùng luật if-then tường
                 minh.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — hàm kích hoạt cần phi tuyến.
+                <strong>d</strong>{" "}sai — hàm kích hoạt cần phi tuyến.
               </p>
             </div>
           </div>

@@ -14,18 +14,18 @@ export function SectionNarrowGeneralSuperAi() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.2 · mức K2 – Hiểu): <em>phân biệt</em> ba cấp độ trí tuệ của
+          (LO AI-1.1.2 · mức K2 – Hiểu): <em>phân biệt</em>{" "}ba cấp độ trí tuệ của
           hệ thống AI.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> AI
-            được phân cấp theo <strong>phạm vi năng lực</strong> so với con
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}AI
+            được phân cấp theo <strong>phạm vi năng lực</strong>{" "}so với con
             người.
           </p>
           <p className="m-0 mt-1.5">
             •{" "}
-            <strong className="text-[color:var(--ink)]">Hôm nay</strong> → toàn
+            <strong className="text-[color:var(--ink)]">Hôm nay</strong>{" "}→ toàn
             bộ AI đang dùng là <strong>Narrow AI</strong>
           </p>
           <p className="m-0 mt-1">
@@ -95,28 +95,32 @@ export function SectionNarrowGeneralSuperAi() {
       </h2>
       <div className="mt-4 space-y-4 text-[color:var(--muted)] leading-relaxed">
         <p className="m-0">
-          <strong className="text-[color:var(--ink)]">① Narrow AI.</strong> Mọi
+          <strong className="text-[color:var(--ink)]">① Narrow AI.</strong>{" "}Mọi
           hệ AI bạn từng gặp — trợ lý giọng nói, gợi ý phim, lọc thư rác, chatbot,
           xe tự lái — đều là narrow AI: giỏi <strong>một miền việc</strong>, ra
           khỏi miền đó thì &quot;mù&quot;. Nhánh narrow AI{" "}
-          <strong>tiên tiến nhất</strong> hiện nay gọi là{" "}
-          <strong>frontier AI</strong> (các mô hình GenAI rất lớn, mức tự chủ
+          <strong>tiên tiến nhất</strong>{" "}hiện nay gọi là{" "}
+          <strong>frontier AI</strong>{" "}(các mô hình GenAI rất lớn, mức tự chủ
           cao) — nhưng dù mạnh đến đâu, chúng vẫn gắn với{" "}
           <strong>những tác vụ cụ thể</strong>, chưa phải trí tuệ tổng quát.
         </p>
         <p className="m-0">
-          <strong className="text-[color:var(--ink)]">② General AI.</strong> Một
-          hệ có thể học và làm <em>bất kỳ</em> việc trí tuệ nào con người làm
+          <strong className="text-[color:var(--ink)]">② General AI.</strong>{" "}Một
+          hệ có thể học và làm <em>bất kỳ</em>{" "}việc trí tuệ nào con người làm
           được, linh hoạt chuyển giữa các việc mà không cần lập trình/huấn luyện
           lại. Đây là mục tiêu dài hạn của ngành,{" "}
           <strong>hiện chưa có hệ nào đạt tới</strong>.
         </p>
         <p className="m-0">
-          <strong className="text-[color:var(--ink)]">③ Super AI.</strong> Vượt
-          xa trí tuệ con người và <strong>tự cải thiện</strong> mà không cần con
-          người can thiệp. Mốc (giả định) khi AI chuyển từ mức general sang super
-          gọi là <strong>điểm kỳ dị công nghệ (technological singularity)</strong>{" "}
-          — thời điểm ta không còn dự đoán được diễn tiến của AI.
+          <strong className="text-[color:var(--ink)]">③ Super AI.</strong>{" "}Vượt
+          xa trí tuệ con người và <strong>tự cải thiện</strong>{" "}mà không cần con
+          người can thiệp. Về mặt kỹ thuật, Super AI{" "}
+          <strong>không bắt buộc phải kết nối Internet</strong>{" "}mới tồn tại được
+          — nhưng nếu có, khả năng &amp; tầm ảnh hưởng của nó có thể{" "}
+          <strong>mở rộng đáng kể</strong>. Mốc (giả định) khi AI chuyển từ mức
+          general sang super gọi là{" "}
+          <strong>điểm kỳ dị công nghệ (technological singularity)</strong>{" "}—
+          thời điểm ta không còn dự đoán được diễn tiến của AI.
         </p>
       </div>
 
@@ -125,9 +129,9 @@ export function SectionNarrowGeneralSuperAi() {
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <ul className="mt-2 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
-            Đề gài: gọi một chatbot/LLM mạnh là <strong>General AI</strong> →{" "}
+            Đề gài: gọi một chatbot/LLM mạnh là <strong>General AI</strong>{" "}→{" "}
             <strong className="text-amber-200">SAI</strong>. Dù ấn tượng đến đâu,
-            nó vẫn là <strong>narrow AI</strong> (frontier AI).
+            nó vẫn là <strong>narrow AI</strong>{" "}(frontier AI).
           </li>
           <li>
             Nhớ ánh xạ tên khác:{" "}
@@ -135,7 +139,7 @@ export function SectionNarrowGeneralSuperAi() {
             <strong>general = strong AI</strong>.
           </li>
           <li>
-            <strong>Technological singularity</strong> gắn với bước chuyển sang{" "}
+            <strong>Technological singularity</strong>{" "}gắn với bước chuyển sang{" "}
             <strong>super AI</strong>, không phải narrow hay general.
           </li>
         </ul>
@@ -148,24 +152,24 @@ export function SectionNarrowGeneralSuperAi() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Narrow AI</strong> = một
+            <strong className="text-[color:var(--metal)]">Narrow AI</strong>{" "}= một
             việc cụ thể · <em>đang có, dùng khắp nơi</em>
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">General AI</strong> =
+            <strong className="text-[color:var(--metal)]">General AI</strong>{" "}=
             như con người · <em>chưa tồn tại</em>
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Super AI</strong> = vượt
+            <strong className="text-[color:var(--metal)]">Super AI</strong>{" "}= vượt
             con người, tự cải thiện · <em>giả thuyết</em>
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> hệ bạn
-          kiểm thử luôn là <strong>narrow AI</strong> — giỏi trong phạm vi hẹp,
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}hệ bạn
+          kiểm thử luôn là <strong>narrow AI</strong>{" "}— giỏi trong phạm vi hẹp,
           nên phải xác định rõ <strong>ranh giới miền hoạt động</strong>. Ngoài
           ranh giới đó, đầu ra dễ sai/vô lý; kiểm thử phải nhắm thẳng vào các{" "}
-          <strong>ca ngoài phạm vi huấn luyện</strong> (out-of-distribution).
+          <strong>ca ngoài phạm vi huấn luyện</strong>{" "}(out-of-distribution).
         </p>
       </div>
 
@@ -198,19 +202,19 @@ export function SectionNarrowGeneralSuperAi() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> General AI, because it can perform many different
+            <strong>a)</strong>{" "}General AI, because it can perform many different
             tasks like a human.
           </li>
           <li>
-            <strong>b)</strong> Super AI, because it improves itself without human
+            <strong>b)</strong>{" "}Super AI, because it improves itself without human
             help.
           </li>
           <li>
-            <strong>c)</strong> Narrow AI (frontier AI), because it is still tied
+            <strong>c)</strong>{" "}Narrow AI (frontier AI), because it is still tied
             to specific trained tasks.
           </li>
           <li>
-            <strong>d)</strong> It marks the technological singularity.
+            <strong>d)</strong>{" "}It marks the technological singularity.
           </li>
         </ul>
         <details className="mt-3">
@@ -224,19 +228,19 @@ export function SectionNarrowGeneralSuperAi() {
               CT-AI, hệ thống này thuộc loại nào?
             </p>
             <p className="m-0">
-              <strong>a)</strong> General AI, vì nó làm được nhiều việc khác nhau
+              <strong>a)</strong>{" "}General AI, vì nó làm được nhiều việc khác nhau
               như con người.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Super AI, vì nó tự cải thiện không cần con
+              <strong>b)</strong>{" "}Super AI, vì nó tự cải thiện không cần con
               người.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Narrow AI (frontier AI), vì vẫn gắn với những
+              <strong>c)</strong>{" "}Narrow AI (frontier AI), vì vẫn gắn với những
               tác vụ cụ thể đã được huấn luyện.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Nó đánh dấu điểm kỳ dị công nghệ.
+              <strong>d)</strong>{" "}Nó đánh dấu điểm kỳ dị công nghệ.
             </p>
           </div>
         </details>
@@ -248,21 +252,21 @@ export function SectionNarrowGeneralSuperAi() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>c</strong> — Dù làm được nhiều việc, LLM vẫn được huấn luyện
+              <strong>c</strong>{" "}— Dù làm được nhiều việc, LLM vẫn được huấn luyện
               cho các tác vụ cụ thể → là narrow AI ở mức tiên tiến (frontier AI).
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — general AI phải làm được{" "}
-                <em>bất kỳ</em> việc trí tuệ nào mà không cần huấn luyện lại;{" "}
+                <strong>a</strong>{" "}sai — general AI phải làm được{" "}
+                <em>bất kỳ</em>{" "}việc trí tuệ nào mà không cần huấn luyện lại;{" "}
                 hiện chưa tồn tại.
               </p>
               <p className="m-0">
-                <strong>b</strong> sai — super AI tự cải thiện vượt con người, chỉ
+                <strong>b</strong>{" "}sai — super AI tự cải thiện vượt con người, chỉ
                 là giả thuyết.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — singularity là mốc chuyển sang super AI,
+                <strong>d</strong>{" "}sai — singularity là mốc chuyển sang super AI,
                 không phải một loại hệ thống.
               </p>
             </div>

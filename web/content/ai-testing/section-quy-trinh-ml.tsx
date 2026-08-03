@@ -14,15 +14,15 @@ export function SectionQuyTrinhMl() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-3.1.2 · mức K2 – Hiểu): <em>tóm tắt</em> quy trình (workflow)
+          (LO AI-3.1.2 · mức K2 – Hiểu): <em>tóm tắt</em>{" "}quy trình (workflow)
           phát triển mô hình ML.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> quy
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}quy
             trình đi từ <strong>hiểu mục tiêu → chuẩn bị dữ liệu → sinh &amp; test
             mô hình → triển khai → giám sát</strong>, và{" "}
-            <strong>lặp đi lặp lại</strong> chứ không tuyến tính một chiều.
+            <strong>lặp đi lặp lại</strong>{" "}chứ không tuyến tính một chiều.
           </p>
         </div>
       </div>
@@ -77,7 +77,7 @@ export function SectionQuyTrinhMl() {
       <p className="mt-3 text-sm text-[color:var(--muted)]">
         Quy trình trên là <strong>trình tự logic</strong>, thực tế{" "}
         <strong>lặp lại</strong>. Mô hình ML hiếm khi chạy đơn lẻ — thường phải{" "}
-        <strong>tích hợp với phần không-ML</strong> (vd data pipeline làm sạch dữ
+        <strong>tích hợp với phần không-ML</strong>{" "}(vd data pipeline làm sạch dữ
         liệu trước khi đưa vào mô hình) → có thể cần test tích hợp, hệ thống, chấp
         nhận.
       </p>
@@ -88,12 +88,12 @@ export function SectionQuyTrinhMl() {
           🔑 <strong className="text-[color:var(--ink)]">Hai loại hyperparameter:</strong>
         </p>
         <p className="m-0 mt-1.5 border-l-2 border-sky-400/50 pl-3">
-          <strong className="text-sky-300">Model hyperparameter</strong> — định{" "}
-          <em>cấu trúc</em> mô hình (số lớp mạng nơ-ron, độ sâu cây quyết định).
+          <strong className="text-sky-300">Model hyperparameter</strong>{" "}— định{" "}
+          <em>cấu trúc</em>{" "}mô hình (số lớp mạng nơ-ron, độ sâu cây quyết định).
         </p>
         <p className="m-0 mt-1 border-l-2 border-sky-400/50 pl-3">
-          <strong className="text-sky-300">Algorithm hyperparameter</strong> —{" "}
-          <em>điều khiển quá trình train</em> (số vòng lặp khi huấn luyện).
+          <strong className="text-sky-300">Algorithm hyperparameter</strong>{" "}—{" "}
+          <em>điều khiển quá trình train</em>{" "}(số vòng lặp khi huấn luyện).
         </p>
       </div>
 
@@ -101,7 +101,7 @@ export function SectionQuyTrinhMl() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -117,8 +117,8 @@ export function SectionQuyTrinhMl() {
             <strong>lặp</strong>, có thể quay lại bước trước.
           </li>
           <li>
-            Nhầm <strong>model hyperparameter</strong> (cấu trúc) với{" "}
-            <strong>algorithm hyperparameter</strong> (điều khiển train).
+            Nhầm <strong>model hyperparameter</strong>{" "}(cấu trúc) với{" "}
+            <strong>algorithm hyperparameter</strong>{" "}(điều khiển train).
           </li>
         </ul>
       </div>
@@ -139,9 +139,9 @@ export function SectionQuyTrinhMl() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> mỗi
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}mỗi
           bước có <strong>hoạt động test riêng</strong>, và lỗi thường{" "}
-          <strong>bắt nguồn từ bước sớm</strong> (chuẩn bị dữ liệu, chọn mô
+          <strong>bắt nguồn từ bước sớm</strong>{" "}(chuẩn bị dữ liệu, chọn mô
           hình). Hiểu workflow giúp biết đặt test ở đâu và truy ngược lỗi về gốc.
         </p>
       </div>
@@ -170,21 +170,21 @@ export function SectionQuyTrinhMl() {
           🎯 Câu hỏi minh họa (phong cách đề CT-AI · K2)
         </h3>
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
-          Which dataset is used to <strong>test the tuned model</strong> to verify
+          Which dataset is used to <strong>test the tuned model</strong>{" "}to verify
           the agreed performance criteria are met?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> The training dataset.
+            <strong>a)</strong>{" "}The training dataset.
           </li>
           <li>
-            <strong>b)</strong> The validation dataset.
+            <strong>b)</strong>{" "}The validation dataset.
           </li>
           <li>
-            <strong>c)</strong> An independent test dataset.
+            <strong>c)</strong>{" "}An independent test dataset.
           </li>
           <li>
-            <strong>d)</strong> The operational (production) dataset.
+            <strong>d)</strong>{" "}The operational (production) dataset.
           </li>
         </ul>
         <details className="mt-3">
@@ -197,16 +197,16 @@ export function SectionQuyTrinhMl() {
               nhằm xác nhận đạt tiêu chí hiệu năng đã chốt?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Tập huấn luyện.
+              <strong>a)</strong>{" "}Tập huấn luyện.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Tập kiểm định (validation).
+              <strong>b)</strong>{" "}Tập kiểm định (validation).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Tập kiểm thử độc lập.
+              <strong>c)</strong>{" "}Tập kiểm thử độc lập.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Tập dữ liệu vận hành (production).
+              <strong>d)</strong>{" "}Tập dữ liệu vận hành (production).
             </p>
           </div>
         </details>
@@ -218,18 +218,18 @@ export function SectionQuyTrinhMl() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>c</strong> — Test dùng tập kiểm thử độc lập (holdout).
+              <strong>c</strong>{" "}— Test dùng tập kiểm thử độc lập (holdout).
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — training dataset để train, không để test.
+                <strong>a</strong>{" "}sai — training dataset để train, không để test.
               </p>
               <p className="m-0">
-                <strong>b</strong> sai — validation để evaluate/tune, không phải
+                <strong>b</strong>{" "}sai — validation để evaluate/tune, không phải
                 bước test cuối.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — dữ liệu vận hành dùng khi đã chạy thật,
+                <strong>d</strong>{" "}sai — dữ liệu vận hành dùng khi đã chạy thật,
                 không phải bước test trước triển khai.
               </p>
             </div>

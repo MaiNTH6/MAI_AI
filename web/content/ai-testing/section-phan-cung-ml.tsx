@@ -14,20 +14,20 @@ export function SectionPhanCungMl() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.5 · mức K2 – Hiểu): <em>so sánh</em> các lựa chọn phần cứng
+          (LO AI-1.1.5 · mức K2 – Hiểu): <em>so sánh</em>{" "}các lựa chọn phần cứng
           cho hệ thống ML.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> ML
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}ML
             cần phần cứng <strong>tính song song ồ ạt</strong>, không cần độ chính
             xác cao — nên GPU/chip chuyên dụng hợp hơn CPU thường.
           </p>
           <p className="m-0 mt-1.5">
-            Phần cứng để <strong>huấn luyện (training)</strong> và{" "}
-            <strong>chạy suy luận (inference)</strong> có thể khác nhau — ví dụ mô
-            hình nhận giọng nói <em>chạy</em> trên điện thoại yếu, nhưng{" "}
-            <em>huấn luyện</em> cần sức mạnh đám mây.
+            Phần cứng để <strong>huấn luyện (training)</strong>{" "}và{" "}
+            <strong>chạy suy luận (inference)</strong>{" "}có thể khác nhau — ví dụ mô
+            hình nhận giọng nói <em>chạy</em>{" "}trên điện thoại yếu, nhưng{" "}
+            <em>huấn luyện</em>{" "}cần sức mạnh đám mây.
           </p>
         </div>
       </div>
@@ -139,14 +139,14 @@ export function SectionPhanCungMl() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;CPU hợp cho ML hơn GPU vì xung nhịp cao hơn&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: ML cần{" "}
-            <strong>nhiều lõi chạy song song</strong> (GPU), không phải xung nhịp
+            <strong>nhiều lõi chạy song song</strong>{" "}(GPU), không phải xung nhịp
             cao.
           </li>
           <li>
@@ -169,7 +169,7 @@ export function SectionPhanCungMl() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">ML cần:</strong> dữ liệu
+            <strong className="text-[color:var(--metal)]">ML cần:</strong>{" "}dữ liệu
             lớn · song song ồ ạt · ít bit (quantization)
           </p>
           <p className="m-0">
@@ -178,11 +178,11 @@ export function SectionPhanCungMl() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> phần
-          cứng ảnh hưởng <strong>hiệu năng &amp; độ trễ</strong> — cùng mô hình
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}phần
+          cứng ảnh hưởng <strong>hiệu năng &amp; độ trễ</strong>{" "}— cùng mô hình
           nhưng chạy trên điện thoại hay đám mây cho tốc độ khác nhau. Đặc biệt{" "}
-          <strong>quantization</strong> (nén số) có thể làm{" "}
-          <strong>đổi nhẹ kết quả</strong> → cần kiểm thử lại trên đúng phần cứng
+          <strong>quantization</strong>{" "}(nén số) có thể làm{" "}
+          <strong>đổi nhẹ kết quả</strong>{" "}→ cần kiểm thử lại trên đúng phần cứng
           sẽ triển khai, không chỉ trên máy huấn luyện.
         </p>
       </div>
@@ -219,18 +219,18 @@ export function SectionPhanCungMl() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> GPUs run at a much higher clock speed than CPUs.
+            <strong>a)</strong>{" "}GPUs run at a much higher clock speed than CPUs.
           </li>
           <li>
-            <strong>b)</strong> GPUs have thousands of cores for massively
+            <strong>b)</strong>{" "}GPUs have thousands of cores for massively
             parallel processing, which ML relies on.
           </li>
           <li>
-            <strong>c)</strong> GPUs perform arithmetic with much higher precision
+            <strong>c)</strong>{" "}GPUs perform arithmetic with much higher precision
             than CPUs.
           </li>
           <li>
-            <strong>d)</strong> GPUs do not need any cooling or power.
+            <strong>d)</strong>{" "}GPUs do not need any cooling or power.
           </li>
         </ul>
         <details className="mt-3">
@@ -242,17 +242,17 @@ export function SectionPhanCungMl() {
               Với công việc ML quy mô nhỏ, vì sao GPU thường vượt trội hơn CPU?
             </p>
             <p className="m-0">
-              <strong>a)</strong> GPU chạy xung nhịp cao hơn CPU nhiều.
+              <strong>a)</strong>{" "}GPU chạy xung nhịp cao hơn CPU nhiều.
             </p>
             <p className="m-0">
-              <strong>b)</strong> GPU có hàng nghìn lõi để xử lý song song ồ ạt —
+              <strong>b)</strong>{" "}GPU có hàng nghìn lõi để xử lý song song ồ ạt —
               thứ ML dựa vào.
             </p>
             <p className="m-0">
-              <strong>c)</strong> GPU tính toán chính xác hơn CPU nhiều.
+              <strong>c)</strong>{" "}GPU tính toán chính xác hơn CPU nhiều.
             </p>
             <p className="m-0">
-              <strong>d)</strong> GPU không cần làm mát hay nguồn điện.
+              <strong>d)</strong>{" "}GPU không cần làm mát hay nguồn điện.
             </p>
           </div>
         </details>
@@ -264,20 +264,20 @@ export function SectionPhanCungMl() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — GPU có hàng nghìn lõi, hợp phép tính song song
+              <strong>b</strong>{" "}— GPU có hàng nghìn lõi, hợp phép tính song song
               ồ ạt của ML.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — CPU mới thường có xung nhịp cao hơn; đó
+                <strong>a</strong>{" "}sai — CPU mới thường có xung nhịp cao hơn; đó
                 không phải yếu tố quyết định cho ML.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — ML không cần độ chính xác cao (còn dùng
+                <strong>c</strong>{" "}sai — ML không cần độ chính xác cao (còn dùng
                 quantization để giảm bit).
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — GPU vẫn tốn điện và cần làm mát.
+                <strong>d</strong>{" "}sai — GPU vẫn tốn điện và cần làm mát.
               </p>
             </div>
           </div>

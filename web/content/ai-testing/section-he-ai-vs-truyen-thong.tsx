@@ -14,21 +14,21 @@ export function SectionHeAiVsTruyenThong() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.1 · mức K2 – Hiểu): <em>phân biệt</em> hệ thống dựa trên AI
+          (LO AI-1.1.1 · mức K2 – Hiểu): <em>phân biệt</em>{" "}hệ thống dựa trên AI
           với hệ thống truyền thống.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> vì
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}vì
             sao phải kiểm thử khác?
           </p>
           <p className="m-0 mt-1.5">
             •{" "}
-            <strong className="text-[color:var(--ink)]">Phần mềm thường</strong> →
+            <strong className="text-[color:var(--ink)]">Phần mềm thường</strong>{" "}→
             chạy theo <strong>luật người viết sẵn</strong>
           </p>
           <p className="m-0 mt-1">
-            • <strong className="text-[color:var(--ink)]">Hệ AI</strong> → chạy
+            • <strong className="text-[color:var(--ink)]">Hệ AI</strong>{" "}→ chạy
             theo <strong>mẫu học từ dữ liệu</strong>
           </p>
         </div>
@@ -116,18 +116,18 @@ export function SectionHeAiVsTruyenThong() {
           <strong className="text-[color:var(--ink)]">
             ② Minh bạch vs Hộp đen.
           </strong>{" "}
-          Mô hình học sâu có thể chứa <strong>hàng tỉ tham số</strong> → khó biết
+          Mô hình học sâu có thể chứa <strong>hàng tỉ tham số</strong>{" "}→ khó biết
           vì sao nó ra quyết định. Nguy hiểm ở lĩnh vực hệ trọng: y tế, tài chính,
           quốc phòng, giao thông. Vì vậy tính minh bạch (transparency) và giải
           thích được (explainability) đang là{" "}
-          <strong>trọng tâm của các quy định về AI</strong> (xem thêm mục 2.1.1).
+          <strong>trọng tâm của các quy định về AI</strong>{" "}(xem thêm mục 2.1.1).
         </p>
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">③ Tĩnh vs Tự học.</strong>{" "}
           Hệ thường tĩnh, muốn đổi hành vi phải cập nhật thủ công. Hệ AI tự học,
           liên tục cải thiện khi gặp dữ liệu mới →{" "}
           <strong>đặc biệt mạnh trong môi trường động</strong>, thay đổi liên tục.
-          Đổi lại, phải <strong>giám sát liên tục</strong> để nó không
+          Đổi lại, phải <strong>giám sát liên tục</strong>{" "}để nó không
           &quot;trôi&quot; khỏi yêu cầu ban đầu.
         </p>
       </div>
@@ -144,7 +144,7 @@ export function SectionHeAiVsTruyenThong() {
           </li>
           <li>
             Đề hay gài: &quot;hệ AI luôn cho cùng kết quả với cùng input&quot; →{" "}
-            <strong className="text-amber-200">SAI</strong> (đó là hệ truyền
+            <strong className="text-amber-200">SAI</strong>{" "}(đó là hệ truyền
             thống).
           </li>
         </ul>
@@ -161,14 +161,14 @@ export function SectionHeAiVsTruyenThong() {
             = luật + tất định + minh bạch + tĩnh
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Hệ AI</strong> = dữ liệu
+            <strong className="text-[color:var(--metal)]">Hệ AI</strong>{" "}= dữ liệu
             + xác suất + hộp đen + tự học
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> đầu ra
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}đầu ra
           xác suất + hộp đen + tự trôi →{" "}
-          <strong>không có &quot;một đáp án đúng duy nhất&quot;</strong> để so —
+          <strong>không có &quot;một đáp án đúng duy nhất&quot;</strong>{" "}để so —
           gốc rễ khiến các phần sau phải dùng cách tiếp cận{" "}
           <strong>thống kê</strong>, <strong>test oracle riêng cho AI</strong>, và{" "}
           <strong>kiểm thử drift</strong>.
@@ -208,24 +208,24 @@ export function SectionHeAiVsTruyenThong() {
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
           A team replaces a fixed if-then-else credit-scoring module with a
           machine learning model trained on historical data. Compared with the
-          old module, which statement <strong>correctly describes</strong> the new
+          old module, which statement <strong>correctly describes</strong>{" "}the new
           system?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Given the same input record, it always returns the
+            <strong>a)</strong>{" "}Given the same input record, it always returns the
             same score in a deterministic way.
           </li>
           <li>
-            <strong>b)</strong> Its results are based on patterns learned from data
+            <strong>b)</strong>{" "}Its results are based on patterns learned from data
             and are probabilistic, so they are not always predictable.
           </li>
           <li>
-            <strong>c)</strong> The way it makes decisions is always more
+            <strong>c)</strong>{" "}The way it makes decisions is always more
             transparent and easier to explain than the old module.
           </li>
           <li>
-            <strong>d)</strong> It needs no monitoring after deployment because its
+            <strong>d)</strong>{" "}It needs no monitoring after deployment because its
             behaviour is fixed.
           </li>
         </ul>
@@ -238,22 +238,22 @@ export function SectionHeAiVsTruyenThong() {
               Một nhóm phát triển thay module tính điểm tín dụng bằng luật
               if-then-else cố định bằng một mô hình học máy huấn luyện từ dữ liệu
               lịch sử. So với module cũ, phát biểu nào{" "}
-              <strong>mô tả đúng</strong> hệ thống mới?
+              <strong>mô tả đúng</strong>{" "}hệ thống mới?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Cùng một hồ sơ đầu vào luôn cho cùng một điểm số
+              <strong>a)</strong>{" "}Cùng một hồ sơ đầu vào luôn cho cùng một điểm số
               một cách tất định.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Kết quả dựa trên mẫu học từ dữ liệu và mang tính
+              <strong>b)</strong>{" "}Kết quả dựa trên mẫu học từ dữ liệu và mang tính
               xác suất, không phải lúc nào cũng đoán trước được.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Cách hệ ra quyết định luôn minh bạch và dễ giải
+              <strong>c)</strong>{" "}Cách hệ ra quyết định luôn minh bạch và dễ giải
               thích hơn module cũ.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Hệ không cần giám sát sau khi triển khai vì hành
+              <strong>d)</strong>{" "}Hệ không cần giám sát sau khi triển khai vì hành
               vi đã cố định.
             </p>
           </div>
@@ -266,19 +266,19 @@ export function SectionHeAiVsTruyenThong() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Mô hình ML học mẫu từ dữ liệu và suy luận theo
+              <strong>b</strong>{" "}— Mô hình ML học mẫu từ dữ liệu và suy luận theo
               xác suất → đầu ra không tất định.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — tất định là đặc điểm của hệ luật cũ.
+                <strong>a</strong>{" "}sai — tất định là đặc điểm của hệ luật cũ.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — mô hình ML thường là hộp đen, khó giải
+                <strong>c</strong>{" "}sai — mô hình ML thường là hộp đen, khó giải
                 thích hơn.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — hệ tự học cần giám sát liên tục để không
+                <strong>d</strong>{" "}sai — hệ tự học cần giám sát liên tục để không
                 bị trôi.
               </p>
             </div>

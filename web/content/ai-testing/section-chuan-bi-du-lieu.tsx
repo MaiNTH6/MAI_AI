@@ -14,14 +14,14 @@ export function SectionChuanBiDuLieu() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-3.2.1 · mức K2 – Hiểu): <em>tóm tắt</em> các hoạt động chuẩn bị
+          (LO AI-3.2.1 · mức K2 – Hiểu): <em>tóm tắt</em>{" "}các hoạt động chuẩn bị
           dữ liệu cho ML.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> chuẩn
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}chuẩn
             bị dữ liệu là khâu <strong>quan trọng &amp; tốn nguồn lực nhất</strong>{" "}
-            trong quy trình ML — gồm <strong>3 nhóm hoạt động</strong> + EDA song
+            trong quy trình ML — gồm <strong>3 nhóm hoạt động</strong>{" "}+ EDA song
             song.
           </p>
         </div>
@@ -49,7 +49,7 @@ export function SectionChuanBiDuLieu() {
             {[
               [
                 "Data acquisition (thu thập)",
-                "Xác định loại dữ liệu (số, phân loại, ảnh, văn bản...); thu từ nhiều nguồn (CSDL, API, cảm biến); gắn nhãn cho supervised, kiểm độ chính xác & nhất quán.",
+                "Xác định loại dữ liệu cần (số, phân loại, ảnh, văn bản...); thu từ nhiều nguồn (CSDL, API, cảm biến thời gian thực); gắn nhãn cho supervised, kiểm độ chính xác & nhất quán. Dữ liệu thu được có thể ở nhiều dạng: số (numerical), phân loại (categorical), ảnh, dạng bảng (tabular), văn bản, chuỗi thời gian (time series), cảm biến, không gian địa lý (geospatial), video, và âm thanh.",
               ],
               [
                 "Data preprocessing (tiền xử lý)",
@@ -84,7 +84,7 @@ export function SectionChuanBiDuLieu() {
           Chuẩn bị dữ liệu là quá trình <strong>lặp</strong>, thường{" "}
           <strong>làm thủ công</strong>; có thể đảo thứ tự hoặc bỏ bớt bước tùy
           dự án. Quan trọng: <strong>dữ liệu vận hành phải khớp đặc điểm dữ liệu
-          huấn luyện</strong> (phân phối, khoảng giá trị đặc trưng) để mô hình
+          huấn luyện</strong>{" "}(phân phối, khoảng giá trị đặc trưng) để mô hình
           chạy đúng như kỳ vọng khi lên production.
         </p>
       </div>
@@ -93,7 +93,7 @@ export function SectionChuanBiDuLieu() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -121,19 +121,19 @@ export function SectionChuanBiDuLieu() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 nhóm:</strong> thu thập
+            <strong className="text-[color:var(--metal)]">3 nhóm:</strong>{" "}thu thập
             · tiền xử lý · feature engineering (+ EDA song song)
           </p>
           <p className="m-0">
             <strong className="text-[color:var(--metal)]">Nguyên tắc vàng:</strong>{" "}
-            dữ liệu vận hành phải <em>khớp</em> đặc điểm dữ liệu huấn luyện
+            dữ liệu vận hành phải <em>khớp</em>{" "}đặc điểm dữ liệu huấn luyện
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> lỗi mô
-          hình rất hay <strong>bắt nguồn từ dữ liệu</strong> — nhãn sai, thiên
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}lỗi mô
+          hình rất hay <strong>bắt nguồn từ dữ liệu</strong>{" "}— nhãn sai, thiên
           lệch, lệch phân phối train/production. Bản thân dữ liệu và các bước
-          chuẩn bị tự động <strong>đều phải được test</strong> (Chương 5).
+          chuẩn bị tự động <strong>đều phải được test</strong>{" "}(Chương 5).
         </p>
       </div>
 
@@ -168,16 +168,16 @@ export function SectionChuanBiDuLieu() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Data acquisition.
+            <strong>a)</strong>{" "}Data acquisition.
           </li>
           <li>
-            <strong>b)</strong> Data preprocessing (cleaning).
+            <strong>b)</strong>{" "}Data preprocessing (cleaning).
           </li>
           <li>
-            <strong>c)</strong> Feature engineering.
+            <strong>c)</strong>{" "}Feature engineering.
           </li>
           <li>
-            <strong>d)</strong> Model deployment.
+            <strong>d)</strong>{" "}Model deployment.
           </li>
         </ul>
         <details className="mt-3">
@@ -190,16 +190,16 @@ export function SectionChuanBiDuLieu() {
               dữ liệu nào?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Thu thập dữ liệu.
+              <strong>a)</strong>{" "}Thu thập dữ liệu.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Tiền xử lý (làm sạch).
+              <strong>b)</strong>{" "}Tiền xử lý (làm sạch).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Feature engineering.
+              <strong>c)</strong>{" "}Feature engineering.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Triển khai mô hình.
+              <strong>d)</strong>{" "}Triển khai mô hình.
             </p>
           </div>
         </details>
@@ -211,18 +211,18 @@ export function SectionChuanBiDuLieu() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Điền khuyết là bước làm sạch trong tiền xử lý.
+              <strong>b</strong>{" "}— Điền khuyết là bước làm sạch trong tiền xử lý.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — acquisition là thu thập &amp; gắn nhãn.
+                <strong>a</strong>{" "}sai — acquisition là thu thập &amp; gắn nhãn.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — feature engineering là chọn/trích đặc
+                <strong>c</strong>{" "}sai — feature engineering là chọn/trích đặc
                 trưng.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — deployment là triển khai, không liên
+                <strong>d</strong>{" "}sai — deployment là triển khai, không liên
                 quan.
               </p>
             </div>

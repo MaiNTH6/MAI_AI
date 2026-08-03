@@ -14,18 +14,18 @@ export function SectionGenerativeAi() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.4 · mức K2 – Hiểu): <em>giải thích</em> Generative AI là gì,
+          (LO AI-1.1.4 · mức K2 – Hiểu): <em>giải thích</em>{" "}Generative AI là gì,
           công nghệ nền và các tác động đi kèm.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
             💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}
-            GenAI là AI chuyên <strong>tạo ra nội dung mới</strong> (văn bản, ảnh,
+            GenAI là AI chuyên <strong>tạo ra nội dung mới</strong>{" "}(văn bản, ảnh,
             video, nhạc, dữ liệu phức tạp) trông giống dữ liệu nó đã học.
           </p>
           <p className="m-0 mt-1.5">
-            Học từ <strong>lượng dữ liệu khổng lồ</strong> → sinh đầu ra{" "}
-            <strong>tương tự dữ liệu huấn luyện</strong> (nhiều mô hình cũng làm
+            Học từ <strong>lượng dữ liệu khổng lồ</strong>{" "}→ sinh đầu ra{" "}
+            <strong>tương tự dữ liệu huấn luyện</strong>{" "}(nhiều mô hình cũng làm
             phân loại/dự đoán).
           </p>
         </div>
@@ -97,8 +97,8 @@ export function SectionGenerativeAi() {
               GANs — 2 mạng đấu nhau
             </span>
             <p className="m-0 mt-1.5">
-              Tưởng tượng một <strong>thợ làm tiền giả</strong> (Generator) và một{" "}
-              <strong>cảnh sát</strong> (Discriminator). Thợ càng làm tinh vi để
+              Tưởng tượng một <strong>thợ làm tiền giả</strong>{" "}(Generator) và một{" "}
+              <strong>cảnh sát</strong>{" "}(Discriminator). Thợ càng làm tinh vi để
               qua mặt, cảnh sát càng soi kỹ để bắt bài — hai bên{" "}
               <strong>ép nhau giỏi dần lên</strong>, tới lúc &quot;tiền giả&quot;
               gần như không phân biệt được với thật. Đó là lý do GANs tạo được
@@ -110,7 +110,7 @@ export function SectionGenerativeAi() {
               Diffusion — thêm nhiễu → khử nhiễu
             </span>
             <p className="m-0 mt-1.5">
-              Lúc học, mô hình xem ảnh thật bị <strong>rắc nhiễu dần</strong> tới
+              Lúc học, mô hình xem ảnh thật bị <strong>rắc nhiễu dần</strong>{" "}tới
               khi thành mớ hạt như <strong>màn hình TV mất sóng</strong>, rồi tập{" "}
               <strong>gột nhiễu ngược lại</strong>. Lúc tạo ảnh mới, nó bắt đầu từ
               một màn nhiễu và khử nhiễu dần từng bước — như tấm ảnh đầy hạt{" "}
@@ -142,14 +142,14 @@ export function SectionGenerativeAi() {
       <div className="mt-4 space-y-4 text-[color:var(--muted)] leading-relaxed">
         <p className="m-0">
           Đa số công cụ GenAI hôm nay dựng trên một{" "}
-          <strong>foundation model</strong> (mô hình nền, huấn luyện sẵn trên dữ
-          liệu khổng lồ) rồi <strong>fine-tune</strong> (tinh chỉnh) cho ứng dụng
+          <strong>foundation model</strong>{" "}(mô hình nền, huấn luyện sẵn trên dữ
+          liệu khổng lồ) rồi <strong>fine-tune</strong>{" "}(tinh chỉnh) cho ứng dụng
           cụ thể — thay vì huấn luyện lại từ đầu.
         </p>
         <p className="m-0">
           Xu hướng tiến tới <strong>đa phương thức (multimodal)</strong>: một mô
           hình xử lý và sinh được cả văn bản, ảnh lẫn âm thanh → linh hoạt hơn.
-          Khung pháp lý như <strong>EU AI Act</strong> đang dần định hình để quản
+          Khung pháp lý như <strong>EU AI Act</strong>{" "}đang dần định hình để quản
           lý việc phát triển và sử dụng có trách nhiệm.
         </p>
       </div>
@@ -165,8 +165,8 @@ export function SectionGenerativeAi() {
           </span>
           <p className="m-0 mt-1.5">
             Vì GenAI tạo được nội dung <strong>giả mà rất thật</strong>, nó dễ bị
-            lợi dụng: <strong>deepfake</strong> (video/giọng nói giả mặt sếp hay
-            người thân để lừa chuyển tiền), <strong>tin giả</strong> và bình luận
+            lợi dụng: <strong>deepfake</strong>{" "}(video/giọng nói giả mặt sếp hay
+            người thân để lừa chuyển tiền), <strong>tin giả</strong>{" "}và bình luận
             ảo sinh hàng loạt để thao túng dư luận, nội dung lừa đảo tinh vi. Hệ
             quả: người xem <strong>khó phân biệt thật–giả</strong>, mất niềm tin
             vào ảnh/video/tin trên mạng; kèm theo rủi ro về{" "}
@@ -197,7 +197,7 @@ export function SectionGenerativeAi() {
             nguyên tính toán</strong>: trung tâm dữ liệu tốn lượng điện khổng lồ
             và cả nước để làm mát → <strong>tiêu thụ điện cao, dấu chân carbon
             lớn</strong>. Vì vậy có xu hướng đẩy mạnh{" "}
-            <strong>mô hình gọn/hiệu quả hơn</strong> và{" "}
+            <strong>mô hình gọn/hiệu quả hơn</strong>{" "}và{" "}
             <strong>hạ tầng dùng năng lượng sạch hơn</strong>.
           </p>
         </div>
@@ -211,7 +211,7 @@ export function SectionGenerativeAi() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -241,25 +241,25 @@ export function SectionGenerativeAi() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">GenAI</strong> = tạo nội
+            <strong className="text-[color:var(--metal)]">GenAI</strong>{" "}= tạo nội
             dung mới giống dữ liệu đã học
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 nền:</strong> GANs ·
+            <strong className="text-[color:var(--metal)]">3 nền:</strong>{" "}GANs ·
             Diffusion · Transformer
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 lo ngại:</strong> niềm
+            <strong className="text-[color:var(--metal)]">3 lo ngại:</strong>{" "}niềm
             tin · việc làm · bền vững
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> đầu ra
-          GenAI <strong>mở, đa dạng, không có một đáp án đúng duy nhất</strong> →
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}đầu ra
+          GenAI <strong>mở, đa dạng, không có một đáp án đúng duy nhất</strong>{" "}→
           không thể so khớp chính xác như phần mềm thường. Phải kiểm theo tiêu chí
           (đúng ngữ cảnh, an toàn, không thiên lệch, không bịa) và dùng kỹ thuật
-          riêng — <strong>kiểm thử GenAI</strong> và{" "}
-          <strong>red teaming</strong> (xem mục 4.2).
+          riêng — <strong>kiểm thử GenAI</strong>{" "}và{" "}
+          <strong>red teaming</strong>{" "}(xem mục 4.2).
         </p>
       </div>
 
@@ -290,21 +290,21 @@ export function SectionGenerativeAi() {
         </h3>
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
           Which generative technology creates content by{" "}
-          <strong>gradually adding and then removing noise</strong> from data to
+          <strong>gradually adding and then removing noise</strong>{" "}from data to
           produce high-quality outputs?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Generative adversarial networks (GANs).
+            <strong>a)</strong>{" "}Generative adversarial networks (GANs).
           </li>
           <li>
-            <strong>b)</strong> Diffusion models.
+            <strong>b)</strong>{" "}Diffusion models.
           </li>
           <li>
-            <strong>c)</strong> Decision trees.
+            <strong>c)</strong>{" "}Decision trees.
           </li>
           <li>
-            <strong>d)</strong> Reinforcement learning agents.
+            <strong>d)</strong>{" "}Reinforcement learning agents.
           </li>
         </ul>
         <details className="mt-3">
@@ -314,20 +314,20 @@ export function SectionGenerativeAi() {
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
               Công nghệ tạo sinh nào tạo nội dung bằng cách{" "}
-              <strong>thêm nhiễu rồi khử nhiễu dần</strong> khỏi dữ liệu để cho ra
+              <strong>thêm nhiễu rồi khử nhiễu dần</strong>{" "}khỏi dữ liệu để cho ra
               đầu ra chất lượng cao?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Mạng đối sinh (GANs).
+              <strong>a)</strong>{" "}Mạng đối sinh (GANs).
             </p>
             <p className="m-0">
-              <strong>b)</strong> Mô hình khuếch tán (diffusion).
+              <strong>b)</strong>{" "}Mô hình khuếch tán (diffusion).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Cây quyết định.
+              <strong>c)</strong>{" "}Cây quyết định.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Agent học tăng cường.
+              <strong>d)</strong>{" "}Agent học tăng cường.
             </p>
           </div>
         </details>
@@ -339,20 +339,20 @@ export function SectionGenerativeAi() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Diffusion model tạo nội dung bằng cách thêm rồi
+              <strong>b</strong>{" "}— Diffusion model tạo nội dung bằng cách thêm rồi
               khử nhiễu dần.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — GANs dùng hai mạng cạnh tranh nhau, không
+                <strong>a</strong>{" "}sai — GANs dùng hai mạng cạnh tranh nhau, không
                 phải cơ chế nhiễu.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — decision tree là thuật toán ML phân
+                <strong>c</strong>{" "}sai — decision tree là thuật toán ML phân
                 loại/dự đoán, không phải công nghệ tạo sinh.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — reinforcement learning học hành vi qua
+                <strong>d</strong>{" "}sai — reinforcement learning học hành vi qua
                 thử–sai, không phải sinh nội dung theo kiểu này.
               </p>
             </div>

@@ -14,13 +14,13 @@ export function SectionQuyDinhTieuChuan() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.8 · mức K2 – Hiểu): <em>giải thích</em> các quy định &amp;
+          (LO AI-1.1.8 · mức K2 – Hiểu): <em>giải thích</em>{" "}các quy định &amp;
           tiêu chuẩn ảnh hưởng tới phát triển và kiểm thử AI.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> mục
-            tiêu là <strong>tạo niềm tin</strong> vào AI — phát huy lợi ích trong
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}mục
+            tiêu là <strong>tạo niềm tin</strong>{" "}vào AI — phát huy lợi ích trong
             khi <strong>giảm thiểu tác hại</strong>; hướng tới AI an toàn, công
             bằng, minh bạch, bền vững, có trách nhiệm giải trình, đạo đức.
           </p>
@@ -79,9 +79,9 @@ export function SectionQuyDinhTieuChuan() {
         </table>
       </div>
       <p className="mt-3 text-sm text-[color:var(--muted)]">
-        Ngoài EU, nhiều nước chọn cách <strong>nới lỏng hơn</strong> để khuyến
+        Ngoài EU, nhiều nước chọn cách <strong>nới lỏng hơn</strong>{" "}để khuyến
         khích đổi mới. Quản trị AI hiệu quả cần{" "}
-        <strong>đối thoại &amp; hợp tác liên tục</strong> giữa nhà nước, doanh
+        <strong>đối thoại &amp; hợp tác liên tục</strong>{" "}giữa nhà nước, doanh
         nghiệp, giới học thuật và xã hội; và vì AI thay đổi nhanh, quy định &amp;
         tiêu chuẩn phải được <strong>rà soát, cập nhật thường xuyên</strong>.
       </p>
@@ -90,26 +90,26 @@ export function SectionQuyDinhTieuChuan() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;EU AI Act quản mọi hệ AI như nhau&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: nó theo{" "}
-            <strong>mức rủi ro</strong> — chỉ hệ <strong>rủi ro cao</strong> mới
+            <strong>mức rủi ro</strong>{" "}— chỉ hệ <strong>rủi ro cao</strong>{" "}mới
             bị yêu cầu ngặt nghèo.
           </li>
           <li>
             &quot;OECD/UN là luật bắt buộc có chế tài&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: đó là{" "}
-            <strong>soft law</strong> (định hướng); EU AI Act mới là luật cứng có
+            <strong>soft law</strong>{" "}(định hướng); EU AI Act mới là luật cứng có
             phạt.
           </li>
           <li>
             &quot;Tiêu chuẩn hướng dẫn kiểm thử hệ AI là ISO 9001&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: đúng là{" "}
-            <strong>ISO/IEC TR 29119-11</strong> (và ISO/IEC 42119 đang xây).
+            <strong>ISO/IEC TR 29119-11</strong>{" "}(và ISO/IEC 42119 đang xây).
           </li>
         </ul>
       </div>
@@ -121,11 +121,11 @@ export function SectionQuyDinhTieuChuan() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 tầng:</strong> soft law
+            <strong className="text-[color:var(--metal)]">3 tầng:</strong>{" "}soft law
             (OECD/UN) · luật cứng (EU AI Act) · tiêu chuẩn kỹ thuật (ISO/IEEE)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">EU AI Act:</strong> tiếp
+            <strong className="text-[color:var(--metal)]">EU AI Act:</strong>{" "}tiếp
             cận theo <strong>mức rủi ro</strong>
           </p>
           <p className="m-0">
@@ -134,10 +134,10 @@ export function SectionQuyDinhTieuChuan() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> đây là
-          mục gần tester nhất. <strong>ISO/IEC TR 29119-11</strong> hướng dẫn cách
-          kiểm thử hệ AI; hệ <strong>rủi ro cao</strong> theo EU AI Act bắt buộc{" "}
-          <strong>test nghiêm ngặt + có con người giám sát</strong> → tester là
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}đây là
+          mục gần tester nhất. <strong>ISO/IEC TR 29119-11</strong>{" "}hướng dẫn cách
+          kiểm thử hệ AI; hệ <strong>rủi ro cao</strong>{" "}theo EU AI Act bắt buộc{" "}
+          <strong>test nghiêm ngặt + có con người giám sát</strong>{" "}→ tester là
           mắt xích chứng minh tuân thủ, không chỉ là &quot;bắt bug&quot;.
         </p>
       </div>
@@ -173,19 +173,19 @@ export function SectionQuyDinhTieuChuan() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> The EU AI Act applies identical requirements to
+            <strong>a)</strong>{" "}The EU AI Act applies identical requirements to
             every AI system regardless of risk.
           </li>
           <li>
-            <strong>b)</strong> The EU AI Act uses a risk-based approach; high-risk
+            <strong>b)</strong>{" "}The EU AI Act uses a risk-based approach; high-risk
             systems face stringent testing and human oversight.
           </li>
           <li>
-            <strong>c)</strong> OECD AI Principles are binding law with financial
+            <strong>c)</strong>{" "}OECD AI Principles are binding law with financial
             penalties.
           </li>
           <li>
-            <strong>d)</strong> No standard gives guidance on testing AI-based
+            <strong>d)</strong>{" "}No standard gives guidance on testing AI-based
             systems.
           </li>
         </ul>
@@ -198,18 +198,18 @@ export function SectionQuyDinhTieuChuan() {
               Phát biểu nào về quy định &amp; tiêu chuẩn AI là <strong>đúng</strong>?
             </p>
             <p className="m-0">
-              <strong>a)</strong> EU AI Act áp dụng yêu cầu giống hệt cho mọi hệ
+              <strong>a)</strong>{" "}EU AI Act áp dụng yêu cầu giống hệt cho mọi hệ
               AI bất kể rủi ro.
             </p>
             <p className="m-0">
-              <strong>b)</strong> EU AI Act tiếp cận theo mức rủi ro; hệ rủi ro cao
+              <strong>b)</strong>{" "}EU AI Act tiếp cận theo mức rủi ro; hệ rủi ro cao
               phải test nghiêm ngặt và có con người giám sát.
             </p>
             <p className="m-0">
-              <strong>c)</strong> OECD AI Principles là luật bắt buộc, có phạt tiền.
+              <strong>c)</strong>{" "}OECD AI Principles là luật bắt buộc, có phạt tiền.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Không có tiêu chuẩn nào hướng dẫn kiểm thử hệ AI.
+              <strong>d)</strong>{" "}Không có tiêu chuẩn nào hướng dẫn kiểm thử hệ AI.
             </p>
           </div>
         </details>
@@ -221,18 +221,18 @@ export function SectionQuyDinhTieuChuan() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — EU AI Act theo mức rủi ro; hệ rủi ro cao bị yêu
+              <strong>b</strong>{" "}— EU AI Act theo mức rủi ro; hệ rủi ro cao bị yêu
               cầu ngặt (test + giám sát con người).
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — không áp dụng như nhau; phân theo rủi ro.
+                <strong>a</strong>{" "}sai — không áp dụng như nhau; phân theo rủi ro.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — OECD là soft law (định hướng), không phạt.
+                <strong>c</strong>{" "}sai — OECD là soft law (định hướng), không phạt.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — ISO/IEC TR 29119-11 hướng dẫn kiểm thử hệ
+                <strong>d</strong>{" "}sai — ISO/IEC TR 29119-11 hướng dẫn kiểm thử hệ
                 AI.
               </p>
             </div>

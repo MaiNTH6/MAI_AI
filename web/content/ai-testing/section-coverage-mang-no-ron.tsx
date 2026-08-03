@@ -14,14 +14,14 @@ export function SectionCoverageMangNoRon() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-3.4.3 · mức K2 – Hiểu): <em>giải thích</em> các thước đo coverage
+          (LO AI-3.4.3 · mức K2 – Hiểu): <em>giải thích</em>{" "}các thước đo coverage
           cho mạng nơ-ron.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
-            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong> mạng
-            nơ-ron <strong>không có nhánh code</strong> để phủ — hành vi nằm ở
-            weights/bias/activation → cần <strong>coverage riêng</strong> đo xem
+            💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}mạng
+            nơ-ron <strong>không có nhánh code</strong>{" "}để phủ — hành vi nằm ở
+            weights/bias/activation → cần <strong>coverage riêng</strong>{" "}đo xem
             test đã &quot;chạm&quot; tới các phần nào của mạng.
           </p>
         </div>
@@ -84,22 +84,22 @@ export function SectionCoverageMangNoRon() {
         </p>
         <div className="mt-2 space-y-1.5 border-l-2 border-sky-400/50 pl-3">
           <p className="m-0">
-            <strong className="text-sky-300">Neuron Coverage</strong> — bao nhiêu{" "}
-            <strong>phòng có đèn sáng</strong> (vượt ngưỡng) khi test? Vd mạng có{" "}
+            <strong className="text-sky-300">Neuron Coverage</strong>{" "}— bao nhiêu{" "}
+            <strong>phòng có đèn sáng</strong>{" "}(vượt ngưỡng) khi test? Vd mạng có{" "}
             <strong>10 nơ-ron, test làm 6 nơ-ron sáng → coverage = 60%</strong>;
             4 phòng chưa bao giờ sáng = chưa được test, có thể ẩn lỗi.
           </p>
           <p className="m-0">
-            <strong className="text-sky-300">kMNC</strong> — chia độ sáng mỗi đèn
-            thành <strong>k nấc</strong> (mờ → chói). Test đã làm đèn chạy qua{" "}
+            <strong className="text-sky-300">kMNC</strong>{" "}— chia độ sáng mỗi đèn
+            thành <strong>k nấc</strong>{" "}(mờ → chói). Test đã làm đèn chạy qua{" "}
             <strong>bao nhiêu nấc</strong>? Nếu đèn chỉ luôn ở mức mờ, các nấc
             sáng hơn <strong>chưa được kiểm</strong>.
           </p>
           <p className="m-0">
-            <strong className="text-sky-300">NBC</strong> — có đèn nào{" "}
-            <strong>sáng hơn mức chói nhất</strong> (hoặc tối hơn mức tối nhất){" "}
-            <strong>từng thấy lúc học</strong> không? Nếu có → mạng đang ở{" "}
-            <strong>tình huống lạ, vượt vùng quen thuộc</strong> → đáng soi kỹ.
+            <strong className="text-sky-300">NBC</strong>{" "}— có đèn nào{" "}
+            <strong>sáng hơn mức chói nhất</strong>{" "}(hoặc tối hơn mức tối nhất){" "}
+            <strong>từng thấy lúc học</strong>{" "}không? Nếu có → mạng đang ở{" "}
+            <strong>tình huống lạ, vượt vùng quen thuộc</strong>{" "}→ đáng soi kỹ.
           </p>
         </div>
       </div>
@@ -110,19 +110,19 @@ export function SectionCoverageMangNoRon() {
       </h2>
       <div className="mt-4 space-y-4 text-[color:var(--muted)] leading-relaxed">
         <p className="m-0">
-          <strong className="text-[color:var(--ink)]">Ích lợi:</strong> lộ ra{" "}
-          <strong>vùng chưa được test</strong> — nếu một số nơ-ron/lớp không bao
+          <strong className="text-[color:var(--ink)]">Ích lợi:</strong>{" "}lộ ra{" "}
+          <strong>vùng chưa được test</strong>{" "}— nếu một số nơ-ron/lớp không bao
           giờ kích hoạt khi test, hiệu năng ở các ranh giới quyết định liên quan
           đáng ngờ → giúp tester thiết kế thêm ca test cho phần ít được khám phá.
           (Công cụ thương mại hỗ trợ các thước đo này hiện còn hạn chế.)
         </p>
         <p className="m-0">
-          <strong className="text-[color:var(--ink)]">Giới hạn:</strong> coverage
-          cấu trúc <strong>một mình không bảo đảm</strong> mạng khái quát tốt hay
+          <strong className="text-[color:var(--ink)]">Giới hạn:</strong>{" "}coverage
+          cấu trúc <strong>một mình không bảo đảm</strong>{" "}mạng khái quát tốt hay
           xử lý được biến thể thực tế. Mạng có thể học{" "}
-          <strong>tương quan giả</strong> → kích hoạt đúng nhưng vì lý do sai. Nên{" "}
-          phải dùng kèm <strong>adversarial testing</strong> và{" "}
-          <strong>metamorphic testing</strong> (Chương 5, 6, 7).
+          <strong>tương quan giả</strong>{" "}→ kích hoạt đúng nhưng vì lý do sai. Nên{" "}
+          phải dùng kèm <strong>adversarial testing</strong>{" "}và{" "}
+          <strong>metamorphic testing</strong>{" "}(Chương 5, 6, 7).
         </p>
       </div>
 
@@ -130,14 +130,14 @@ export function SectionCoverageMangNoRon() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;Đạt 100% neuron coverage là mạng chắc chắn tốt&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: coverage cấu trúc{" "}
-            <strong>không bảo đảm</strong> khái quát tốt (có thể học tương quan
+            <strong>không bảo đảm</strong>{" "}khái quát tốt (có thể học tương quan
             giả).
           </li>
           <li>
@@ -146,8 +146,8 @@ export function SectionCoverageMangNoRon() {
             code, coverage đo <strong>mức kích hoạt nơ-ron</strong>.
           </li>
           <li>
-            Nhầm định nghĩa: <strong>NBC</strong> xét vượt biên min/max từng đạt
-            khi <em>huấn luyện</em>; <strong>kMNC</strong> chia khoảng thành{" "}
+            Nhầm định nghĩa: <strong>NBC</strong>{" "}xét vượt biên min/max từng đạt
+            khi <em>huấn luyện</em>; <strong>kMNC</strong>{" "}chia khoảng thành{" "}
             <strong>k phần</strong>.
           </li>
         </ul>
@@ -165,12 +165,12 @@ export function SectionCoverageMangNoRon() {
             min/max)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Nhớ:</strong> coverage
+            <strong className="text-[color:var(--metal)]">Nhớ:</strong>{" "}coverage
             cao ≠ mạng tốt
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> dùng
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}dùng
           coverage để <strong>phát hiện vùng mạng chưa được test</strong>, nhưng{" "}
           <strong>đừng coi là bằng chứng đủ</strong>. Luôn kết hợp với adversarial
           &amp; metamorphic testing để bắt lỗi &quot;đúng vì lý do sai&quot;.
@@ -205,19 +205,19 @@ export function SectionCoverageMangNoRon() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Achieving high coverage guarantees the network
+            <strong>a)</strong>{" "}Achieving high coverage guarantees the network
             generalises well.
           </li>
           <li>
-            <strong>b)</strong> It can reveal parts of the network never activated
+            <strong>b)</strong>{" "}It can reveal parts of the network never activated
             by tests, but does not on its own guarantee good generalisation.
           </li>
           <li>
-            <strong>c)</strong> It replaces the need for adversarial and
+            <strong>c)</strong>{" "}It replaces the need for adversarial and
             metamorphic testing.
           </li>
           <li>
-            <strong>d)</strong> Neural networks follow explicit code paths, so
+            <strong>d)</strong>{" "}Neural networks follow explicit code paths, so
             branch coverage is enough.
           </li>
         </ul>
@@ -231,18 +231,18 @@ export function SectionCoverageMangNoRon() {
               <strong>đúng</strong>?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Coverage cao bảo đảm mạng khái quát tốt.
+              <strong>a)</strong>{" "}Coverage cao bảo đảm mạng khái quát tốt.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Lộ ra phần mạng chưa được test kích hoạt, nhưng
+              <strong>b)</strong>{" "}Lộ ra phần mạng chưa được test kích hoạt, nhưng
               một mình không bảo đảm khái quát tốt.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Nó thay thế được adversarial &amp; metamorphic
+              <strong>c)</strong>{" "}Nó thay thế được adversarial &amp; metamorphic
               testing.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Mạng nơ-ron theo nhánh code tường minh nên phủ
+              <strong>d)</strong>{" "}Mạng nơ-ron theo nhánh code tường minh nên phủ
               nhánh là đủ.
             </p>
           </div>
@@ -255,20 +255,20 @@ export function SectionCoverageMangNoRon() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Coverage lộ vùng chưa test nhưng không bảo đảm
+              <strong>b</strong>{" "}— Coverage lộ vùng chưa test nhưng không bảo đảm
               khái quát tốt.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — coverage cao ≠ khái quát tốt (có tương
+                <strong>a</strong>{" "}sai — coverage cao ≠ khái quát tốt (có tương
                 quan giả).
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — vẫn cần adversarial &amp; metamorphic
+                <strong>c</strong>{" "}sai — vẫn cần adversarial &amp; metamorphic
                 testing.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — mạng không theo nhánh code tường minh.
+                <strong>d</strong>{" "}sai — mạng không theo nhánh code tường minh.
               </p>
             </div>
           </div>

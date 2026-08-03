@@ -14,14 +14,14 @@ export function SectionDacTinhChatLuongAi() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-2.1.1 · mức K2 – Hiểu): <em>phân loại</em> hành vi của hệ AI theo
+          (LO AI-2.1.1 · mức K2 – Hiểu): <em>phân loại</em>{" "}hành vi của hệ AI theo
           các đặc tính chất lượng trong <strong>ISO/IEC 25059</strong>.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
             💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}
-            <strong>ISO/IEC 25059</strong> mở rộng mô hình chất lượng phần mềm{" "}
-            <strong>ISO/IEC 25010</strong> để thêm các đặc tính riêng cho AI.
+            <strong>ISO/IEC 25059</strong>{" "}mở rộng mô hình chất lượng phần mềm{" "}
+            <strong>ISO/IEC 25010</strong>{" "}để thêm các đặc tính riêng cho AI.
           </p>
           <p className="m-0 mt-1.5">
             Đánh giá theo <strong>2 góc</strong>: chất lượng sản phẩm (product
@@ -84,7 +84,7 @@ export function SectionDacTinhChatLuongAi() {
               [
                 "Societal & ethical risk mitigation (giảm rủi ro xã hội & đạo đức)",
                 "Quality in use",
-                "Bao trùm: trách nhiệm giải trình, công bằng/không phân biệt, riêng tư, an toàn, kiểm soát của con người, bền vững môi trường...",
+                "Bao trùm 13 khía cạnh: trách nhiệm giải trình, công bằng/không phân biệt, trách nhiệm nghề nghiệp, đề cao giá trị con người, riêng tư, an toàn & an ninh, kiểm soát của con người với công nghệ, sự tham gia & phát triển cộng đồng, thiết kế lấy con người làm trung tâm, tôn trọng pháp luật, tôn trọng chuẩn mực quốc tế, bền vững môi trường, và thực hành lao động.",
               ],
             ].map((r) => (
               <tr key={r[0]} className="even:bg-white/[0.04]">
@@ -103,38 +103,38 @@ export function SectionDacTinhChatLuongAi() {
         </table>
       </div>
       <p className="mt-3 text-sm text-[color:var(--muted)]">
-        Ghi chú: mỗi đặc tính là <em>sub-characteristic</em> mới/điều chỉnh của
+        Ghi chú: mỗi đặc tính là <em>sub-characteristic</em>{" "}mới/điều chỉnh của
         một nhóm trong ISO/IEC 25010 — vd robustness thuộc{" "}
         <strong>reliability</strong>, intervenability thuộc{" "}
         <strong>security</strong>, user controllability &amp; transparency thuộc{" "}
-        <strong>interaction capability</strong> (tên mới thay cho{" "}
-        <em>usability</em> ở bản 2023).
+        <strong>interaction capability</strong>{" "}(tên mới thay cho{" "}
+        <em>usability</em>{" "}ở bản 2023).
       </p>
 
       {/* Chỗ dễ ra đề */}
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;Hệ AI phải đúng 100%, không được có lỗi&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: AI xác suất{" "}
-            <strong>chấp nhận tỷ lệ lỗi</strong> trong ngưỡng —{" "}
+            <strong>chấp nhận tỷ lệ lỗi</strong>{" "}trong ngưỡng —{" "}
             <strong>AI functional correctness</strong>.
           </li>
           <li>
-            Nhầm cặp <strong>user controllability</strong> (nhóm interaction
-            capability) với <strong>intervenability</strong> (nhóm security) →{" "}
+            Nhầm cặp <strong>user controllability</strong>{" "}(nhóm interaction
+            capability) với <strong>intervenability</strong>{" "}(nhóm security) →{" "}
             cả hai đều &quot;can thiệp&quot; nhưng <strong>khác nhóm chất
             lượng</strong>.
           </li>
           <li>
             &quot;25059 thay thế hoàn toàn 25010&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: nó{" "}
-            <strong>mở rộng</strong> 25010, không thay thế.
+            <strong>mở rộng</strong>{" "}25010, không thay thế.
           </li>
         </ul>
       </div>
@@ -146,8 +146,8 @@ export function SectionDacTinhChatLuongAi() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">25059</strong> = mở rộng{" "}
-            <strong>25010</strong> cho AI · 2 góc: product quality + quality in use
+            <strong className="text-[color:var(--metal)]">25059</strong>{" "}= mở rộng{" "}
+            <strong>25010</strong>{" "}cho AI · 2 góc: product quality + quality in use
           </p>
           <p className="m-0">
             <strong className="text-[color:var(--metal)]">7 đặc tính:</strong>{" "}
@@ -156,9 +156,9 @@ export function SectionDacTinhChatLuongAi() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> các đặc
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}các đặc
           tính này <strong>định hình mục tiêu kiểm thử</strong>: cách đặt{" "}
-          <strong>tiêu chí chấp nhận</strong> (mục 2.2.1) và cách{" "}
+          <strong>tiêu chí chấp nhận</strong>{" "}(mục 2.2.1) và cách{" "}
           <strong>diễn giải kết quả test</strong>. Biết một hành vi thuộc đặc tính
           nào giúp chọn đúng kỹ thuật ở các chương sau.
         </p>
@@ -201,16 +201,16 @@ export function SectionDacTinhChatLuongAi() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Functional adaptability.
+            <strong>a)</strong>{" "}Functional adaptability.
           </li>
           <li>
-            <strong>b)</strong> AI robustness.
+            <strong>b)</strong>{" "}AI robustness.
           </li>
           <li>
-            <strong>c)</strong> Transparency.
+            <strong>c)</strong>{" "}Transparency.
           </li>
           <li>
-            <strong>d)</strong> User controllability.
+            <strong>d)</strong>{" "}User controllability.
           </li>
         </ul>
         <details className="mt-3">
@@ -224,16 +224,16 @@ export function SectionDacTinhChatLuongAi() {
               lượng nào theo ISO/IEC 25059?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Khả năng thích ứng.
+              <strong>a)</strong>{" "}Khả năng thích ứng.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Độ bền vững (AI robustness).
+              <strong>b)</strong>{" "}Độ bền vững (AI robustness).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Minh bạch.
+              <strong>c)</strong>{" "}Minh bạch.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Người dùng kiểm soát được.
+              <strong>d)</strong>{" "}Người dùng kiểm soát được.
             </p>
           </div>
         </details>
@@ -245,20 +245,20 @@ export function SectionDacTinhChatLuongAi() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Giữ đúng đắn dù dữ liệu xấu/đối kháng chính là{" "}
+              <strong>b</strong>{" "}— Giữ đúng đắn dù dữ liệu xấu/đối kháng chính là{" "}
               AI robustness.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — adaptability là tự thích ứng khi{" "}
+                <strong>a</strong>{" "}sai — adaptability là tự thích ứng khi{" "}
                 <em>môi trường thay đổi</em>, không phải chịu dữ liệu xấu.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — transparency là truyền đạt thông tin cho
+                <strong>c</strong>{" "}sai — transparency là truyền đạt thông tin cho
                 các bên.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — user controllability là con người can
+                <strong>d</strong>{" "}sai — user controllability là con người can
                 thiệp được.
               </p>
             </div>

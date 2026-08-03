@@ -14,17 +14,17 @@ export function SectionAiVaAnToan() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-2.1.2 · mức K2 – Hiểu): <em>giải thích</em> những cân nhắc đặc
+          (LO AI-2.1.2 · mức K2 – Hiểu): <em>giải thích</em>{" "}những cân nhắc đặc
           biệt khi dùng AI trong hệ thống liên quan an toàn.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
             💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}
-            <strong>hệ liên quan an toàn (safety-related)</strong> là hệ có thể
+            <strong>hệ liên quan an toàn (safety-related)</strong>{" "}là hệ có thể
             gây <strong>thương tích/tổn hại cho người, tài sản, môi trường</strong>.
           </p>
           <p className="m-0 mt-1.5">
-            Kiểm thử hệ an toàn <em>không dùng AI</em> đã khó nhưng khả thi; đưa{" "}
+            Kiểm thử hệ an toàn <em>không dùng AI</em>{" "}đã khó nhưng khả thi; đưa{" "}
             <strong>AI vào thì phát sinh thêm 5 thách thức</strong>.
           </p>
         </div>
@@ -88,7 +88,7 @@ export function SectionAiVaAnToan() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -96,7 +96,7 @@ export function SectionAiVaAnToan() {
             &quot;Test kỹ một lần trước khi triển khai là đủ bảo đảm an toàn cho
             hệ AI tự học&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: hệ tự học{" "}
-            <strong>dần lệch</strong> khỏi hành vi đã test → cần giám sát/safety
+            <strong>dần lệch</strong>{" "}khỏi hành vi đã test → cần giám sát/safety
             guard.
           </li>
           <li>
@@ -119,7 +119,7 @@ export function SectionAiVaAnToan() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Safety-related</strong> =
+            <strong className="text-[color:var(--metal)]">Safety-related</strong>{" "}=
             có thể gây hại cho người / tài sản / môi trường
           </p>
           <p className="m-0">
@@ -128,11 +128,11 @@ export function SectionAiVaAnToan() {
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> những
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}những
           thách thức này làm <strong>bảo đảm an toàn kiểu truyền thống mất
           hiệu lực</strong>. Tester cần: dùng <strong>safety guard</strong>, kỹ
           thuật <strong>XAI</strong>, giám sát liên tục hành vi tự học, và tuân
-          thủ yêu cầu ngặt cho hệ <strong>rủi ro cao</strong> theo EU AI Act (mục
+          thủ yêu cầu ngặt cho hệ <strong>rủi ro cao</strong>{" "}theo EU AI Act (mục
           1.1.8).
         </p>
       </div>
@@ -162,22 +162,22 @@ export function SectionAiVaAnToan() {
           🎯 Câu hỏi minh họa (phong cách đề CT-AI · K2)
         </h3>
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
-          Why does <strong>self-learning</strong> make it hard to assure the
+          Why does <strong>self-learning</strong>{" "}make it hard to assure the
           safety of an AI-based system after deployment?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> The system’s behaviour progressively moves away
+            <strong>a)</strong>{" "}The system’s behaviour progressively moves away
             from the behaviour that was originally tested.
           </li>
           <li>
-            <strong>b)</strong> Self-learning models never change their behaviour.
+            <strong>b)</strong>{" "}Self-learning models never change their behaviour.
           </li>
           <li>
-            <strong>c)</strong> Self-learning removes all need for monitoring.
+            <strong>c)</strong>{" "}Self-learning removes all need for monitoring.
           </li>
           <li>
-            <strong>d)</strong> Self-learning guarantees perfectly deterministic
+            <strong>d)</strong>{" "}Self-learning guarantees perfectly deterministic
             outputs.
           </li>
         </ul>
@@ -187,21 +187,21 @@ export function SectionAiVaAnToan() {
           </summary>
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
-              Vì sao <strong>tự học</strong> khiến khó bảo đảm an toàn cho hệ AI
+              Vì sao <strong>tự học</strong>{" "}khiến khó bảo đảm an toàn cho hệ AI
               sau khi triển khai?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Hành vi của hệ dần lệch khỏi hành vi đã test ban
+              <strong>a)</strong>{" "}Hành vi của hệ dần lệch khỏi hành vi đã test ban
               đầu.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Mô hình tự học không bao giờ đổi hành vi.
+              <strong>b)</strong>{" "}Mô hình tự học không bao giờ đổi hành vi.
             </p>
             <p className="m-0">
-              <strong>c)</strong> Tự học bỏ được mọi nhu cầu giám sát.
+              <strong>c)</strong>{" "}Tự học bỏ được mọi nhu cầu giám sát.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Tự học bảo đảm đầu ra tất định tuyệt đối.
+              <strong>d)</strong>{" "}Tự học bảo đảm đầu ra tất định tuyệt đối.
             </p>
           </div>
         </details>
@@ -213,19 +213,19 @@ export function SectionAiVaAnToan() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>a</strong> — Hệ tự học dần lệch khỏi hành vi đã test → bảo
+              <strong>a</strong>{" "}— Hệ tự học dần lệch khỏi hành vi đã test → bảo
               đảm an toàn ban đầu không còn giá trị.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>b</strong> sai — ngược lại, tự học chính là <em>đổi</em>{" "}
+                <strong>b</strong>{" "}sai — ngược lại, tự học chính là <em>đổi</em>{" "}
                 hành vi.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — càng cần giám sát liên tục.
+                <strong>c</strong>{" "}sai — càng cần giám sát liên tục.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — nhiều hệ AI vốn phi tất định.
+                <strong>d</strong>{" "}sai — nhiều hệ AI vốn phi tất định.
               </p>
             </div>
           </div>

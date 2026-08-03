@@ -14,14 +14,14 @@ export function SectionCacLoaiCongNgheAi() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.3 · mức K2 – Hiểu): <em>giải thích</em> các loại công nghệ
+          (LO AI-1.1.3 · mức K2 – Hiểu): <em>giải thích</em>{" "}các loại công nghệ
           AI khác nhau.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
             💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}
             AI là một &quot;ô lớn&quot; gồm nhiều công nghệ. Cần nhớ đúng{" "}
-            <strong>quan hệ bao hàm</strong> giữa chúng.
+            <strong>quan hệ bao hàm</strong>{" "}giữa chúng.
           </p>
 
           {/* Bố cục 2 cột: hình bên trái, chú giải bên phải (màn nhỏ xếp dọc) */}
@@ -55,19 +55,19 @@ export function SectionCacLoaiCongNgheAi() {
               <ul className="space-y-1.5 text-sm text-[color:var(--muted)] list-none pl-0 m-0">
                 <li className="flex items-center gap-2">
                   <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: "rgba(148,163,184,0.9)" }} />
-                  <span><strong className="text-[color:var(--ink)]">AI</strong> — Trí tuệ nhân tạo</span>
+                  <span><strong className="text-[color:var(--ink)]">AI</strong>{" "}— Trí tuệ nhân tạo</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: "rgba(56,189,248,0.9)" }} />
-                  <span><strong className="text-[color:var(--ink)]">ML</strong> — Machine Learning (Học máy)</span>
+                  <span><strong className="text-[color:var(--ink)]">ML</strong>{" "}— Machine Learning (Học máy)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: "rgba(167,139,250,0.95)" }} />
-                  <span><strong className="text-[color:var(--ink)]">DL</strong> — Deep Learning (Học sâu)</span>
+                  <span><strong className="text-[color:var(--ink)]">DL</strong>{" "}— Deep Learning (Học sâu)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: "rgba(232,121,249,0.95)" }} />
-                  <span><strong className="text-[color:var(--ink)]">GenAI / LLM</strong> — AI tạo sinh / Mô hình ngôn ngữ lớn</span>
+                  <span><strong className="text-[color:var(--ink)]">GenAI / LLM</strong>{" "}— AI tạo sinh / Mô hình ngôn ngữ lớn</span>
                 </li>
               </ul>
               <p className="m-0 mt-3 text-xs text-[color:var(--muted)]">
@@ -84,7 +84,7 @@ export function SectionCacLoaiCongNgheAi() {
         Ba dạng Machine Learning (hay ra đề nhất)
       </h2>
       <p className="mt-1 text-[color:var(--muted)]">
-        Phân biệt theo <strong>dữ liệu có nhãn hay không</strong> và{" "}
+        Phân biệt theo <strong>dữ liệu có nhãn hay không</strong>{" "}và{" "}
         <strong>cách học</strong>.
       </p>
       <div className="mt-4 overflow-x-auto">
@@ -155,33 +155,33 @@ export function SectionCacLoaiCongNgheAi() {
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">① Machine Learning (ML).</strong>{" "}
           Nhánh cốt lõi của AI: <strong>học từ dữ liệu</strong>, xây mô hình mà
-          không cần lập trình tường minh. Có mô hình <em>tự học liên tục</em> khi
+          không cần lập trình tường minh. Có mô hình <em>tự học liên tục</em>{" "}khi
           có dữ liệu mới; có mô hình chỉ giữ những gì đã học,{" "}
           <strong>muốn cập nhật phải huấn luyện lại (retrain)</strong>.
         </p>
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">② Deep Learning (DL).</strong>{" "}
-          Một <em>tập con</em> của ML, dùng <strong>mạng nơ-ron sâu</strong> (deep
+          Một <em>tập con</em>{" "}của ML, dùng <strong>mạng nơ-ron sâu</strong>{" "}(deep
           neural network) để xử lý bài toán phức tạp. Ba kiến trúc cần nhớ:
         </p>
         <ul className="m-0 ml-5 list-disc space-y-1">
           <li>
-            <strong>CNN</strong> (Convolutional Neural Network — mạng nơ-ron tích
+            <strong>CNN</strong>{" "}(Convolutional Neural Network — mạng nơ-ron tích
             chập) → nhận diện ảnh, phát hiện vật thể.
           </li>
           <li>
-            <strong>RNN</strong> (Recurrent Neural Network — mạng nơ-ron hồi tiếp)
+            <strong>RNN</strong>{" "}(Recurrent Neural Network — mạng nơ-ron hồi tiếp)
             → dữ liệu tuần tự (văn bản, chuỗi thời gian).
           </li>
           <li>
-            <strong>Transformer</strong> → bắt phụ thuộc xa trong chuỗi; nền của{" "}
+            <strong>Transformer</strong>{" "}→ bắt phụ thuộc xa trong chuỗi; nền của{" "}
             NLP và vision transformer.
           </li>
         </ul>
         <p className="m-0">
           <strong className="text-[color:var(--ink)]">③ GenAI &amp; LLM.</strong>{" "}
-          Xây trên các công nghệ trên để <strong>tạo nội dung mới</strong> (mục
-          1.1.4). <strong>LLM</strong> kết hợp mạng nơ-ron sâu (DNN) với xử lý
+          Xây trên các công nghệ trên để <strong>tạo nội dung mới</strong>{" "}(mục
+          1.1.4). <strong>LLM</strong>{" "}kết hợp mạng nơ-ron sâu (DNN) với xử lý
           ngôn ngữ tự nhiên (NLP) để hiểu và sinh ngôn ngữ giống người.
         </p>
       </div>
@@ -225,7 +225,7 @@ export function SectionCacLoaiCongNgheAi() {
         </table>
       </div>
       <p className="mt-3 text-[color:var(--muted)] leading-relaxed">
-        <strong className="text-[color:var(--ink)]">Agentic AI</strong> mở rộng
+        <strong className="text-[color:var(--ink)]">Agentic AI</strong>{" "}mở rộng
         các công nghệ trên bằng <strong>agent tự chủ</strong>: tự lập kế hoạch,
         suy luận và hành động độc lập để đạt mục tiêu trong{" "}
         <strong>môi trường động</strong>. Việc tích hợp trọn vẹn nhiều công nghệ
@@ -237,14 +237,14 @@ export function SectionCacLoaiCongNgheAi() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
           <li>
             &quot;ML là tập con của Deep Learning&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: ngược lại,{" "}
-            <strong>DL là tập con của ML</strong> (AI ⊃ ML ⊃ DL).
+            <strong>DL là tập con của ML</strong>{" "}(AI ⊃ ML ⊃ DL).
           </li>
           <li>
             &quot;Supervised học từ dữ liệu không nhãn&quot; (hoặc
@@ -269,18 +269,18 @@ export function SectionCacLoaiCongNgheAi() {
         </h3>
         <div className="mt-3 space-y-2 text-[color:var(--ink)] leading-relaxed">
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Bao hàm:</strong> AI ⊃
+            <strong className="text-[color:var(--metal)]">Bao hàm:</strong>{" "}AI ⊃
             ML ⊃ DL ⊃ (GenAI / LLM)
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">3 dạng ML:</strong> có
+            <strong className="text-[color:var(--metal)]">3 dạng ML:</strong>{" "}có
             giám sát · không giám sát · tăng cường
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> biết hệ
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}biết hệ
           dùng công nghệ gì để chọn đúng cách test — mô hình{" "}
-          <strong>supervised</strong> cần soi <strong>chất lượng nhãn</strong>{" "}
+          <strong>supervised</strong>{" "}cần soi <strong>chất lượng nhãn</strong>{" "}
           (Chương 5); mô hình <strong>DL hộp đen</strong>{" "}
           cần cách tiếp cận thống kê và test oracle riêng (Chương 4). Không có &quot;một chiêu&quot; test
           chung cho mọi loại AI.
@@ -321,23 +321,23 @@ export function SectionCacLoaiCongNgheAi() {
         </h3>
         <p className="mt-3 mb-0 text-[color:var(--ink)]">
           A marketing team has a large set of customer records with{" "}
-          <strong>no predefined labels</strong> and wants the system to
+          <strong>no predefined labels</strong>{" "}and wants the system to
           automatically group similar customers into segments. Which type of
           machine learning fits best?
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Supervised learning, using linear regression.
+            <strong>a)</strong>{" "}Supervised learning, using linear regression.
           </li>
           <li>
-            <strong>b)</strong> Unsupervised learning, using clustering.
+            <strong>b)</strong>{" "}Unsupervised learning, using clustering.
           </li>
           <li>
-            <strong>c)</strong> Reinforcement learning, using trial-and-error with
+            <strong>c)</strong>{" "}Reinforcement learning, using trial-and-error with
             an environment.
           </li>
           <li>
-            <strong>d)</strong> Deep learning, using a convolutional neural network
+            <strong>d)</strong>{" "}Deep learning, using a convolutional neural network
             (CNN).
           </li>
         </ul>
@@ -348,21 +348,21 @@ export function SectionCacLoaiCongNgheAi() {
           <div className="mt-2 text-sm text-[color:var(--muted)] space-y-1">
             <p className="m-0">
               Một nhóm marketing có tập lớn hồ sơ khách hàng{" "}
-              <strong>không có nhãn định sẵn</strong> và muốn hệ thống tự động gom
+              <strong>không có nhãn định sẵn</strong>{" "}và muốn hệ thống tự động gom
               các khách hàng giống nhau thành từng nhóm. Dạng học máy nào phù hợp
               nhất?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Học có giám sát, dùng linear regression.
+              <strong>a)</strong>{" "}Học có giám sát, dùng linear regression.
             </p>
             <p className="m-0">
-              <strong>b)</strong> Học không giám sát, dùng clustering (gom cụm).
+              <strong>b)</strong>{" "}Học không giám sát, dùng clustering (gom cụm).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Học tăng cường, dùng thử–sai với môi trường.
+              <strong>c)</strong>{" "}Học tăng cường, dùng thử–sai với môi trường.
             </p>
             <p className="m-0">
-              <strong>d)</strong> Học sâu, dùng mạng tích chập (CNN).
+              <strong>d)</strong>{" "}Học sâu, dùng mạng tích chập (CNN).
             </p>
           </div>
         </details>
@@ -374,20 +374,20 @@ export function SectionCacLoaiCongNgheAi() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>b</strong> — Dữ liệu không nhãn + tự gom nhóm →
+              <strong>b</strong>{" "}— Dữ liệu không nhãn + tự gom nhóm →
               unsupervised learning, kỹ thuật clustering.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — supervised cần dữ liệu{" "}
-                <em>có nhãn</em> để học.
+                <strong>a</strong>{" "}sai — supervised cần dữ liệu{" "}
+                <em>có nhãn</em>{" "}để học.
               </p>
               <p className="m-0">
-                <strong>c</strong> sai — reinforcement hợp bài toán học hành vi qua
+                <strong>c</strong>{" "}sai — reinforcement hợp bài toán học hành vi qua
                 tương tác môi trường, không phải gom nhóm dữ liệu tĩnh.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — CNN chuyên về ảnh; đây không phải bài toán
+                <strong>d</strong>{" "}sai — CNN chuyên về ảnh; đây không phải bài toán
                 thị giác.
               </p>
             </div>

@@ -14,13 +14,13 @@ export function SectionMlFramework() {
       <div className="mt-6 rounded-2xl border border-brand-500/30 bg-brand-500/10 p-5 space-y-2">
         <p className="m-0 text-[color:var(--muted)]">
           🎯 <strong className="text-[color:var(--ink)]">Mục tiêu học</strong>{" "}
-          (LO AI-1.1.7 · mức K2 – Hiểu): <em>tóm tắt</em> chức năng của một
+          (LO AI-1.1.7 · mức K2 – Hiểu): <em>tóm tắt</em>{" "}chức năng của một
           framework phát triển ML.
         </p>
         <div className="text-[color:var(--muted)]">
           <p className="m-0">
             💡 <strong className="text-[color:var(--ink)]">Ý cốt lõi:</strong>{" "}
-            framework ML là <strong>bộ công cụ</strong> để xây và huấn luyện mô
+            framework ML là <strong>bộ công cụ</strong>{" "}để xây và huấn luyện mô
             hình — lo trọn vòng đời từ <strong>dữ liệu → mô hình → triển
             khai</strong>.
           </p>
@@ -97,13 +97,13 @@ export function SectionMlFramework() {
       <div className="mt-4 space-y-4 text-[color:var(--muted)] leading-relaxed">
         <p className="m-0">
           Framework có <strong>mức trừu tượng khác nhau</strong>:{" "}
-          <strong>API cấp thấp</strong> (nhiều quyền kiểm soát nhưng cần code
-          giỏi) ↔ <strong>API cấp cao</strong> (dễ dùng nhưng ít tùy biến). Có
+          <strong>API cấp thấp</strong>{" "}(nhiều quyền kiểm soát nhưng cần code
+          giỏi) ↔ <strong>API cấp cao</strong>{" "}(dễ dùng nhưng ít tùy biến). Có
           loại đa dụng, có loại chuyên biệt (nhận diện ảnh, giọng nói, dịch
           thuật).
         </p>
         <p className="m-0">
-          <strong>Chọn theo:</strong> lĩnh vực ứng dụng · nhu cầu prototyping
+          <strong>Chọn theo:</strong>{" "}lĩnh vực ứng dụng · nhu cầu prototyping
           nhanh · khả năng cấu hình cho mô hình phức tạp · trình độ người dùng ·
           ràng buộc triển khai (môi trường ít tài nguyên) · mức hỗ trợ cộng đồng ·
           độ chín của hệ sinh thái.
@@ -114,7 +114,7 @@ export function SectionMlFramework() {
       <div className="mt-8 rounded-2xl border-2 border-dashed border-amber-500/40 bg-amber-500/10 p-6">
         <h3 className="mt-0 text-lg font-bold text-amber-200">📝 Bẫy hay gặp</h3>
         <p className="mt-1 mb-2 text-sm text-[color:var(--muted)]">
-          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em> — nhớ mấy chỗ
+          Đề hay cho một phát biểu <em>nghe hợp lý nhưng sai</em>{" "}— nhớ mấy chỗ
           gài sau:
         </p>
         <ul className="mt-0 mb-0 space-y-1.5 text-[color:var(--muted)]">
@@ -133,7 +133,7 @@ export function SectionMlFramework() {
             Nhầm khâu: &quot;Evaluation là để nạp và làm sạch dữ liệu&quot; →{" "}
             <strong className="text-amber-200">SAI</strong>: đó là{" "}
             <strong>Data Handling</strong>; Evaluation là <strong>đo hiệu
-            năng</strong> mô hình.
+            năng</strong>{" "}mô hình.
           </li>
         </ul>
       </div>
@@ -149,13 +149,13 @@ export function SectionMlFramework() {
             Dữ liệu → Dựng → Huấn luyện/Tối ưu → Đánh giá → Triển khai
           </p>
           <p className="m-0">
-            <strong className="text-[color:var(--metal)]">Mức API:</strong> thấp
+            <strong className="text-[color:var(--metal)]">Mức API:</strong>{" "}thấp
             (kiểm soát) ↔ cao (dễ dùng)
           </p>
         </div>
         <p className="mt-3 mb-0 text-[color:var(--muted)] leading-relaxed">
-          <strong className="text-[color:var(--ink)]">Với tester:</strong> khâu{" "}
-          <strong>Evaluation</strong> chính là nơi framework cung cấp sẵn thước đo
+          <strong className="text-[color:var(--ink)]">Với tester:</strong>{" "}khâu{" "}
+          <strong>Evaluation</strong>{" "}chính là nơi framework cung cấp sẵn thước đo
           (accuracy/precision/recall...) — tester tận dụng để{" "}
           <strong>kiểm hiệu năng mô hình</strong>. Hiểu 5 khâu giúp biết{" "}
           <strong>test ở đâu</strong>: dữ liệu (Chương 5), mô hình (Chương 6),
@@ -195,16 +195,16 @@ export function SectionMlFramework() {
         </p>
         <ul className="mt-3 mb-0 space-y-1.5 text-[color:var(--muted)] list-none pl-0">
           <li>
-            <strong>a)</strong> Data Handling.
+            <strong>a)</strong>{" "}Data Handling.
           </li>
           <li>
-            <strong>b)</strong> Model Building.
+            <strong>b)</strong>{" "}Model Building.
           </li>
           <li>
-            <strong>c)</strong> Evaluation.
+            <strong>c)</strong>{" "}Evaluation.
           </li>
           <li>
-            <strong>d)</strong> Deployment.
+            <strong>d)</strong>{" "}Deployment.
           </li>
         </ul>
         <details className="mt-3">
@@ -217,16 +217,16 @@ export function SectionMlFramework() {
               <strong>accuracy, precision và recall trên dữ liệu chưa thấy</strong>?
             </p>
             <p className="m-0">
-              <strong>a)</strong> Xử lý dữ liệu (Data Handling).
+              <strong>a)</strong>{" "}Xử lý dữ liệu (Data Handling).
             </p>
             <p className="m-0">
-              <strong>b)</strong> Dựng mô hình (Model Building).
+              <strong>b)</strong>{" "}Dựng mô hình (Model Building).
             </p>
             <p className="m-0">
-              <strong>c)</strong> Đánh giá (Evaluation).
+              <strong>c)</strong>{" "}Đánh giá (Evaluation).
             </p>
             <p className="m-0">
-              <strong>d)</strong> Triển khai (Deployment).
+              <strong>d)</strong>{" "}Triển khai (Deployment).
             </p>
           </div>
         </details>
@@ -238,20 +238,20 @@ export function SectionMlFramework() {
           <div className="mt-2 text-sm space-y-2">
             <p className="m-0 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-emerald-200 font-medium">
               ✅ <span className="font-bold text-white">Đáp án đúng:</span>{" "}
-              <strong>c</strong> — Evaluation đo hiệu năng (accuracy/precision/
+              <strong>c</strong>{" "}— Evaluation đo hiệu năng (accuracy/precision/
               recall) trên dữ liệu chưa thấy.
             </p>
             <div className="space-y-1 text-[color:var(--muted)]">
               <p className="m-0">
-                <strong>a</strong> sai — Data Handling lo nạp/làm sạch/biến đổi dữ
+                <strong>a</strong>{" "}sai — Data Handling lo nạp/làm sạch/biến đổi dữ
                 liệu.
               </p>
               <p className="m-0">
-                <strong>b</strong> sai — Model Building lo chọn thuật toán &amp;
+                <strong>b</strong>{" "}sai — Model Building lo chọn thuật toán &amp;
                 kiến trúc.
               </p>
               <p className="m-0">
-                <strong>d</strong> sai — Deployment lo đóng gói để triển khai.
+                <strong>d</strong>{" "}sai — Deployment lo đóng gói để triển khai.
               </p>
             </div>
           </div>

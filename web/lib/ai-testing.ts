@@ -65,6 +65,7 @@ export const aiChapters: AiChapter[] = [
       { slug: "quy-trinh-ml", code: "3.1.2", title: "Quy trình ML (workflow)", hasContent: true },
       { slug: "pretrained-finetuning-rag", code: "3.1.4", title: "Pretrained, Fine-tuning, RAG", hasContent: true },
       { slug: "chuan-bi-du-lieu", code: "3.2.1", title: "Các hoạt động chuẩn bị dữ liệu", hasContent: true },
+      { slug: "du-lieu-train-validation-test", code: "3.2.3", title: "Tập Training, Validation, Test", hasContent: true },
       { slug: "tinh-metric-ml", code: "3.3.1", title: "Tính thước đo hiệu năng ML (phân loại)", hasContent: true },
       { slug: "mang-no-ron-sau", code: "3.4.1", title: "Cấu trúc & hoạt động mạng nơ-ron sâu", hasContent: true },
       { slug: "coverage-mang-no-ron", code: "3.4.3", title: "Coverage cho mạng nơ-ron", hasContent: true },
@@ -79,13 +80,13 @@ export const aiChapters: AiChapter[] = [
     summary:
       "Đặc thù kiểm thử hệ AI: locked vs adaptive, cách tiếp cận thống kê, test oracle, kiểm thử GenAI/LLM, test level.",
     sections: [
-      { slug: "locked-adaptive", code: "4.1.1", title: "Hệ AI khóa (locked) và thích ứng (adaptive)" },
-      { slug: "cach-tiep-can-thong-ke", code: "4.1.2", title: "Vì sao cần cách tiếp cận thống kê" },
-      { slug: "test-oracle-ai", code: "4.1.3", title: "Test oracle cho hệ AI" },
-      { slug: "kiem-thu-genai", code: "4.2.1", title: "Kiểm thử Generative AI" },
-      { slug: "red-teaming", code: "4.2.2", title: "Red Teaming" },
-      { slug: "test-level-ml", code: "4.3.1", title: "Test level cho hệ thống ML" },
-      { slug: "risk-based-testing", code: "4.3.2", title: "Risk-based testing cho hệ thống ML" },
+      { slug: "locked-adaptive", code: "4.1.1", title: "Hệ AI khóa (locked) và thích ứng (adaptive)", hasContent: true },
+      { slug: "cach-tiep-can-thong-ke", code: "4.1.2", title: "Vì sao cần cách tiếp cận thống kê", hasContent: true },
+      { slug: "test-oracle-ai", code: "4.1.3", title: "Test oracle cho hệ AI", hasContent: true },
+      { slug: "kiem-thu-genai", code: "4.2.1", title: "Kiểm thử Generative AI", hasContent: true },
+      { slug: "red-teaming", code: "4.2.2", title: "Red Teaming", hasContent: true },
+      { slug: "test-level-ml", code: "4.3.1", title: "Test level cho hệ thống ML", hasContent: true },
+      { slug: "risk-based-testing", code: "4.3.2", title: "Risk-based testing cho hệ thống ML", hasContent: true },
     ],
   },
   {
@@ -97,12 +98,12 @@ export const aiChapters: AiChapter[] = [
     summary:
       "Rủi ro dữ liệu đầu vào, kiểm thử thiên lệch (bias), data pipeline, tính đại diện, ràng buộc & nhãn dữ liệu.",
     sections: [
-      { slug: "rui-ro-du-lieu-dau-vao", code: "5.1.1", title: "Rủi ro dữ liệu đầu vào & giảm thiểu" },
-      { slug: "kiem-thu-bias", code: "5.1.2", title: "Kiểm thử thiên lệch (bias)" },
-      { slug: "data-pipeline-testing", code: "5.1.3", title: "Kiểm thử data pipeline" },
-      { slug: "tinh-dai-dien-du-lieu", code: "5.1.4", title: "Tính đại diện của dữ liệu" },
-      { slug: "rang-buoc-tap-du-lieu", code: "5.1.5", title: "Ràng buộc tập dữ liệu" },
-      { slug: "dung-dan-nhan", code: "5.1.6", title: "Đúng đắn của nhãn (label)" },
+      { slug: "rui-ro-du-lieu-dau-vao", code: "5.1.1", title: "Rủi ro dữ liệu đầu vào & giảm thiểu", hasContent: true },
+      { slug: "kiem-thu-bias", code: "5.1.2", title: "Kiểm thử thiên lệch (bias)", hasContent: true },
+      { slug: "data-pipeline-testing", code: "5.1.3", title: "Kiểm thử data pipeline", hasContent: true },
+      { slug: "tinh-dai-dien-du-lieu", code: "5.1.4", title: "Tính đại diện của dữ liệu", hasContent: true },
+      { slug: "rang-buoc-tap-du-lieu", code: "5.1.5", title: "Ràng buộc tập dữ liệu", hasContent: true },
+      { slug: "dung-dan-nhan", code: "5.1.6", title: "Đúng đắn của nhãn (label)", hasContent: true },
     ],
   },
   {
@@ -114,15 +115,15 @@ export const aiChapters: AiChapter[] = [
     summary:
       "Kỹ thuật kiểm thử mô hình: adversarial, metamorphic, drift, overfitting/underfitting, A/B, back-to-back.",
     sections: [
-      { slug: "rui-ro-mo-hinh", code: "6.1.1", title: "Rủi ro mô hình & giảm thiểu" },
-      { slug: "tai-lieu-review-mo-hinh", code: "6.1.2", title: "Tài liệu & review mô hình" },
-      { slug: "test-hieu-nang-xac-suat", code: "6.1.3", title: "Test hiệu năng mô hình xác suất" },
-      { slug: "adversarial-testing", code: "6.1.4", title: "Adversarial testing" },
-      { slug: "metamorphic-testing", code: "6.1.5", title: "Metamorphic testing" },
-      { slug: "drift-testing", code: "6.1.7", title: "Drift testing" },
-      { slug: "overfitting-underfitting", code: "6.1.8", title: "Overfitting & Underfitting" },
-      { slug: "ab-testing", code: "6.1.9", title: "A/B testing" },
-      { slug: "back-to-back-testing", code: "6.1.10", title: "Back-to-back testing" },
+      { slug: "rui-ro-mo-hinh", code: "6.1.1", title: "Rủi ro mô hình & giảm thiểu", hasContent: true },
+      { slug: "tai-lieu-review-mo-hinh", code: "6.1.2", title: "Tài liệu & review mô hình", hasContent: true },
+      { slug: "test-hieu-nang-xac-suat", code: "6.1.3", title: "Test hiệu năng mô hình xác suất", hasContent: true },
+      { slug: "adversarial-testing", code: "6.1.4", title: "Adversarial testing", hasContent: true },
+      { slug: "metamorphic-testing", code: "6.1.5", title: "Metamorphic testing", hasContent: true },
+      { slug: "drift-testing", code: "6.1.7", title: "Drift testing", hasContent: true },
+      { slug: "overfitting-underfitting", code: "6.1.8", title: "Overfitting & Underfitting", hasContent: true },
+      { slug: "ab-testing", code: "6.1.9", title: "A/B testing", hasContent: true },
+      { slug: "back-to-back-testing", code: "6.1.10", title: "Back-to-back testing", hasContent: true },
     ],
   },
   {
@@ -133,8 +134,8 @@ export const aiChapters: AiChapter[] = [
     minutes: 30,
     summary: "Rủi ro trong phát triển ML và kiểm thử triển khai (deployment) hệ thống ML.",
     sections: [
-      { slug: "rui-ro-phat-trien-ml", code: "7.1.1", title: "Rủi ro trong phát triển ML & giảm thiểu" },
-      { slug: "deployment-testing", code: "7.1.2", title: "Kiểm thử triển khai (deployment)" },
+      { slug: "rui-ro-phat-trien-ml", code: "7.1.1", title: "Rủi ro trong phát triển ML & giảm thiểu", hasContent: true },
+      { slug: "deployment-testing", code: "7.1.2", title: "Kiểm thử triển khai (deployment)", hasContent: true },
     ],
   },
 ];
