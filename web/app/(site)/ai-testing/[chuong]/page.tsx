@@ -55,6 +55,13 @@ export default async function ChapterPage({ params }: PageProps) {
             {ch.minutes} phút · {ch.sections.length} mục
           </div>
 
+          <Link
+            href={`/ai-testing/${ch.slug}/luyen-de`}
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-600"
+          >
+            🎯 Luyện đề Chương {ch.num} (bộ đề mẫu ISTQB)
+          </Link>
+
           <ul className="mt-6 space-y-3">
             {ch.sections.map((s) => (
               <li key={s.slug}>
