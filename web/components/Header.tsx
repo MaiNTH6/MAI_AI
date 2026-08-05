@@ -4,6 +4,7 @@ const nav = [
   { href: "/ai-qa", label: "AI cho QA", short: "🧪 QA / Test" },
   { href: "/db-testing", label: "DB Testing", short: "🗄️ DB Testing" },
   { href: "/ai-testing", label: "AI Testing", short: "🧠 AI Testing" },
+  { href: "/api-testing", label: "API Testing", short: "🧭 API Testing" },
   { href: "/kho-template-qa", label: "Kho Template", short: "🧩 Template" },
   { href: "/kho-prompt", label: "Kho Prompt", short: "📚 Prompt" },
 ];
