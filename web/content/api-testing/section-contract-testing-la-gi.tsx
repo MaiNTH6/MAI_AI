@@ -41,6 +41,56 @@ export function SectionContractTestingLaGi() {
         chạy thật để test.
       </p>
 
+      <div className="mt-5 rounded-2xl card-surface p-6">
+        <h3 className="mt-0 text-lg font-bold text-[color:var(--metal)]">
+          💡 Hiểu &quot;hợp đồng&quot; bằng ví dụ cụ thể
+        </h3>
+        <p className="mt-3 text-[color:var(--muted)] leading-relaxed">
+          Hãy hình dung đội Frontend và đội Backend cùng ngồi thống nhất
+          trước: khi gọi <code className="text-emerald-300">GET
+          /v1/orders/&#123;orderId&#125;</code>, response sẽ luôn có đúng các
+          field này, đúng kiểu này. Bản thống nhất đó — thường được viết ra
+          thành 1 file schema (OpenAPI/Swagger, hoặc file Pact) — chính là
+          &quot;hợp đồng&quot;:
+        </p>
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-[#0b0f16] p-4 text-xs md:text-sm text-emerald-200 ring-1 ring-white/10">
+          {`// "Hợp đồng" cho GET /v1/orders/{orderId} — cả 2 đội cùng đồng ý
+{
+  "orderId": "string",       // bắt buộc có
+  "customerId": "string",    // bắt buộc có
+  "status": "PAID | PENDING | CANCELLED",  // chỉ 1 trong 3 giá trị này
+  "total": "number"          // bắt buộc là số, không phải chuỗi "350000"
+}`}
+        </pre>
+        <p className="mt-4 text-[color:var(--muted)] leading-relaxed">
+          Từ bản hợp đồng này, mỗi bên tự kiểm tra phần của mình{" "}
+          <strong className="text-[color:var(--ink)]">tách rời nhau, không
+          cần chạy cùng lúc</strong>:
+        </p>
+        <ul className="mt-3 space-y-2 text-[color:var(--muted)] leading-relaxed list-disc pl-5">
+          <li>
+            <strong className="text-[color:var(--ink)]">Phía Consumer</strong>{" "}
+            (frontend, hoặc service khác gọi API này): viết test khẳng định
+            &quot;tôi trông đợi response đúng như hợp đồng&quot; — chạy được
+            ngay cả khi Backend chưa code xong, vì không gọi API thật.
+          </li>
+          <li>
+            <strong className="text-[color:var(--ink)]">Phía Provider</strong>{" "}
+            (backend cung cấp API): sau khi code xong, tự gọi API thật của
+            mình 1 lần rồi so response thực tế với đúng hợp đồng đó — nếu
+            sau này backend lỡ đổi <code>total</code> từ số thành chuỗi, hoặc
+            đổi tên field, test sẽ báo đỏ ngay lập tức.
+          </li>
+        </ul>
+        <p className="mt-4 mb-0 text-[color:var(--muted)] leading-relaxed">
+          Cả hai không cần đứng chờ nhau chạy chung một lúc — chỉ cần cùng
+          nhìn vào một bản hợp đồng làm &quot;trọng tài&quot;. Đây là lý do
+          contract test chạy nhanh như unit test (Tầng 1 — Chương 7), trong
+          khi Integration testing (Chương 3) bắt buộc phải khởi động cả 2 hệ
+          thống thật rồi mới gọi thử được.
+        </p>
+      </div>
+
       <h2 className="mt-10 text-xl md:text-2xl font-bold text-[color:var(--metal)]">
         So sánh Contract testing vs. Integration testing
       </h2>
