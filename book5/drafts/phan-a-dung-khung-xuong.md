@@ -1385,6 +1385,67 @@ Viết lại cho đi qua phép so sánh thật, rồi kiểm lại bằng đúng
 > không phải việc làm một lần cho xong — mỗi bài test kiểm cơ chế lõi đều
 > phải qua bước này khi vừa viết.
 
+### A13.7. Vòng 4 — sau khi gộp 4 repo thành 1
+
+Khung được đẩy lên một repo chung trên GitHub, mỗi dự án là một thư mục con.
+Chạy lại đủ 8 tiêu chí ngay sau đó: **4 lỗi, trong đó 3 lỗi do chính việc gộp
+sinh ra.** Đây là lý do phải review lại sau mỗi thay đổi cấu trúc, chứ không
+chỉ sau khi sửa code.
+
+**Lỗi 13 — `pytest` chạy ở gốc repo bị hỏng, mà README lại hướng dẫn làm vậy.**
+
+```
+ImportError: cannot import name 'RestfulBookerPlatformClient'
+from 'api_client' (.../project-restful-booker/api_client.py)
+```
+
+Hai dự án đều có module `api_client.py` ở cấp cao nhất. Chạy từ gốc thì cả hai
+đường dẫn cùng vào `sys.path`, cái nào vào trước thì thắng — `conftest.py` của
+dự án này import được `api_client` của dự án **khác**.
+
+Đã thử `--import-mode=importlib`: không giải quyết được, còn hỏng nặng hơn.
+Kết luận đúng là: chạy 4 dự án độc lập trong một phiên `pytest` **không hỗ trợ
+được về bản chất** — mỗi dự án đọc `config.json` theo đường dẫn tương đối nên
+cần thư mục của chính nó làm thư mục làm việc. Lỗi nằm ở README, không nằm ở
+cấu trúc.
+
+**Lỗi 14 — thông báo lỗi khiến người đọc đi tìm sai chỗ.** Dòng `ImportError`
+trên khiến người ta mở `api_client.py` ra soát, không ai nghĩ nguyên nhân là
+"đang đứng sai thư mục". Đã thêm `conftest.py` ở gốc repo, nói thẳng phải `cd`
+vào đâu.
+
+Chi tiết kỹ thuật đáng lưu: mỗi dự án con có `pytest.ini` riêng, nên `rootdir`
+là thư mục dự án và `conftest.py` ở gốc **không** bị nạp khi chạy bên trong.
+Đã kiểm cả hai chiều: chạy ở gốc thì báo rõ (`exit=4`), chạy trong từng dự án
+thì không bị ảnh hưởng.
+
+**Lỗi 15 — 4 file workflow trông như đang hoạt động.** GitHub Actions chỉ đọc
+`.github/workflows/` ở **gốc** repo. Bốn file nằm trong thư mục con không bao
+giờ chạy — ai sửa chúng sẽ tưởng CI đã đổi. Đã đổi tên thành
+`tests.yml.example` kèm tiêu đề nói rõ file không chạy và CI thật ở đâu.
+
+**Lỗi 16 — `is_visible` chỉ có ở tầng app.** Tầng web không có cách nào rẽ
+nhánh theo giao diện (vd "nếu có banner khuyến mãi thì đóng lại trước") mà
+không tự bắt ngoại lệ. Đã bổ sung `BasePage.is_visible()`, kèm lời cảnh báo
+trong docstring: hàm này **chỉ** dùng để rẽ nhánh, câu kiểm kết quả vẫn phải
+dùng nhóm `should_*`.
+
+#### Ba thứ tưởng là lỗi nhưng không phải
+
+Kiểm bằng thực nghiệm chứ không đọc rồi đoán:
+
+| Nghi vấn | Cách kiểm | Kết quả |
+|---|---|---|
+| `ruff check .` ở gốc có thật áp cấu hình thư mục con? | tiêm 1 dòng 105 ký tự vào cả 4 thư mục | cả 4 đều bắt `E501` — đúng |
+| `.gitignore` ở gốc có chặn được file trong thư mục con? | tạo thử ảnh/phiên/trace trong từng thư mục | chặn hết |
+| Đường dẫn artifact trong workflow gốc | đối chiếu với gốc repo | đúng |
+
+> **Điều đáng nhớ nhất của vòng 4:** ba trong bốn lỗi **không nằm trong code**
+> — chúng nằm trong README, trong thông báo lỗi, và trong vị trí đặt file cấu
+> hình. Đổi cấu trúc repo không sửa một dòng logic nào mà vẫn làm khung xấu đi
+> ở ba chỗ. Tiêu chí review vì vậy phải soát cả **tài liệu và cấu hình**, không
+> chỉ soát code.
+
 ### A13.5. Chốt lại
 
 | # | Tiêu chuẩn | Trước review | Sau review |
