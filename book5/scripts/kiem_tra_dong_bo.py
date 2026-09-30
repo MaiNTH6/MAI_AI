@@ -21,12 +21,17 @@ from pathlib import Path
 GOC = Path(__file__).resolve().parents[2]  # D:/MAI/MAI-AI-TOOL
 THU_MUC_SACH = GOC.parent / "MAI-AI-TOOL" / "book5" / "drafts"
 
-# Cac repo chua ma nguon that ma sach trich dan
+# Ma nguon that ma sach trich dan - nay nam trong 1 repo chung da day len
+# GitHub (github.com/MaiNTH6/MAI_PYTHON_POM), moi thu muc con la 1 du an
+# Python doc lap. Truoc day la 4 repo rieng o D:/MAI/<ten-repo>: neu tro vao
+# duong dan cu, script se doi chieu voi ban da loi thoi ma van bao "khop".
+REPO_CHUNG = GOC.parent / "MAI_PYTHON_POM"
+
 THU_MUC_MA_NGUON = [
-    GOC.parent / "qa-automation-core",
-    GOC.parent / "project-restful-booker",
-    GOC.parent / "project-restful-booker-platform",
-    GOC.parent / "project-3-he-thong",
+    REPO_CHUNG / "qa-automation-core",
+    REPO_CHUNG / "project-restful-booker",
+    REPO_CHUNG / "project-restful-booker-platform",
+    REPO_CHUNG / "project-3-he-thong",
 ]
 
 KHOI_PYTHON = re.compile(r"```python\n(.*?)```", re.DOTALL)
@@ -70,15 +75,42 @@ def _cac_dinh_nghia_trong_sach() -> dict[str, list[tuple[str, int, str]]]:
     return ket_qua
 
 
+# Thu muc chua BAN SAO cua ma nguon, khong phai ma nguon. Phai bo qua, neu
+# khong script se doi chieu voi ban cu roi bao "khop" oan.
+# Day la loi that da xay ra: `build/lib/` con giu ban truoc khi doi ten ham,
+# script tim thay ten cu o do nen bao dong bo trong khi ma nguon da doi.
+THU_MUC_KHONG_PHAI_MA_NGUON = (
+    ".venv",
+    "__pycache__",
+    ".git",
+    "build",
+    "dist",
+    "site-packages",
+    ".eggs",
+)
+
+
 def _ma_nguon_that() -> str:
-    """Gop toan bo file .py cua cac repo thanh 1 chuoi de tra cuu."""
+    """Gop toan bo file .py cua cac repo thanh 1 chuoi de tra cuu.
+
+    Thieu thu muc nao thi DUNG NGAY chu khong bo qua: mot script kiem tra ma
+    khong tim thay gi de kiem, roi van bao "OK", thi te hon la khong co script.
+    """
+    thieu = [str(d) for d in THU_MUC_MA_NGUON if not d.is_dir()]
+    if thieu:
+        print("[!] KHONG THAY thu muc ma nguon:")
+        for d in thieu:
+            print(f"  {d}")
+        print(
+            "\n=> Sua duong dan trong THU_MUC_MA_NGUON. Khong doi chieu duoc thi\n"
+            "   khong the ket luan sach dung - dung o day thay vi bao OK."
+        )
+        sys.exit(2)
+
     phan = []
     for directory in THU_MUC_MA_NGUON:
-        if not directory.is_dir():
-            print(f"  (bo qua, khong thay thu muc: {directory})")
-            continue
         for file_py in directory.rglob("*.py"):
-            if any(bo in file_py.parts for bo in (".venv", "__pycache__", ".git")):
+            if any(bo in file_py.parts for bo in THU_MUC_KHONG_PHAI_MA_NGUON):
                 continue
             phan.append(file_py.read_text(encoding="utf-8"))
     return "\n".join(phan)
@@ -111,6 +143,15 @@ def main() -> int:
                 lech_chu_ky.append(f"  {file_sach}:{so_dong}  {dong}")
 
     print(f"Da quet {len(trong_sach)} dinh nghia trong sach.\n")
+
+    # Quet duoc 0 dinh nghia nghia la script khong doc duoc sach (sai duong
+    # dan, doi name file...). Bao "OK" luc do la bao dat ma khong kiem gi.
+    if not trong_sach:
+        print("[!] Khong quet duoc dinh nghia nao trong sach - kiem lai THU_MUC_SACH.")
+        return 2
+    if not ma_nguon.strip():
+        print("[!] Khong doc duoc dong ma nguon nao - kiem lai THU_MUC_MA_NGUON.")
+        return 2
 
     if khong_ton_tai:
         print(f"[!] KHONG TIM THAY trong ma nguon ({len(khong_ton_tai)}):")

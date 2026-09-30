@@ -337,7 +337,9 @@ class BaseScreen:
         except TimeoutException:
             return False
 
-    def swipe(self, from_x: int, from_y: int, to_x: int, to_y: int, duration_ms: int = 800) -> "BaseScreen":
+    def swipe(
+        self, from_x: int, from_y: int, to_x: int, to_y: int, duration_ms: int = 800
+    ) -> "BaseScreen":
         """Vuot man hinh (swipe) - thao tac dac thu cua app native, web khong co."""
         logger.info("vuot tu (%s,%s) den (%s,%s)", from_x, from_y, to_x, to_y)
         self.driver.swipe(from_x, from_y, to_x, to_y, duration_ms)
@@ -722,8 +724,8 @@ def with_screenshot_on_failure(request, page_or_screen):
             yield from with_screenshot_on_failure(request, HomePage(page))
 
         @pytest.fixture
-        def man_hinh_dang_nhap(driver, request):
-            yield from with_screenshot_on_failure(request, ManHinhDangNhap(driver))
+        def login_screen(driver, request):
+            yield from with_screenshot_on_failure(request, LoginScreen(driver))
     """
     yield page_or_screen
 
@@ -1064,11 +1066,56 @@ không chứa 1 dòng nào nhắc tới "Restful-Booker". Hai repo dự án đ�
 native, API) và 4 cơ chế tự động (responsive, phiên đăng nhập, ảnh evidence,
 dọn dữ liệu).
 
-> **Phần chưa kiểm chứng được:** tầng `BaseScreen` (Appium) viết theo đúng
-> chuẩn Appium nhưng **chưa chạy thật**, vì cần Appium server + thiết bị
-> thật/emulator + file cài đặt app (`.apk`/`.ipa`) — 3 thứ không có trong
-> môi trường viết sách. Khi áp dụng vào dự án thật có app, cần chạy thử lại
-> tầng này trước khi tin tưởng hoàn toàn.
+### Tầng app native đã chạy trên thiết bị thật
+
+Bản đầu của phần này ghi "tầng `BaseScreen` chưa chạy thật" — vì cần Appium
+server + thiết bị/emulator + file `.apk`. Nay đã chạy được, và có một mẹo
+khiến việc đó dễ hơn tưởng: **dùng app Settings có sẵn của Android**, không
+cần file `.apk` riêng của dự án nào.
+
+```bash
+emulator -avd Pixel_8 -no-window -no-audio -no-boot-anim
+appium --port 4723
+python scripts/verify_base_screen_on_device.py
+```
+
+Script kiểm 18 mục, chia 4 nhóm:
+
+| Nhóm | Kiểm gì |
+|---|---|
+| Hành động | `wait_until_visible`, `tap`, `fill`, `get_text`, `count_of`, `is_visible` |
+| Kiểm tra | cả 5 hàm `should_*` |
+| **Báo lỗi đúng cách** | phải ném `AssertionError` đọc được, **không được âm thầm pass** |
+| Đặc thù app | `swipe`, `save_screenshot` ra file ảnh thật |
+
+Kết quả trên Pixel_8 / Android 16 / Appium 2.19 + uiautomator2 4.2.6:
+**18/18 đạt.**
+
+Nhóm thứ ba đáng lưu ý: nó không kiểm "hàm chạy được", mà kiểm **hàm biết báo
+sai**. Một hàm `should_have_count` không bao giờ fail thì còn nguy hiểm hơn là
+không có nó.
+
+#### Hai lần sai khi viết script này — hữu ích hơn con số 18/18
+
+**Lần 1: đoán locator.** Tôi viết `content-desc="Search settings"` theo cảm
+giác. Bản Android trên emulator **không có `content-desc` nào** ở màn hình
+đó, nên 3 mục kiểm cùng đỏ. Đọc `page_source` thật thì locator đúng là
+`com.android.settings:id/search_action_bar`.
+
+**Lần 2: chọn sai chỗ để kiểm.** Sửa locator xong còn 2 mục đỏ. Nguyên nhân:
+ô tìm kiếm của Settings chuyển sang **một app khác**
+(`com.google.android.settings.intelligence`) và kết quả phụ thuộc Play
+Services — lúc có lúc không. Dùng nó làm mục tiêu kiểm thì test đỏ vì **môi
+trường**, không phải vì code sai. Đưa các câu kiểm text về danh sách chính của
+Settings — thứ luôn có mặt — thì đủ 18/18.
+
+> Bài học cho dự án thật: khi một bài test app đỏ, câu hỏi đầu tiên không phải
+> "code sai ở đâu" mà **"chỗ tôi đang kiểm có ổn định không"**. Hai lần sai ở
+> trên đều trông giống lỗi framework, mà thực ra không phải.
+
+**Phần vẫn chưa kiểm chứng được:** phía **iOS**. Script trên chỉ chạy Android
+(driver `uiautomator2`). `BaseScreen` viết chung cho cả hai nền tảng, nhưng
+muốn chứng minh phía iOS thì cần máy macOS + Xcode + driver `xcuitest`.
 
 ---
 
@@ -1294,7 +1341,7 @@ linter không kiểm được ngôn ngữ đặt tên. Hai chỗ đáng lo nhấ
 lượng mà là **ví dụ trong docstring**:
 
 ```python
-# evidence.py — trước
+# ❌ evidence.py — bản CŨ, vi phạm quy ước đặt tên
 def man_hinh_dang_nhap(driver, request):
     yield from with_screenshot_on_failure(request, ManHinhDangNhap(driver))
 ```
