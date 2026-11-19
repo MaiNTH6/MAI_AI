@@ -8,7 +8,20 @@ const nav = [
   { href: "/automation-testing", label: "Automation Testing", short: "🤖 Automation" },
   { href: "/kho-template-qa", label: "Kho Template", short: "🧩 Template" },
   { href: "/kho-prompt", label: "Kho Prompt", short: "📚 Prompt" },
+  // TechTalk is a separate app behind a rewrite, so it needs a full page load (<a>), not <Link>.
+  { href: "/techtalk", label: "Tiếng Anh IT", short: "🗣️ Tiếng Anh IT", zone: true },
 ];
+
+const navItem = (n: (typeof nav)[number], text: string, className: string) =>
+  "zone" in n && n.zone ? (
+    <a key={n.href} href={n.href} className={className}>
+      {text}
+    </a>
+  ) : (
+    <Link key={n.href} href={n.href} className={className}>
+      {text}
+    </Link>
+  );
 
 export function Header() {
   return (
@@ -30,15 +43,7 @@ export function Header() {
           >
             Trang chủ
           </Link>
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="rounded-md px-3 py-2 hover:bg-white/5 hover:text-[color:var(--ink)]"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {nav.map((n) => navItem(n, n.label, "rounded-md px-3 py-2 hover:bg-white/5 hover:text-[color:var(--ink)]"))}
         </nav>
 
         <Link href="/ai-qa" className="btn-cta hidden sm:inline-flex !py-2 !px-4 text-sm">
@@ -49,15 +54,7 @@ export function Header() {
       {/* mobile nav */}
       <nav className="md:hidden border-t border-[color:var(--line)] overflow-x-auto">
         <div className="container-content flex gap-1 py-2 text-sm font-medium text-[color:var(--muted)] whitespace-nowrap">
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-[color:var(--ink)]"
-            >
-              {n.short}
-            </Link>
-          ))}
+          {nav.map((n) => navItem(n, n.short, "rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-[color:var(--ink)]"))}
         </div>
       </nav>
     </header>
